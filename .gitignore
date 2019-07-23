@@ -1,0 +1,14 @@
+node_modules/**/*
+.expo/*
+npm-debug.*
+*.jks
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+web-report/
+summary.txt
+assets-in-progress/
+*.log
+.DS_Store
