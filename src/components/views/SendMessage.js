@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Keyboard, Image, FlatList, KeyboardAvoidingView } from 'react-native'
-import { GiphyOption } from './'
+import { View, TextInput, Text, TouchableOpacity, StyleSheet, Keyboard, Image, FlatList, KeyboardAvoidingView, Animated, Easing } from 'react-native'
+import { GiphyOption, Png } from './'
 import { Video } from 'expo-av'
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome } from '@expo/vector-icons'
-const giphy = require('giphy-api')(); //eventually apply for development API key and then production API key https://developers.giphy.com/faq/
+const giphy = require('giphy-api')() //eventually apply for development API key and then production API key https://developers.giphy.com/faq/
 import utils from '../../utils'
 import config from '../../config'
 
@@ -15,6 +15,7 @@ class SendMessage extends React.Component {
         super()
         this.state = {
             keyboardHeight: 0,
+            fadeInCanvas: new Animated.Value(0),
             subscreen: false,
             giphySearchPhrase: '',
             giphyArray: [], //this will be what is temporarily set in state upon calling giphy.search('...'
@@ -42,6 +43,14 @@ class SendMessage extends React.Component {
     }
 
         componentDidMount() {
+
+            Animated.timing(                // Animate over time
+              this.state.fadeInCanvas,     // The animated value to drive
+              { toValue: 1,                 // Animate to opacity: 1
+                delay: 1000,                // Wait 1000ms so keyboard can swing up
+                duration: 500,             // Make it take 500ms
+                easing: Easing.bezier(0, 0, 0, 1, 1)
+              }).start()
 
             this.keyboardDidShowListener = Keyboard.addListener(
                 'keyboardDidShow',
@@ -214,7 +223,7 @@ class SendMessage extends React.Component {
                             subscreen: true
                         })
                     }
-                }.bind(this));
+                }.bind(this))
             } else {
                 await giphy.search({
                     api: 'stickers',
@@ -227,7 +236,7 @@ class SendMessage extends React.Component {
                             subscreen: true
                         })
                     }
-                }.bind(this));
+                }.bind(this))
             }
         }
 
@@ -252,9 +261,7 @@ class SendMessage extends React.Component {
                 </View>
 
 
-                <View style={[{flexDirection: 'column'}, {bottom: this.state.keyboardHeight}]}>
-
-
+                <Animated.View style={{flexDirection: 'column', bottom: this.state.keyboardHeight, opacity: this.state.fadeInCanvas}}>
 
                     <KeyboardAvoidingView behavior='padding' style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
 
@@ -263,15 +270,17 @@ class SendMessage extends React.Component {
 
                         <Image source={{uri: `https://media.giphy.com/media/${this.state.newMessage.giphyCanvasId}/giphy.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyCanvasId === '' ? 'none' : 'flex'}]}/>
 
-                        <Image source={{uri: `https://media.giphy.com/media/${this.state.newMessage.giphyPng1Id}/giphy.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.png, {display: this.state.subscreen !== false ? 'none' : 'flex'}]}/>
 
-                        <Image source={{uri: `https://media.giphy.com/media/${this.state.newMessage.giphyPng2Id}/giphy.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.png, {display: this.state.subscreen !== false ? 'none' : 'flex'}]}/>
+                        <View style={{position: 'absolute', zIndex: this.state.selectGiphyPng1Id ? 10 : 1, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectGiphyPng1Id} giphyPngId={this.state.newMessage.giphyPng1Id}/></View>
 
-                        <Image source={{uri: `https://media.giphy.com/media/${this.state.newMessage.giphyPng3Id}/giphy.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.png, {display: this.state.subscreen !== false ? 'none' : 'flex'}]}/>
+                        <View style={{position: 'absolute', zIndex: this.state.selectGiphyPng2Id ? 10 : 2, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectGiphyPng2Id} giphyPngId={this.state.newMessage.giphyPng2Id}/></View>
 
-                        <Image source={{uri: `https://media.giphy.com/media/${this.state.newMessage.giphyPng4Id}/giphy.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.png, {display: this.state.subscreen !== false ? 'none' : 'flex'}]}/>
+                        <View style={{position: 'absolute', zIndex: this.state.selectGiphyPng3Id ? 10 : 3, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectGiphyPng3Id} giphyPngId={this.state.newMessage.giphyPng3Id}/></View>
 
-                        <Image source={{uri: `https://media.giphy.com/media/${this.state.newMessage.giphyPng5Id}/giphy.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.png, {display: this.state.subscreen !== false ? 'none' : 'flex'}]}/>
+                        <View style={{position: 'absolute', zIndex: this.state.selectGiphyPng4Id ? 10 : 4, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectGiphyPng4Id} giphyPngId={this.state.newMessage.giphyPng4Id}/></View>
+
+                        <View style={{position: 'absolute', zIndex: this.state.selectGiphyPng5Id ? 10 : 5, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectGiphyPng5Id} giphyPngId={this.state.newMessage.giphyPng5Id}/></View>
+
 
                         <FlatList
                             style={[styles.canvas, {display: this.state.subscreen === false || this.state.giphySearchPhrase === '' || this.state.giphyArray === [] ? 'none' : 'flex'}]}
@@ -314,7 +323,7 @@ class SendMessage extends React.Component {
 
 
                     <TextInput
-                        placeholder={"I'm feeling..."}
+                        placeholder={"Search..."}
                         placeholderTextColor={'rgba(0,0,0, .6)'}
                         ref={input => this.searchInput = input}
                         autoFocus={this.props.toUser === undefined ? false : true}
@@ -341,7 +350,7 @@ class SendMessage extends React.Component {
                         onChangeText={text => this.updateNewMessage(text, 'message')}
                     /> */}
 
-                </View>
+                </Animated.View>
 
                 <View style={{position: 'absolute', bottom: 0, height: this.state.keyboardHeight, width: 100 + '%', display: 'flex', alignItems: 'center'}}>
                         <Text style={{color: 'rgba(255,255,255,.8)', fontSize: 20, fontWeight: 'bold'}}>Go</Text>
@@ -384,9 +393,7 @@ const styles = StyleSheet.create({
         borderRadius: config.screenWidth *.021875
     },
     png: {
-        position: 'absolute',
-        width: config.screenWidth/4,
-        height: config.screenWidth/4,
+        position: 'absolute'
     },
     button: {
         justifyContent: 'center',

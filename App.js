@@ -4,11 +4,11 @@ import { Home, Authenticate, Conversation, Profile } from './src/components/scre
 import config from './src/config'
 import { createAppContainer, createSwitchNavigator, createStackNavigator, createBottomTabNavigator } from 'react-navigation'
 
-import { Zocial, Ionicons } from '@expo/vector-icons';
+import { Zocial, Ionicons } from '@expo/vector-icons'
 
 YellowBox.ignoreWarnings([
   'Require cycle:',
-]);
+])
 
 const MessageStack = createStackNavigator({
     home: Home,
@@ -112,7 +112,7 @@ class App extends React.Component {
     }
 
     render() {
-        const Switch = rootNav(this.state.authed);
+        const Switch = rootNav(this.state.authed)
         return(
             this.state.authChecked ? <Switch/> : <ActivityIndicator size='large'/>
         )
