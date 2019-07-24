@@ -23,7 +23,7 @@ class SendMessage extends React.Component {
             newMessage: {
                 toUser: '',
                 message: '',
-                //Instead of message here I'll have canvasChoice, sticker1Choice, sticker2Choice, textChoice, etc. along with a width coefficient prop and position props for each one using React Native PanResponder (https://snack.expo.io/@yoobidev/draggable-component). Then newMessage will be an object with toUser and dozens of other fields, some of which might be empty strings. The object will render dynamically in a flatlist with a MemeStream parser component.
+                //Instead of message here I'll have canvasChoice, sticker1Choice, sticker2Choice, textChoice, etc. along with a width coefficient prop and position props for each one using React Native PanResponder (https://medium.com/@leonardobrunolima/react-native-tips-using-animated-and-panresponder-components-to-interact-with-user-gestures-4620bf27b9e4). Then newMessage will be an object with toUser and dozens of other fields, some of which might be empty strings. The object will render dynamically in a flatlist with a MemeStream parser component.
                 giphyCanvasId: '',
                 giphyPng1Id: '',
                 giphyPng2Id: '',
