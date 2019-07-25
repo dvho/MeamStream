@@ -296,9 +296,27 @@ class Authenticate extends React.Component {
                         </TouchableOpacity>
                     </View>
 
-                    <TextInput style={[styles.inputs, styles.textInput1Shadow]} placeholder={'username'} placeholderTextColor={config.colors.activeButton} autoCapitalize={'none'} autoCorrect={false} spellCheck={false} onChangeText={text => this.updateCredentials(text, 'username')} onSubmitEditing={() => this.secondTextInput.focus()} returnKeyType={"next"}/>
+                    <TextInput
+                        style={[styles.inputs, styles.textInput1Shadow]}
+                        placeholder={'username'}
+                        placeholderTextColor={config.colors.activeButton}
+                        autoCapitalize={'none'}
+                        autoCorrect={false} spellCheck={false}
+                        onChangeText={text => this.updateCredentials(text, 'username')}
+                        onSubmitEditing={() => this.secondTextInput.focus()}
+                        returnKeyType={"next"}
+                    />
 
-                    <TextInput style={[styles.inputs, styles.textInput2Shadow]} placeholder={'password'} placeholderTextColor={config.colors.activeButton} onChangeText={text => this.updateCredentials(text, 'password')} onSubmitEditing={() => this.submit()} returnKeyType={'go'} ref={(input) => { this.secondTextInput = input }} blurOnSubmit={false} secureTextEntry/>
+                    <TextInput
+                        style={[styles.inputs, styles.textInput2Shadow]}
+                        placeholder={'password'}
+                        placeholderTextColor={config.colors.activeButton}
+                        onChangeText={text => this.updateCredentials(text, 'password')}
+                        onSubmitEditing={() => this.submit()}
+                        returnKeyType={'go'}
+                        ref={(input) => { this.secondTextInput = input }}
+                        blurOnSubmit={false} secureTextEntry
+                    />
 
                 </Animated.View>
 
