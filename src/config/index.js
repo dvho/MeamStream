@@ -14,11 +14,12 @@ export default {
 
 
         dormantButton: 'rgb(128,128,128)',
-        toggleSearching: 'rgb(207, 23, 23)',
-        toggleArranging: 'rgb(0, 0, 179)',
-        selectingButton: 'rgb(163, 163, 15)',
-        selectedButton: 'rgb(122, 122, 255)',
-        sendButton: 'rgb(182,182,255)'
+        toggleSearching: 'rgb(207,23,23)',
+        toggleArranging: 'rgb(0,0,179)',
+        selectingButton: 'rgb(163,163,15)',
+        selectedButton: 'rgb(122,122,255)',
+        sendButton: 'rgb(182,182,255)',
+        scrollButton: 'rgba(182,255,182,.7)'
     },
     screenWidth: Dimensions.get('window').width,
     headerHeight: Header.HEIGHT,

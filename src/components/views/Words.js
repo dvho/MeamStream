@@ -30,7 +30,7 @@ class Png extends React.Component {
        let handlers = this.state.panResponder.panHandlers
       return (
          <Animated.View style={[{width: config.screenWidth * .9}, this.state.position.getLayout()]} {...handlers}>
-            <Text numberOfLines={6} style={{textAlign: 'center', color: 'rgb(215,215,215)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: 32, fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.words}</Text>
+            <Text numberOfLines={6} style={{textDecorationLine: this.props.selected && this.props.words !== '' ? 'underline' : 'none', textAlign: 'center', color: 'rgb(215,215,215)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: 32, fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.words}</Text>
          </Animated.View>
       )
    }

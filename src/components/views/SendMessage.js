@@ -7,7 +7,7 @@ const giphy = require('giphy-api')() //eventually apply for development API key 
 import utils from '../../utils'
 import config from '../../config'
 
-//TODO: 1) need to implement select png layer upon touch so that selectGiphyPngXId switches to true, 2) need to pass positionCoefficients for each 5 png layers and words layer, 3) need to buil out parser for Message.js and MessageShort.js, 4) need to validate phone numbers instead of userName in Authenticate, 5) need to gain access to contacts, 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 9) need to add those png curtains to Authenticate.js
+//TODO: 1) limit height of textInput for when it's on Words, 2) need to pass positionCoefficients for each 5 png layers and words layer, 3) need to build out parser for Message.js and MessageShort.js, 4) need to validate phone numbers instead of userName in Authenticate, 5) need to gain access to contacts, 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 9) need to add those png curtains to Authenticate.js
 
 
 class SendMessage extends React.Component {
@@ -32,14 +32,7 @@ class SendMessage extends React.Component {
                 giphyPng5Id: '',
                 words: ''
             },
-            selectGiphyCanvasId: true,
-            selectGiphyPng1Id: false,
-            selectGiphyPng2Id: false,
-            selectGiphyPng3Id: false,
-            selectGiphyPng4Id: false,
-            selectGiphyPng5Id: false,
-            selectWords: false,
-            selectNone: false
+            selectedLayer: 'giphyCanvasId'
         }
         this._keyboardDidShow = this._keyboardDidShow.bind(this)
         //this._keyboardDidHide = this._keyboardDidHide.bind(this)
@@ -91,7 +84,7 @@ class SendMessage extends React.Component {
 
         updateDirections() {
             this.setState({
-                directions: !this.state.selectNone ? (this.state.selectWords ? ' Text something here and hit send! ' : ' Update this layer by entering a search phrase and selecting an animation. ') : ' All done? Send this message! '
+                directions: this.state.selectedLayer === 'words' ? ' Text something here and hit send! ' : ' Update this layer by entering a search phrase and selecting an animation. '
             })
         }
 
@@ -104,143 +97,29 @@ class SendMessage extends React.Component {
             })
         }
 
-        setLayer(layer) {
-            if (layer === 'canvas') {
-                this.setState({
-                    giphySearchPhrase: '',
-                    selectGiphyCanvasId: true,
-                    selectGiphyPng1Id: false,
-                    selectGiphyPng2Id: false,
-                    selectGiphyPng3Id: false,
-                    selectGiphyPng4Id: false,
-                    selectGiphyPng5Id: false,
-                    selectWords: false,
-                    selectNone: false
-                })
-            }
-            if (layer === 'png1') {
-                this.setState({
-                    giphySearchPhrase: '',
-                    selectGiphyCanvasId: false,
-                    selectGiphyPng1Id: true,
-                    selectGiphyPng2Id: false,
-                    selectGiphyPng3Id: false,
-                    selectGiphyPng4Id: false,
-                    selectGiphyPng5Id: false,
-                    selectWords: false,
-                    selectNone: false
-                })
-            }
-            if (layer === 'png2') {
-                this.setState({
-                    giphySearchPhrase: '',
-                    selectGiphyCanvasId: false,
-                    selectGiphyPng1Id: false,
-                    selectGiphyPng2Id: true,
-                    selectGiphyPng3Id: false,
-                    selectGiphyPng4Id: false,
-                    selectGiphyPng5Id: false,
-                    selectWords: false,
-                    selectNone: false
-                })
-            }
-            if (layer === 'png3') {
-                this.setState({
-                    giphySearchPhrase: '',
-                    selectGiphyCanvasId: false,
-                    selectGiphyPng1Id: false,
-                    selectGiphyPng2Id: false,
-                    selectGiphyPng3Id: true,
-                    selectGiphyPng4Id: false,
-                    selectGiphyPng5Id: false,
-                    selectWords: false,
-                    selectNone: false
-                })
-            }
-            if (layer === 'png4') {
-                this.setState({
-                    selectGiphyCanvasId: false,
-                    giphySearchPhrase: '',
-                    selectGiphyPng1Id: false,
-                    selectGiphyPng2Id: false,
-                    selectGiphyPng3Id: false,
-                    selectGiphyPng4Id: true,
-                    selectGiphyPng5Id: false,
-                    selectWords: false,
-                    selectNone: false
-                })
-            }
-            if (layer === 'png5') {
-                this.setState({
-                    giphySearchPhrase: '',
-                    selectGiphyCanvasId: false,
-                    selectGiphyPng1Id: false,
-                    selectGiphyPng2Id: false,
-                    selectGiphyPng3Id: false,
-                    selectGiphyPng4Id: false,
-                    selectGiphyPng5Id: true,
-                    selectWords: false,
-                    selectNone: false
-                })
-            }
-            if (layer === 'words') {
-                this.setState({
-                    giphySearchPhrase: '',
-                    selectGiphyCanvasId: false,
-                    selectGiphyPng1Id: false,
-                    selectGiphyPng2Id: false,
-                    selectGiphyPng3Id: false,
-                    selectGiphyPng4Id: false,
-                    selectGiphyPng5Id: false,
-                    selectWords: true,
-                    selectNone: false
-                })
-            }
-            if (layer === 'none') {
-                this.setState({
-                    giphySearchPhrase: '',
-                    selectGiphyCanvasId: false,
-                    selectGiphyPng1Id: false,
-                    selectGiphyPng2Id: false,
-                    selectGiphyPng3Id: false,
-                    selectGiphyPng4Id: false,
-                    selectGiphyPng5Id: false,
-                    selectWords: false,
-                    selectNone: true
-                })
-            }
-            setTimeout(() => this.updateDirections(), 0)
-        }
-
         updateNewMessage(text, field) {
-            if (this.state.selectWords) {
-                field = 'words'
-            } else if (this.state.selectGiphyPng5Id) {
-                field = 'giphyPng5Id'
-                this.setLayer('words')
-            } else if (this.state.selectGiphyPng4Id) {
-                field = 'giphyPng4Id'
-                this.setLayer('png5')
-            } else if (this.state.selectGiphyPng3Id) {
-                field = 'giphyPng3Id'
-                this.setLayer('png4')
-            } else if (this.state.selectGiphyPng2Id) {
-                field = 'giphyPng2Id'
-                this.setLayer('png3')
-            } else if (this.state.selectGiphyPng1Id) {
-                field = 'giphyPng1Id'
-                this.setLayer('png2')
-            } else if (this.state.selectGiphyCanvasId) {
-                field = 'giphyCanvasId'
-                this.setLayer('png1')
-            }
             let newMessage = Object.assign({}, this.state.newMessage)
-            newMessage[field] = text
+            newMessage[this.state.selectedLayer] = text
             this.setState({
                 newMessage: newMessage,
                 subscreen: false
             })
             this.mainInput.focus()
+        }
+
+        setLayerAndDirections(choice) {
+            const choiceArray = ['giphyCanvasId', 'giphyPng1Id', 'giphyPng2Id', 'giphyPng3Id', 'giphyPng4Id', 'giphyPng5Id', 'words']
+            const forward = (choiceArray.indexOf(this.state.selectedLayer) + 1) % 7
+            const backward = (7 + (choiceArray.indexOf(this.state.selectedLayer) - 1)) % 7
+
+            if (choice === 'forward') {
+                this.setState({selectedLayer: choiceArray[forward], giphySearchPhrase: ''})
+            } else if (choice === 'backward') {
+                this.setState({selectedLayer: choiceArray[backward], giphySearchPhrase: ''})
+            } else {
+                this.setState({selectedLayer: choice, giphySearchPhrase: ''})
+            }
+            setTimeout(() => this.updateDirections(), 0)
         }
 
         cancel() {
@@ -275,7 +154,7 @@ class SendMessage extends React.Component {
             await this.setState({
                 giphySearchPhrase: text
             })
-            if (this.state.selectGiphyCanvasId) {
+            if (this.state.selectedLayer === 'giphyCanvasId') {
                 await giphy.search({
                     q: this.state.giphySearchPhrase,
                     limit: 100
@@ -332,19 +211,19 @@ class SendMessage extends React.Component {
 
                         <Video source={config.videos.waitingMp4} shouldPlay isLooping style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyCanvasId !== '') || (this.state.newMessage.giphyCanvasId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyCanvasId === '') ? 'flex' : 'none'}]} />
 
-                        <Image source={{uri: `https://media.giphy.com/media/${this.state.newMessage.giphyCanvasId}/giphy-downsized.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyCanvasId === '' ? 'none' : 'flex'}]}/>
+                        <Image source={{uri: `https://media2.giphy.com/media/${this.state.newMessage.giphyCanvasId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyCanvasId === '' ? 'none' : 'flex'}]}/>
 
-                        <View style={{position: 'absolute', zIndex: this.state.selectGiphyPng1Id ? 10 : 1, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectGiphyPng1Id} giphyPngId={this.state.newMessage.giphyPng1Id}/></View>
+                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng1Id' ? 10 : 1, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng1Id'} giphyPngId={this.state.newMessage.giphyPng1Id}/></View>
 
-                        <View style={{position: 'absolute', zIndex: this.state.selectGiphyPng2Id ? 10 : 2, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectGiphyPng2Id} giphyPngId={this.state.newMessage.giphyPng2Id}/></View>
+                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng2Id' ? 10 : 2, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng2Id'} giphyPngId={this.state.newMessage.giphyPng2Id}/></View>
 
-                        <View style={{position: 'absolute', zIndex: this.state.selectGiphyPng3Id ? 10 : 3, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectGiphyPng3Id} giphyPngId={this.state.newMessage.giphyPng3Id}/></View>
+                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng3Id' ? 10 : 3, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng3Id'} giphyPngId={this.state.newMessage.giphyPng3Id}/></View>
 
-                        <View style={{position: 'absolute', zIndex: this.state.selectGiphyPng4Id ? 10 : 4, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectGiphyPng4Id} giphyPngId={this.state.newMessage.giphyPng4Id}/></View>
+                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng4Id' ? 10 : 4, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng4Id'} giphyPngId={this.state.newMessage.giphyPng4Id}/></View>
 
-                        <View style={{position: 'absolute', zIndex: this.state.selectGiphyPng5Id ? 10 : 5, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectGiphyPng5Id} giphyPngId={this.state.newMessage.giphyPng5Id}/></View>
+                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng5Id' ? 10 : 5, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng5Id'} giphyPngId={this.state.newMessage.giphyPng5Id}/></View>
 
-                        <View style={{position: 'absolute', zIndex: this.state.selectWords ? 10 : 6, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Words selected={this.state.selectWords} words={this.state.newMessage.words}/></View>
+                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'words' ? 10 : 6, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Words selected={this.state.selectedLayer === 'words'} words={this.state.newMessage.words}/></View>
 
                         <FlatList
                             style={[styles.canvas, {display: !this.state.subscreen || this.state.giphySearchPhrase === '' || this.state.giphyArray === [] ? 'none' : 'flex'}]}
@@ -359,45 +238,47 @@ class SendMessage extends React.Component {
 
                     <View style={{flexDirection: 'row', justifyContent: 'center', height: 30, width: 100 + '%'}}>
 
-                        <TouchableOpacity onPress={() => this.cancel()} activeOpacity={0.7} style={[styles.button, {flex: 1, marginLeft: 12}]}><MaterialIcons style={{marginTop: -4}} name='cancel' color={config.colors.dormantButton} size={26}/></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.cancel()} activeOpacity={0} style={[styles.button, {flex: 1, marginLeft: 6}]}><MaterialIcons style={{marginTop: -4}} name='cancel' color={config.colors.dormantButton} size={26}/></TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.setState({subscreen: !this.state.subscreen})} activeOpacity={0.7} style={[styles.button, {flex: 2}]}><MaterialCommunityIcons style={[{marginTop: -13}, !this.state.subscreen ? {transform: [{rotateY: '180deg'}]} : null]} color={!this.state.subscreen ? config.colors.toggleArranging : config.colors.toggleSearching} name='toggle-switch' size={52}/></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setState({subscreen: !this.state.subscreen})} activeOpacity={1} style={[styles.button, {flex: 1.8}]}><MaterialCommunityIcons style={[{marginTop: -13}, !this.state.subscreen ? {transform: [{rotateY: '180deg'}]} : null]} color={!this.state.subscreen ? config.colors.toggleArranging : config.colors.toggleSearching} name='toggle-switch' size={52}/></TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.setLayer('canvas')} activeOpacity={0.7} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4}} name='file-movie-o' color={this.state.newMessage.giphyCanvasId === '' ? (this.state.selectGiphyCanvasId ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectGiphyCanvasId ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setLayerAndDirections('backward')} activeOpacity={0} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4}} name='backward' color={config.colors.scrollButton} size={22}/></TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.setLayer('png1')} activeOpacity={0.7} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-1' color={this.state.newMessage.giphyPng1Id === '' ? (this.state.selectGiphyPng1Id ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectGiphyPng1Id ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyCanvasId')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4}} name='file-movie-o' color={this.state.newMessage.giphyCanvasId === '' ? (this.state.selectedLayer === 'giphyCanvasId' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyCanvasId' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.setLayer('png2')} activeOpacity={0.7} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-2' color={this.state.newMessage.giphyPng2Id === '' ? (this.state.selectGiphyPng2Id ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectGiphyPng2Id ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng1Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-1' color={this.state.newMessage.giphyPng1Id === '' ? (this.state.selectedLayer === 'giphyPng1Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng1Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.setLayer('png3')} activeOpacity={0.7} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-3' color={this.state.newMessage.giphyPng3Id === '' ? (this.state.selectGiphyPng3Id ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectGiphyPng3Id ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng2Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-2' color={this.state.newMessage.giphyPng2Id === '' ? (this.state.selectedLayer === 'giphyPng2Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng2Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.setLayer('png4')} activeOpacity={0.7} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-4' color={this.state.newMessage.giphyPng4Id === '' ? (this.state.selectGiphyPng4Id ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectGiphyPng4Id ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng3Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-3' color={this.state.newMessage.giphyPng3Id === '' ? (this.state.selectedLayer === 'giphyPng3Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng3Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.setLayer('png5')} activeOpacity={0.7} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-5' color={this.state.newMessage.giphyPng5Id === '' ? (this.state.selectGiphyPng5Id ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectGiphyPng5Id ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng4Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-4' color={this.state.newMessage.giphyPng4Id === '' ? (this.state.selectedLayer === 'giphyPng4Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng4Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.setLayer('words')} activeOpacity={0.7} style={[styles.button, {flex: 1}]}><MaterialCommunityIcons style={{marginTop: -1}} name='format-text' color={this.state.newMessage.words === '' ? (this.state.selectWords ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectWords ? config.colors.selectingButton : config.colors.selectedButton)} size={28}/></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng5Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-5' color={this.state.newMessage.giphyPng5Id === '' ? (this.state.selectedLayer === 'giphyPng5Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng5Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.setLayer(!this.state.selectNone ? 'none' : 'words')} activeOpacity={0.7} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -3}} name={this.state.selectNone ? 'lock' : 'unlock'} color={this.state.selectNone ? config.colors.toggleArranging : config.colors.toggleSearching} size={30}/></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setLayerAndDirections('words')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialCommunityIcons style={{marginTop: -1}} name='format-text' color={this.state.newMessage.words === '' ? (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.selectedButton)} size={28}/></TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.send()} activeOpacity={0.7} style={[styles.button, {flex: 1, marginLeft: 4, marginRight: 16}]}><FontAwesome style={{marginTop: -4}} name='send' color={config.colors.sendButton} size={22}/></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setLayerAndDirections('forward')} activeOpacity={0} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4}} name='forward' color={config.colors.scrollButton} size={22}/></TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => this.send()} activeOpacity={0} style={[styles.button, {flex: 1, marginRight: 6}]}><FontAwesome style={{marginTop: -4}} name='send' color={config.colors.sendButton} size={22}/></TouchableOpacity>
 
                     </View>
 
                     <TextInput
-                        placeholder={this.state.selectWords ? "Text something here..." : "Enter a search phrase..."}
+                        placeholder={this.state.selectedLayer === 'words' ? "Text something here..." : "Enter a search phrase..."}
                         placeholderTextColor={'rgba(0,0,0, .6)'}
                         ref={input => this.mainInput = input}
                         autoFocus={this.props.toUser === undefined ? false : true}
-                        style={[styles.inputs, {marginBottom: 5, paddingVertical: 5, opacity: this.state.selectNone ? 0 : .6}]}
-                        multiline={this.state.selectWords ? true : false}
-                        autoCapitalize={this.state.selectWords ? 'sentences' : 'none'}
+                        style={[styles.inputs, {marginBottom: 5, paddingVertical: 5, opacity: .6}]}
+                        multiline={this.state.selectedLayer === 'words' ? true : false}
+                        autoCapitalize={this.state.selectedLayer === 'words' ? 'sentences' : 'none'}
                         autoCorrect={true}
                         spellCheck={true}
-                        maxLength={this.state.selectWords ? null : 46}
-                        value={this.state.selectWords ? this.state.newMessage.words : this.state.giphySearchPhrase}
-                        onChangeText={this.state.selectWords ? text => this.updateNewMessage(text, 'words') : text => this.searchGiphy(text)}
+                        maxLength={this.state.selectedLayer === 'words' ? null : 46}
+                        value={this.state.selectedLayer === 'words' ? this.state.newMessage.words : this.state.giphySearchPhrase}
+                        onChangeText={this.state.selectedLayer === 'words' ? text => this.updateNewMessage(text, 'words') : text => this.searchGiphy(text)}
                         onBlur={()=>this.updateDirections()}
-                        returnKeyType={this.state.selectWords ? null : 'next'}
+                        returnKeyType={this.state.selectedLayer === 'words' ? null : 'next'}
                     />
 
                     { /* <TextInput
@@ -433,6 +314,7 @@ const styles = StyleSheet.create({
     },
     inputs: {
         width: config.screenWidth - 10,
+        height: 36,
         paddingVertical: 8,
         paddingHorizontal: 12,
         backgroundColor: 'rgb(255,255,255)',
