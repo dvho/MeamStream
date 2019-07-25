@@ -4,6 +4,7 @@ import SendMessage from './SendMessage'
 import TimeStamp from './TimeStamp'
 import GiphyOption from './GifOption'
 import Png from './Png'
+import Words from './Words'
 
 
 export {
@@ -12,5 +13,6 @@ export {
     SendMessage,
     TimeStamp,
     GiphyOption,
-    Png
+    Png,
+    Words
 }

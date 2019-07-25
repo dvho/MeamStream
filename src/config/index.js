@@ -11,9 +11,14 @@ export default {
         inactiveButton: 'rgb(215,215,215)',
         activeButton: 'rgb(187,17,23)',
         failButton: 'rgb(210,210,0)',
+
+
         dormantButton: 'rgb(128,128,128)',
-        productionButton: 'rgb(23,17,187)',
-        selectionButton: 'rgb(187, 187, 17)'
+        toggleSearching: 'rgb(207, 23, 23)',
+        toggleArranging: 'rgb(0, 0, 179)',
+        selectingButton: 'rgb(163, 163, 15)',
+        selectedButton: 'rgb(122, 122, 255)',
+        sendButton: 'rgb(182,182,255)'
     },
     screenWidth: Dimensions.get('window').width,
     headerHeight: Header.HEIGHT,
