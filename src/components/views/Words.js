@@ -30,10 +30,7 @@ class Png extends React.Component {
        let handlers = this.state.panResponder.panHandlers
       return (
          <Animated.View style={[{width: config.screenWidth * .9}, this.state.position.getLayout()]} {...handlers}>
-
             <Text numberOfLines={6} style={{textAlign: 'center', color: 'rgb(215,215,215)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: 32, fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.words}</Text>
-
-            {/*<Image style={{width: config.screenWidth/4, height: config.screenWidth/4, borderRadius: config.screenWidth *.021875, borderWidth: this.props.selected && this.props.giphyPngId !== '' ? StyleSheet.hairlineWidth : null, borderColor: 'rgb(255,255,255)'}} source={{uri: `https://media.giphy.com/media/${this.props.giphyPngId}/giphy.gif`}} resizeMode='contain' resizeMethod='scale'/>*/}
          </Animated.View>
       )
    }

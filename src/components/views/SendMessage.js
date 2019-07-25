@@ -2,10 +2,13 @@ import React from 'react'
 import { View, TextInput, Text, TouchableOpacity, StyleSheet, Keyboard, Image, FlatList, KeyboardAvoidingView, Animated, Easing } from 'react-native'
 import { GiphyOption, Png, Words } from './'
 import { Video } from 'expo-av'
-import { MaterialCommunityIcons, MaterialIcons, FontAwesome } from '@expo/vector-icons'
+import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'
 const giphy = require('giphy-api')() //eventually apply for development API key and then production API key https://developers.giphy.com/faq/
 import utils from '../../utils'
 import config from '../../config'
+
+//TODO: 1) need to implement select png layer upon touch so that selectGiphyPngXId switches to true, 2) need to pass positionCoefficients for each 5 png layers and words layer, 3) need to buil out parser for Message.js and MessageShort.js, 4) need to validate phone numbers instead of userName in Authenticate, 5) need to gain access to contacts, 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 9) need to add those png curtains to Authenticate.js
+
 
 class SendMessage extends React.Component {
     constructor() {
@@ -16,8 +19,7 @@ class SendMessage extends React.Component {
             subscreen: false,
             directions: 'Welcome', //This is never really revealed because it's behind the keyboard which calls the updateDirecions function onBlur, which immediately changes it to some other statement. It's shown for a split second only in the case when 'Next' key on Keyboard is used to automatically focus on the mainInput from the top input where recipient is entered.
             giphySearchPhrase: '',
-            giphyArray: [], //this will be what is temporarily set in state upon calling giphy.search('...'
-            //giphyStickers: [] // this will be what is temporarily set in state upon calling giphy.search({api: 'stickers', q: '...'
+            giphyArray: [],
             newMessage: {
                 toUser: '',
                 //message: '',
@@ -36,7 +38,8 @@ class SendMessage extends React.Component {
             selectGiphyPng3Id: false,
             selectGiphyPng4Id: false,
             selectGiphyPng5Id: false,
-            selectWords: false
+            selectWords: false,
+            selectNone: false
         }
         this._keyboardDidShow = this._keyboardDidShow.bind(this)
         //this._keyboardDidHide = this._keyboardDidHide.bind(this)
@@ -70,6 +73,7 @@ class SendMessage extends React.Component {
             })
         }
 
+        //Don't need to use this right now because keyboardHeight shoudn't be set back to zero when keyboard closes, otherwise the canvas will snap down
         // _keyboardDidHide(e) {
         //     this.setState({
         //         keyboardHeight: 0
@@ -87,7 +91,7 @@ class SendMessage extends React.Component {
 
         updateDirections() {
             this.setState({
-                directions: this.state.selectWords ? ' Text something here and hit send! ' : ' Update this layer by entering a search phrase and selecting an animation. '
+                directions: !this.state.selectNone ? (this.state.selectWords ? ' Text something here and hit send! ' : ' Update this layer by entering a search phrase and selecting an animation. ') : ' All done? Send this message! '
             })
         }
 
@@ -110,7 +114,8 @@ class SendMessage extends React.Component {
                     selectGiphyPng3Id: false,
                     selectGiphyPng4Id: false,
                     selectGiphyPng5Id: false,
-                    selectWords: false
+                    selectWords: false,
+                    selectNone: false
                 })
             }
             if (layer === 'png1') {
@@ -122,7 +127,8 @@ class SendMessage extends React.Component {
                     selectGiphyPng3Id: false,
                     selectGiphyPng4Id: false,
                     selectGiphyPng5Id: false,
-                    selectWords: false
+                    selectWords: false,
+                    selectNone: false
                 })
             }
             if (layer === 'png2') {
@@ -134,7 +140,8 @@ class SendMessage extends React.Component {
                     selectGiphyPng3Id: false,
                     selectGiphyPng4Id: false,
                     selectGiphyPng5Id: false,
-                    selectWords: false
+                    selectWords: false,
+                    selectNone: false
                 })
             }
             if (layer === 'png3') {
@@ -146,7 +153,8 @@ class SendMessage extends React.Component {
                     selectGiphyPng3Id: true,
                     selectGiphyPng4Id: false,
                     selectGiphyPng5Id: false,
-                    selectWords: false
+                    selectWords: false,
+                    selectNone: false
                 })
             }
             if (layer === 'png4') {
@@ -158,7 +166,8 @@ class SendMessage extends React.Component {
                     selectGiphyPng3Id: false,
                     selectGiphyPng4Id: true,
                     selectGiphyPng5Id: false,
-                    selectWords: false
+                    selectWords: false,
+                    selectNone: false
                 })
             }
             if (layer === 'png5') {
@@ -170,7 +179,8 @@ class SendMessage extends React.Component {
                     selectGiphyPng3Id: false,
                     selectGiphyPng4Id: false,
                     selectGiphyPng5Id: true,
-                    selectWords: false
+                    selectWords: false,
+                    selectNone: false
                 })
             }
             if (layer === 'words') {
@@ -182,27 +192,47 @@ class SendMessage extends React.Component {
                     selectGiphyPng3Id: false,
                     selectGiphyPng4Id: false,
                     selectGiphyPng5Id: false,
-                    selectWords: true
+                    selectWords: true,
+                    selectNone: false
+                })
+            }
+            if (layer === 'none') {
+                this.setState({
+                    giphySearchPhrase: '',
+                    selectGiphyCanvasId: false,
+                    selectGiphyPng1Id: false,
+                    selectGiphyPng2Id: false,
+                    selectGiphyPng3Id: false,
+                    selectGiphyPng4Id: false,
+                    selectGiphyPng5Id: false,
+                    selectWords: false,
+                    selectNone: true
                 })
             }
             setTimeout(() => this.updateDirections(), 0)
         }
 
         updateNewMessage(text, field) {
-            if (this.state.selectGiphyCanvasId) {
-                field = 'giphyCanvasId'
-            } else if (this.state.selectGiphyPng1Id) {
-                field = 'giphyPng1Id'
-            } else if (this.state.selectGiphyPng2Id) {
-                field = 'giphyPng2Id'
-            } else if (this.state.selectGiphyPng3Id) {
-                field = 'giphyPng3Id'
-            } else if (this.state.selectGiphyPng4Id) {
-                field = 'giphyPng4Id'
+            if (this.state.selectWords) {
+                field = 'words'
             } else if (this.state.selectGiphyPng5Id) {
                 field = 'giphyPng5Id'
-            } else if (this.state.selectWords) {
-                field = 'words'
+                this.setLayer('words')
+            } else if (this.state.selectGiphyPng4Id) {
+                field = 'giphyPng4Id'
+                this.setLayer('png5')
+            } else if (this.state.selectGiphyPng3Id) {
+                field = 'giphyPng3Id'
+                this.setLayer('png4')
+            } else if (this.state.selectGiphyPng2Id) {
+                field = 'giphyPng2Id'
+                this.setLayer('png3')
+            } else if (this.state.selectGiphyPng1Id) {
+                field = 'giphyPng1Id'
+                this.setLayer('png2')
+            } else if (this.state.selectGiphyCanvasId) {
+                field = 'giphyCanvasId'
+                this.setLayer('png1')
             }
             let newMessage = Object.assign({}, this.state.newMessage)
             newMessage[field] = text
@@ -211,13 +241,12 @@ class SendMessage extends React.Component {
                 subscreen: false
             })
             this.mainInput.focus()
-            //toggle to next layer here
         }
 
         cancel() {
             this.props.toggleCreateMessage()
             this.updateNewMessage('', 'toUser')
-            this.updateNewMessage('', 'message')
+            //this.updateNewMessage('', 'message')
             this.updateNewMessage('', 'giphyCanvasId')
             this.updateNewMessage('', 'giphyPng1Id')
             this.updateNewMessage('', 'giphyPng2Id')
@@ -277,7 +306,6 @@ class SendMessage extends React.Component {
     render() {
 
         return(
-
             <View style={styles.messageModal}>
 
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -304,7 +332,7 @@ class SendMessage extends React.Component {
 
                         <Video source={config.videos.waitingMp4} shouldPlay isLooping style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyCanvasId !== '') || (this.state.newMessage.giphyCanvasId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyCanvasId === '') ? 'flex' : 'none'}]} />
 
-                        <Image source={{uri: `https://media.giphy.com/media/${this.state.newMessage.giphyCanvasId}/giphy.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyCanvasId === '' ? 'none' : 'flex'}]}/>
+                        <Image source={{uri: `https://media.giphy.com/media/${this.state.newMessage.giphyCanvasId}/giphy-downsized.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyCanvasId === '' ? 'none' : 'flex'}]}/>
 
                         <View style={{position: 'absolute', zIndex: this.state.selectGiphyPng1Id ? 10 : 1, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectGiphyPng1Id} giphyPngId={this.state.newMessage.giphyPng1Id}/></View>
 
@@ -317,7 +345,6 @@ class SendMessage extends React.Component {
                         <View style={{position: 'absolute', zIndex: this.state.selectGiphyPng5Id ? 10 : 5, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectGiphyPng5Id} giphyPngId={this.state.newMessage.giphyPng5Id}/></View>
 
                         <View style={{position: 'absolute', zIndex: this.state.selectWords ? 10 : 6, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Words selected={this.state.selectWords} words={this.state.newMessage.words}/></View>
-
 
                         <FlatList
                             style={[styles.canvas, {display: !this.state.subscreen || this.state.giphySearchPhrase === '' || this.state.giphyArray === [] ? 'none' : 'flex'}]}
@@ -350,23 +377,22 @@ class SendMessage extends React.Component {
 
                         <TouchableOpacity onPress={() => this.setLayer('words')} activeOpacity={0.7} style={[styles.button, {flex: 1}]}><MaterialCommunityIcons style={{marginTop: -1}} name='format-text' color={this.state.newMessage.words === '' ? (this.state.selectWords ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectWords ? config.colors.selectingButton : config.colors.selectedButton)} size={28}/></TouchableOpacity>
 
+                        <TouchableOpacity onPress={() => this.setLayer(!this.state.selectNone ? 'none' : 'words')} activeOpacity={0.7} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -3}} name={this.state.selectNone ? 'lock' : 'unlock'} color={this.state.selectNone ? config.colors.toggleArranging : config.colors.toggleSearching} size={30}/></TouchableOpacity>
 
-
-                        <TouchableOpacity onPress={() => this.send()} activeOpacity={0.7} style={[styles.button, {flex: 1, marginLeft: 6, marginRight: 16}]}><FontAwesome style={{marginTop: -4}} name='send' color={config.colors.sendButton} size={22}/></TouchableOpacity>
-
+                        <TouchableOpacity onPress={() => this.send()} activeOpacity={0.7} style={[styles.button, {flex: 1, marginLeft: 4, marginRight: 16}]}><FontAwesome style={{marginTop: -4}} name='send' color={config.colors.sendButton} size={22}/></TouchableOpacity>
 
                     </View>
 
                     <TextInput
-                        placeholder={this.state.selectWords ? "Text something here..." : "Search phrase..."}
+                        placeholder={this.state.selectWords ? "Text something here..." : "Enter a search phrase..."}
                         placeholderTextColor={'rgba(0,0,0, .6)'}
                         ref={input => this.mainInput = input}
                         autoFocus={this.props.toUser === undefined ? false : true}
-                        style={[styles.inputs, {marginBottom: 5, paddingVertical: 5}]}
+                        style={[styles.inputs, {marginBottom: 5, paddingVertical: 5, opacity: this.state.selectNone ? 0 : .6}]}
                         multiline={this.state.selectWords ? true : false}
                         autoCapitalize={this.state.selectWords ? 'sentences' : 'none'}
-                        autoCorrect={this.state.selectWords ? true : false}
-                        spellCheck={this.state.selectWords ? true : false}
+                        autoCorrect={true}
+                        spellCheck={true}
                         maxLength={this.state.selectWords ? null : 46}
                         value={this.state.selectWords ? this.state.newMessage.words : this.state.giphySearchPhrase}
                         onChangeText={this.state.selectWords ? text => this.updateNewMessage(text, 'words') : text => this.searchGiphy(text)}
@@ -382,7 +408,7 @@ class SendMessage extends React.Component {
                         multiline={false}
                         value={this.state.newMessage.message}
                         onChangeText={text => this.updateNewMessage(text, 'message')}
-                    /> */}
+                    /> */ }
 
                 </Animated.View>
 
