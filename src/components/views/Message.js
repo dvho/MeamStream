@@ -64,7 +64,11 @@ class Message extends React.Component {
                         </View>
                     </View>
                     <View style={styles.bottomRow}>
-                        <Text style={styles.messageText}>{this.props.message.message}</Text>
+
+                        <Text style={styles.messageText}>{JSON.stringify(this.props.message)}</Text>
+                        {/*This is where you'll build your renderer for the beautiful message object that gets sent over*/}
+
+
                     </View>
                 </TouchableOpacity>
             </Animated.View>

@@ -7,7 +7,7 @@ const giphy = require('giphy-api')() //eventually apply for development API key 
 import utils from '../../utils'
 import config from '../../config'
 
-//TODO: 1) limit height of textInput for when it's on Words, 2) need to pass positionCoefficients for each 5 png layers and words layer, 3) need to build out parser for Message.js and MessageShort.js, 4) need to validate phone numbers instead of userName in Authenticate, 5) need to gain access to contacts, 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 9) need to add those png curtains to Authenticate.js
+//TODO: 3) need to build out parser for Message.js and MessageShort.js, 4) need to validate phone numbers instead of userName in Authenticate, 5) need to gain access to contacts, 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 9) need to add those png curtains to Authenticate.js
 
 
 class SendMessage extends React.Component {
@@ -26,16 +26,23 @@ class SendMessage extends React.Component {
                 //Instead of message here I'll have canvasChoice, sticker1Choice, sticker2Choice, textChoice, etc. along with a width coefficient prop and position props for each one using React Native PanResponder (https://medium.com/@leonardobrunolima/react-native-tips-using-animated-and-panresponder-components-to-interact-with-user-gestures-4620bf27b9e4). Then newMessage will be an object with toUser and dozens of other fields, some of which might be empty strings. The object will render dynamically in a flatlist with a MemeStream parser component.
                 giphyCanvasId: '',
                 giphyPng1Id: '',
+                giphyPng1Coords: {},
                 giphyPng2Id: '',
+                giphyPng2Coords: {},
                 giphyPng3Id: '',
+                giphyPng3Coords: {},
                 giphyPng4Id: '',
+                giphyPng4Coords: {},
                 giphyPng5Id: '',
-                words: ''
+                giphyPng5Coords: {},
+                words: '',
+                wordsCoords: {}
             },
             selectedLayer: 'giphyCanvasId'
         }
         this._keyboardDidShow = this._keyboardDidShow.bind(this)
         //this._keyboardDidHide = this._keyboardDidHide.bind(this)
+        this.updateCoords = this.updateCoords.bind(this)
     }
 
         componentDidMount() {
@@ -91,6 +98,37 @@ class SendMessage extends React.Component {
         updateRecipient(text, field) {
             let newMessage = Object.assign({}, this.state.newMessage)
             newMessage[field] = text
+            this.setState({
+                newMessage: newMessage,
+                subscreen: false
+            })
+        }
+
+        updateCoords(obj) {
+            let coords
+            if (this.state.selectedLayer === 'giphyCanvasId') {
+                return
+            }
+            if (this.state.selectedLayer === 'giphyPng1Id') {
+                coords = 'giphyPng1Coords'
+            }
+            if (this.state.selectedLayer === 'giphyPng2Id') {
+                coords = 'giphyPng2Coords'
+            }
+            if (this.state.selectedLayer === 'giphyPng3Id') {
+                coords = 'giphyPng3Coords'
+            }
+            if (this.state.selectedLayer === 'giphyPng4Id') {
+                coords = 'giphyPng4Coords'
+            }
+            if (this.state.selectedLayer === 'giphyPng5Id') {
+                coords = 'giphyPng5Coords'
+            }
+            if (this.state.selectedLayer === 'words') {
+                coords = 'wordsCoords'
+            }
+            let newMessage = Object.assign({}, this.state.newMessage)
+            newMessage[coords] = obj
             this.setState({
                 newMessage: newMessage,
                 subscreen: false
@@ -213,17 +251,17 @@ class SendMessage extends React.Component {
 
                         <Image source={{uri: `https://media2.giphy.com/media/${this.state.newMessage.giphyCanvasId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyCanvasId === '' ? 'none' : 'flex'}]}/>
 
-                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng1Id' ? 10 : 1, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng1Id'} giphyPngId={this.state.newMessage.giphyPng1Id}/></View>
+                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng1Id' ? 10 : 1, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng1Id'} giphyPngId={this.state.newMessage.giphyPng1Id} onRef={ref => (this.updateCoords = ref)} updateCoords={this.updateCoords.bind(this)}/></View>
 
-                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng2Id' ? 10 : 2, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng2Id'} giphyPngId={this.state.newMessage.giphyPng2Id}/></View>
+                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng2Id' ? 10 : 2, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng2Id'} giphyPngId={this.state.newMessage.giphyPng2Id} onRef={ref => (this.updateCoords = ref)} updateCoords={this.updateCoords.bind(this)}/></View>
 
-                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng3Id' ? 10 : 3, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng3Id'} giphyPngId={this.state.newMessage.giphyPng3Id}/></View>
+                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng3Id' ? 10 : 3, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng3Id'} giphyPngId={this.state.newMessage.giphyPng3Id} onRef={ref => (this.updateCoords = ref)} updateCoords={this.updateCoords.bind(this)}/></View>
 
-                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng4Id' ? 10 : 4, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng4Id'} giphyPngId={this.state.newMessage.giphyPng4Id}/></View>
+                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng4Id' ? 10 : 4, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng4Id'} giphyPngId={this.state.newMessage.giphyPng4Id} onRef={ref => (this.updateCoords = ref)} updateCoords={this.updateCoords.bind(this)}/></View>
 
-                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng5Id' ? 10 : 5, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng5Id'} giphyPngId={this.state.newMessage.giphyPng5Id}/></View>
+                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng5Id' ? 10 : 5, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng5Id'} giphyPngId={this.state.newMessage.giphyPng5Id} onRef={ref => (this.updateCoords = ref)} updateCoords={this.updateCoords.bind(this)}/></View>
 
-                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'words' ? 10 : 6, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Words selected={this.state.selectedLayer === 'words'} words={this.state.newMessage.words}/></View>
+                        <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'words' ? 10 : 6, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Words selected={this.state.selectedLayer === 'words'} words={this.state.newMessage.words} onRef={ref => (this.updateCoords = ref)} updateCoords={this.updateCoords.bind(this)}/></View>
 
                         <FlatList
                             style={[styles.canvas, {display: !this.state.subscreen || this.state.giphySearchPhrase === '' || this.state.giphyArray === [] ? 'none' : 'flex'}]}
@@ -246,7 +284,9 @@ class SendMessage extends React.Component {
 
                             <TouchableOpacity onPress={() => this.setState({subscreen: !this.state.subscreen})} activeOpacity={1} style={[styles.button, {flex: 1.8}]}><MaterialCommunityIcons style={[{marginTop: -13}, !this.state.subscreen ? {transform: [{rotateY: '180deg'}]} : null]} color={!this.state.subscreen ? config.colors.toggleArranging : config.colors.toggleSearching} name='toggle-switch' size={52}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => this.setLayerAndDirections('backward')} activeOpacity={0} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4}} name='backward' color={config.colors.scrollButton} size={22}/></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setLayerAndDirections('backward')} activeOpacity={0} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4, marginRight: 4}} name='backward' color={config.colors.scrollButton} size={22}/></TouchableOpacity>
+
+                            <TouchableOpacity onPress={() => this.setLayerAndDirections('forward')} activeOpacity={0} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4, marginLeft: 4}} name='forward' color={config.colors.scrollButton} size={22}/></TouchableOpacity>
 
                             <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyCanvasId')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4}} name='file-movie-o' color={this.state.newMessage.giphyCanvasId === '' ? (this.state.selectedLayer === 'giphyCanvasId' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyCanvasId' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
@@ -261,8 +301,6 @@ class SendMessage extends React.Component {
                             <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng5Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-5' color={this.state.newMessage.giphyPng5Id === '' ? (this.state.selectedLayer === 'giphyPng5Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng5Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
                             <TouchableOpacity onPress={() => this.setLayerAndDirections('words')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialCommunityIcons style={{marginTop: -1}} name='format-text' color={this.state.newMessage.words === '' ? (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.selectedButton)} size={28}/></TouchableOpacity>
-
-                            <TouchableOpacity onPress={() => this.setLayerAndDirections('forward')} activeOpacity={0} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4}} name='forward' color={config.colors.scrollButton} size={22}/></TouchableOpacity>
 
                             <TouchableOpacity onPress={() => this.send()} activeOpacity={0} style={[styles.button, {flex: 1, marginLeft: 2, marginRight: 6}]}><FontAwesome style={{marginTop: -4}} name='send' color={config.colors.sendButton} size={22}/></TouchableOpacity>
 

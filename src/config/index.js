@@ -22,6 +22,10 @@ export default {
         scrollButton: 'rgba(182,255,182,.7)'
     },
     screenWidth: Dimensions.get('window').width,
+    borderRadii: Dimensions.get('window').width * .021875,
+    pngWidth: Dimensions.get('window').width / 4,
+    canvasWidth: Dimensions.get('window').width - 10,
+    canvasHeight: Dimensions.get('window').width * .7 - 10,
     headerHeight: Header.HEIGHT,
     images: {
         theaterPng: require('../assets/theater.png'),
