@@ -15,12 +15,12 @@ class Png extends React.Component {
         const panResponder = PanResponder.create({
            onStartShouldSetPanResponder: () => true,
            onPanResponderMove: (event, gesture) => {
-               if (((gesture.moveX - halfPngWidth) > 0) && ((gesture.moveX + halfPngWidth) < config.canvasWidth) && ((gesture.moveY - config.headerHeight - 42 - halfPngWidth) > 0) && (gesture.moveY < ((config.canvasHeight) + 42 + config.headerHeight - halfPngWidth))) {
+               if (((gesture.moveX - halfPngWidth - 5) > 0) && ((gesture.moveX + halfPngWidth + 5) < config.canvasWidth) && ((gesture.moveY - config.headerHeight - 42 - halfPngWidth) > 0) && ((gesture.moveY + halfPngWidth) < (config.canvasHeight + 42 + config.headerHeight))) {
                    position.setValue({ x: gesture.dx, y: gesture.dy })
                    this.setState({
                        coords: {
-                           x: Math.floor(gesture.moveX),
-                           y: Math.floor(gesture.moveY - config.headerHeight - 42 - halfPngWidth)
+                           x: gesture.moveX / config.canvasWidth,
+                           y: (gesture.moveY - config.headerHeight - 42) / config.canvasHeight
                        }
                    })
 
@@ -32,7 +32,7 @@ class Png extends React.Component {
            },
            onPanResponderRelease: (event, {vx, vy}) => {
                this.state.position.flattenOffset()
-               this.props.updateCoords(this.state.coords) //If you don't call this function within onPanResponderRelease (i.e. if you call it in your render function above return) you'll get the error from SendMessage "Invariant Violation: Maximum update depth exceeded. This can happen when a component repeatedly calls setState..." because it will be calling this.props.updateCoords incessantly which is, in turn, calling setState. For some reason it doesn't like setState being nested in a function that's being called from another component.
+               setTimeout(()=>this.props.updateCoords(this.state.coords), 0) //If you don't call this function within onPanResponderRelease (i.e. if you call it in your render function above return) you'll get the error from SendMessage "Invariant Violation: Maximum update depth exceeded. This can happen when a component repeatedly calls setState..." because it will be calling this.props.updateCoords incessantly which is, in turn, calling setState. For some reason it doesn't like setState being nested in a function that's being called from another component. Also, if you don't break the chain with a setTimeout it'll update with coordinates from the release before.
            }
         })
         this.state = {

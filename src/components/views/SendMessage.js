@@ -63,7 +63,7 @@ class SendMessage extends React.Component {
                 this._keyboardDidHide,
             )
             if (this.props.toUser !== undefined) {
-                this.updateNewMessage(this.props.toUser, 'toUser')
+                this.updateRecipient(this.props.toUser, 'toUser')
             }
         }
 
@@ -221,6 +221,10 @@ class SendMessage extends React.Component {
         }
 
     render() {
+
+        //console.log(this.state.subscreen)
+        console.log(this.state.newMessage.giphyCanvasId)
+        //console.log(this.state.giphySearchPhrase)
 
         return(
             <View style={styles.messageModal}>
