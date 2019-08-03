@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { TimeStamp } from './'
 import config from '../../config'
 
+//Important to note that, in rendering the message object here, StyleSheet.hairlineWidth actually renders differently according to device. I've estimated it at .5 px, thereby displacing the screen width by an extra 1px, but if it ends up causing a rendering problem on different devices I'll have to substitute it for a 1px width of a very light gray.
 
 class Message extends React.Component {
     constructor() {
@@ -55,7 +56,7 @@ class Message extends React.Component {
 
                             { senderImage !== '' ? <Image
                                 source={{uri: senderImage}}
-                                style={styles.profile}/> : <MaterialCommunityIcons name='tag-faces' size={40} color="rgb(250,84,33)" style={{transform: [{rotateY: '180deg'}]}}/> }
+                                style={styles.profilePic}/> : <MaterialCommunityIcons name='tag-faces' size={40} color="rgb(250,84,33)" style={{transform: [{rotateY: '180deg'}]}}/> }
 
                             <Text style={styles.username}>{this.state.fromData.username}</Text>
                         </View>
@@ -65,9 +66,20 @@ class Message extends React.Component {
                     </View>
                     <View style={styles.bottomRow}>
 
-                        <Text style={styles.messageText}>{JSON.stringify(this.props.message)}</Text>
+                        {/*<Text style={styles.messageText}>{JSON.stringify(this.props.message)}</Text> */}
                         {/*This is where you'll build your renderer for the beautiful message object that gets sent over*/}
+                        {/* Image width = config.screenWidth - 60, height = config.screenWidth - 60 * .7 */}
+                        {this.props.message.giphyCanvasId !== '' ? <Image source={{uri: `https://media2.giphy.com/media/${this.props.message.giphyCanvasId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={{width: Math.round(config.screenWidth - 61), height: Math.round((config.screenWidth - 61) * .7), borderRadius: config.borderRadii}}></Image> : null}
 
+                        {this.props.message.giphyPng1Id !== '' ? <Image source={{uri: `https://media2.giphy.com/media/${this.props.message.giphyPng1Id}/100.gif`}} resizeMode='contain' resizeMethod='scale' style={{position: 'absolute', top: Math.round((config.screenWidth - 61) * .7 * this.props.message.giphyPng1Coords.y), left: Math.round((config.screenWidth - 61) * this.props.message.giphyPng1Coords.x), width: Math.round(config.screenWidth - 61 + 61/4)/4, height: Math.round((config.screenWidth - 61 + 61/4)/4)}}></Image> : null}
+
+                        {this.props.message.giphyPng2Id !== '' ? <Image source={{uri: `https://media2.giphy.com/media/${this.props.message.giphyPng2Id}/100.gif`}} resizeMode='contain' resizeMethod='scale' style={{position: 'absolute', top: Math.round((config.screenWidth - 61) * .7 * this.props.message.giphyPng2Coords.y), left: Math.round((config.screenWidth - 61) * this.props.message.giphyPng2Coords.x), width: Math.round(config.screenWidth - 61 + 61/4)/4, height: Math.round((config.screenWidth - 61 + 61/4)/4)}}></Image> : null}
+
+                        {this.props.message.giphyPng3Id !== '' ? <Image source={{uri: `https://media2.giphy.com/media/${this.props.message.giphyPng3Id}/100.gif`}} resizeMode='contain' resizeMethod='scale' style={{position: 'absolute', top: Math.round((config.screenWidth - 61) * .7 * this.props.message.giphyPng3Coords.y), left: Math.round((config.screenWidth - 61) * this.props.message.giphyPng3Coords.x), width: Math.round(config.screenWidth - 61 + 61/4)/4, height: Math.round((config.screenWidth - 61 + 61/4)/4)}}></Image> : null}
+
+                        {this.props.message.giphyPng4Id !== '' ? <Image source={{uri: `https://media2.giphy.com/media/${this.props.message.giphyPng4Id}/100.gif`}} resizeMode='contain' resizeMethod='scale' style={{position: 'absolute', top: Math.round((config.screenWidth - 61) * .7 * this.props.message.giphyPng4Coords.y), left: Math.round((config.screenWidth - 61) * this.props.message.giphyPng4Coords.x), width: Math.round(config.screenWidth - 61 + 61/4)/4, height: Math.round((config.screenWidth - 61 + 61/4)/4)}}></Image> : null}
+
+                        {this.props.message.giphyPng5Id !== '' ? <Image source={{uri: `https://media2.giphy.com/media/${this.props.message.giphyPng5Id}/100.gif`}} resizeMode='contain' resizeMethod='scale' style={{position: 'absolute', top: Math.round((config.screenWidth - 61) * .7 * this.props.message.giphyPng5Coords.y), left: Math.round((config.screenWidth - 61) * this.props.message.giphyPng5Coords.x), width: Math.round(config.screenWidth - 61 + 61/4)/4, height: Math.round((config.screenWidth - 61 + 61/4)/4)}}></Image> : null}
 
                     </View>
                 </TouchableOpacity>
@@ -83,13 +95,15 @@ const styles = StyleSheet.create({
             marginHorizontal: 15,
             marginBottom: 15,
             padding: 15,
-            borderRadius: 10,
+            borderRadius: config.borderRadii,
             borderColor: 'rgb(225, 225, 225)',
             backgroundColor: 'rgb(255, 255, 255)'
         },
         bottomRow: {
             flexDirection: 'row',
-            marginTop: 20
+            marginTop: 20,
+            backgroundColor: 'rgb(0,0,0)',
+            borderRadius: config.borderRadii
         },
         topRow: {
             flexDirection: 'row'
@@ -105,7 +119,7 @@ const styles = StyleSheet.create({
             justifyContent: 'center',
             alignItems: 'flex-end'
         },
-        profile: {
+        profilePic: {
             width: 40,
             height: 40,
             borderRadius: 20

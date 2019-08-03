@@ -222,10 +222,6 @@ class SendMessage extends React.Component {
 
     render() {
 
-        //console.log(this.state.subscreen)
-        console.log(this.state.newMessage.giphyCanvasId)
-        //console.log(this.state.giphySearchPhrase)
-
         return(
             <View style={styles.messageModal}>
 

@@ -9,7 +9,6 @@ class Home extends React.Component {
 
     static navigationOptions = ({ navigation }) => {
         const params = navigation.state.params || {}
-        //console.log(params)
         return {
             title: 'Messages',
             headerStyle: {

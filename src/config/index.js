@@ -24,8 +24,8 @@ export default {
     screenWidth: Dimensions.get('window').width,
     borderRadii: Dimensions.get('window').width * .021875,
     pngWidth: Dimensions.get('window').width / 4,
-    canvasWidth: Dimensions.get('window').width - 10,
-    canvasHeight: Dimensions.get('window').width * .7 - 10,
+    canvasWidth: Dimensions.get('window').width - 11,
+    canvasHeight: (Dimensions.get('window').width - 11) * .7,
     headerHeight: Header.HEIGHT,
     images: {
         theaterPng: require('../assets/theater.png'),
