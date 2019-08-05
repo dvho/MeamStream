@@ -8,6 +8,7 @@ import { FontAwesome } from '@expo/vector-icons'
 //https://stackoverflow.com/questions/42014379/panresponder-snaps-animated-view-back-to-original-position-on-second-drag
 //https://stackoverflow.com/questions/41638032/how-to-pass-data-between-child-and-parent-in-react-native
 //I wanted to have Pngs fade out when dragged out of range and fade back into the center of the canvas but https://facebook.github.io/react-native/docs/animations#caveats
+//TODO: Need to make coords update set upon componentDidMount otherwise it'll pass undefined if user doesn't drag content
 
 class Png extends React.Component {
     constructor(props) {
@@ -17,21 +18,29 @@ class Png extends React.Component {
            onStartShouldSetPanResponder: () => true,
            onPanResponderMove: (event, gesture) => {
                if (((gesture.moveX - event.nativeEvent.locationX - 11) > 0) && ((gesture.moveX - event.nativeEvent.locationX + config.pngWidth - 11) < config.canvasWidth ) && ((gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 41) > 0) && ((gesture.moveY - event.nativeEvent.locationY + config.pngWidth - 41) < (config.canvasHeight + config.headerHeight))) {
-                   setTimeout(() => position.setValue({ x: gesture.dx, y: gesture.dy }), 0) //draggable content will get lost unless position.setValue is broken out into a setTimeout.
-                   this.setState({
-                       coords: {
-                           x: (gesture.moveX - event.nativeEvent.locationX - 11) / config.canvasWidth,
-                           y: (gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 41) / config.canvasHeight
-                       },
-                       outOfRange: false
-                   })
-               } else { //else setTimeout later than the one above that pulls the dragable content back just before it went out of range.
+                   let locationX = event.nativeEvent.locationX
+                   let locationY = event.nativeEvent.locationY
+                   setTimeout(() => {
+                       position.setValue({ x: gesture.dx, y: gesture.dy })
+                           this.setState({
+                               coords: {
+                                   x: (gesture.moveX - locationX - 11) / config.canvasWidth,
+                                   y: (gesture.moveY - locationY - config.headerHeight - 41) / config.canvasHeight
+                               },
+                               outOfRange: false
+                           })
+                   }, 0) //Draggable content will get lost unless position.setValue is broken out into a setTimeout...
+
+               } else { //...and state will be one step behind position.setValue unless broken into its own setTimeout that comes later.
                    this.setState({
                        outOfRange: true
                    })
                    setTimeout(() => {
-                       position.setValue({ x: 0, y: 0 })
-                       this.setState({outOfRange: false})
+                       position.setValue({ x: 0, y: config.headerHeight + 41 })
+                       this.setState({
+                           outOfRange: false,
+                           coords: {x:0.356112637362637, y:0.3178963893249608},
+                       })
                    }, 1000)
                }
            },
@@ -51,6 +60,7 @@ class Png extends React.Component {
             outOfRange: false
         }
     }
+
 
    render() {
        let handlers = this.state.panResponder.panHandlers
