@@ -7,7 +7,7 @@ const giphy = require('giphy-api')() //eventually apply for development API key 
 import utils from '../../utils'
 import config from '../../config'
 
-//TODO: 3) need to build out parser for Message.js and MessageShort.js, 4) need to validate phone numbers instead of userName in Authenticate, 5) need to gain access to contacts, 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 9) need to add those png curtains to Authenticate.js
+//TODO: 3) need to build out parser for MessageShort.js, 4) need to validate phone numbers instead of userName in Authenticate, 5) need to gain access to contacts, 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 9) need to add those png curtains to Authenticate.js
 
 
 class SendMessage extends React.Component {
@@ -22,8 +22,7 @@ class SendMessage extends React.Component {
             giphyArray: [],
             newMessage: {
                 toUser: '',
-                //message: '',
-                //Instead of message here I'll have canvasChoice, sticker1Choice, sticker2Choice, textChoice, etc. along with a width coefficient prop and position props for each one using React Native PanResponder (https://medium.com/@leonardobrunolima/react-native-tips-using-animated-and-panresponder-components-to-interact-with-user-gestures-4620bf27b9e4). Then newMessage will be an object with toUser and dozens of other fields, some of which might be empty strings. The object will render dynamically in a flatlist with a MemeStream parser component.
+                message: '',
                 giphyCanvasId: '',
                 giphyPng1Id: '',
                 giphyPng1Coords: {x:0.37362637362637363, y:0.3178963893249608},
@@ -91,7 +90,7 @@ class SendMessage extends React.Component {
 
         updateDirections() {
             this.setState({
-                directions: this.state.selectedLayer === 'words' ? ' Text something here and hit send! ' : ' Update this layer by entering a search phrase and selecting an animation. '
+                directions: this.state.selectedLayer === 'message' ? '' : (this.state.selectedLayer === 'words' ? 'Type something here. Make sure your other layers are where you want them and hit send!' : 'Update this layer by entering a search phrase and selecting an animation.')
             })
         }
 
@@ -163,7 +162,7 @@ class SendMessage extends React.Component {
         cancel() {
             this.props.toggleCreateMessage()
             this.updateNewMessage('', 'toUser')
-            //this.updateNewMessage('', 'message')
+            this.updateNewMessage('', 'message')
             this.updateNewMessage('', 'giphyCanvasId')
             this.updateNewMessage('', 'giphyPng1Id')
             this.updateNewMessage('', 'giphyPng2Id')
@@ -243,7 +242,7 @@ class SendMessage extends React.Component {
                     />
                 </View>
 
-                <Animated.View style={{flexDirection: 'column', top: 0, opacity: this.state.fadeInWorkArea}}>
+                <Animated.View style={{display: this.state.selectedLayer === 'message' ? 'none' : 'flex', flexDirection: 'column', top: 0, opacity: this.state.fadeInWorkArea}}>
 
                     <KeyboardAvoidingView behavior='padding' style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
 
@@ -282,32 +281,32 @@ class SendMessage extends React.Component {
 
                             <TouchableOpacity onPress={() => this.cancel()} activeOpacity={0} style={[styles.button, {flex: 1, marginLeft: 6}]}><MaterialIcons style={{marginTop: -4}} name='cancel' color={config.colors.dormantButton} size={26}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => this.setState({subscreen: !this.state.subscreen})} activeOpacity={1} style={[styles.button, {flex: 1.8}]}><MaterialCommunityIcons style={[{marginTop: -13}, !this.state.subscreen ? {transform: [{rotateY: '180deg'}]} : null]} color={!this.state.subscreen ? config.colors.toggleArranging : config.colors.toggleSearching} name='toggle-switch' size={52}/></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setState({subscreen: !this.state.subscreen})} activeOpacity={1} style={[styles.button, {flex: 1.8}]}><MaterialCommunityIcons style={[{marginTop: -13, opacity: this.state.selectedLayer === 'message' ? 0 : 1}, !this.state.subscreen ? {transform: [{rotateY: '180deg'}]} : null]} color={!this.state.subscreen ? config.colors.toggleArranging : config.colors.toggleSearching} name='toggle-switch' size={52}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => this.setLayerAndDirections('backward')} activeOpacity={0} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4, marginRight: 4}} name='backward' color={config.colors.scrollButton} size={22}/></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setLayerAndDirections('backward')} activeOpacity={0} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4, marginRight: 4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='backward' color={config.colors.scrollButton} size={22}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => this.setLayerAndDirections('forward')} activeOpacity={0} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4, marginLeft: 4}} name='forward' color={config.colors.scrollButton} size={22}/></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setLayerAndDirections('forward')} activeOpacity={0} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4, marginLeft: 4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='forward' color={config.colors.scrollButton} size={22}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyCanvasId')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4}} name='file-movie-o' color={this.state.newMessage.giphyCanvasId === '' ? (this.state.selectedLayer === 'giphyCanvasId' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyCanvasId' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyCanvasId')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='file-movie-o' color={this.state.newMessage.giphyCanvasId === '' ? (this.state.selectedLayer === 'giphyCanvasId' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyCanvasId' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng1Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-1' color={this.state.newMessage.giphyPng1Id === '' ? (this.state.selectedLayer === 'giphyPng1Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng1Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng1Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='filter-1' color={this.state.newMessage.giphyPng1Id === '' ? (this.state.selectedLayer === 'giphyPng1Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng1Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng2Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-2' color={this.state.newMessage.giphyPng2Id === '' ? (this.state.selectedLayer === 'giphyPng2Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng2Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng2Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='filter-2' color={this.state.newMessage.giphyPng2Id === '' ? (this.state.selectedLayer === 'giphyPng2Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng2Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng3Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-3' color={this.state.newMessage.giphyPng3Id === '' ? (this.state.selectedLayer === 'giphyPng3Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng3Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng3Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='filter-3' color={this.state.newMessage.giphyPng3Id === '' ? (this.state.selectedLayer === 'giphyPng3Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng3Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng4Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-4' color={this.state.newMessage.giphyPng4Id === '' ? (this.state.selectedLayer === 'giphyPng4Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng4Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng4Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='filter-4' color={this.state.newMessage.giphyPng4Id === '' ? (this.state.selectedLayer === 'giphyPng4Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng4Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng5Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4}} name='filter-5' color={this.state.newMessage.giphyPng5Id === '' ? (this.state.selectedLayer === 'giphyPng5Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng5Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng5Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='filter-5' color={this.state.newMessage.giphyPng5Id === '' ? (this.state.selectedLayer === 'giphyPng5Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng5Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => this.setLayerAndDirections('words')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialCommunityIcons style={{marginTop: -1}} name='format-text' color={this.state.newMessage.words === '' ? (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.selectedButton)} size={28}/></TouchableOpacity>
+                            <TouchableOpacity onPress={(this.state.newMessage.giphyCanvasId === '' && this.state.newMessage.giphyPng1Id === '' && this.state.newMessage.giphyPng2Id === '' && this.state.newMessage.giphyPng3Id === '' && this.state.newMessage.giphyPng4Id === '' && this.state.newMessage.giphyPng5Id === '') ? () => this.setState({selectedLayer: 'message'}) : () => this.setLayerAndDirections('words')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialCommunityIcons style={{marginTop: -1, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='format-text' color={this.state.newMessage.words === '' ? (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.selectedButton)} size={28}/></TouchableOpacity>
 
                             <TouchableOpacity onPress={() => this.send()} activeOpacity={0} style={[styles.button, {flex: 1, marginLeft: 2, marginRight: 6}]}><FontAwesome style={{marginTop: -4}} name='send' color={config.colors.sendButton} size={22}/></TouchableOpacity>
 
                         </View>
 
                         <TextInput
-                            placeholder={this.state.selectedLayer === 'words' ? "Text something here..." : "Enter a search phrase..."}
+                            placeholder={this.state.selectedLayer === 'message' ? 'Regular text message' : (this.state.selectedLayer === 'words' ? "Type something here..." : "Enter a search phrase...")}
                             placeholderTextColor={'rgba(0,0,0, .6)'}
                             ref={input => this.mainInput = input}
                             autoFocus={this.props.toUser === undefined ? false : true}
@@ -317,15 +316,15 @@ class SendMessage extends React.Component {
                             autoCorrect={true}
                             spellCheck={true}
                             maxLength={this.state.selectedLayer === 'words' ? null : 46}
-                            value={this.state.selectedLayer === 'words' ? this.state.newMessage.words : this.state.giphySearchPhrase}
-                            onChangeText={this.state.selectedLayer === 'words' ? text => this.updateNewMessage(text, 'words') : text => this.searchGiphy(text)}
+                            value={this.state.selectedLayer === 'message' ? this.state.newMessage.message : (this.state.selectedLayer === 'words' ? this.state.newMessage.words : this.state.giphySearchPhrase)}
+                            onChangeText={this.state.selectedLayer === 'message' ? text => this.updateNewMessage(text, 'message') : (this.state.selectedLayer === 'words' ? text => this.updateNewMessage(text, 'words') : text => this.searchGiphy(text))}
                             onBlur={()=>this.updateDirections()}
                             returnKeyType={this.state.selectedLayer === 'words' ? null : 'next'}
                         />
                 </Animated.View>
 
                 <View style={{position: 'absolute', bottom: 0, height: this.state.keyboardHeight, width: 100 + '%', display: 'flex', alignItems: 'center'}}>
-                        <Text style={{textAlign: 'center', color: 'rgb(215,215,215)', fontSize: 20, fontWeight: 'bold', letterSpacing: .5}}>{this.state.directions}</Text>
+                        <Text style={{textAlign: 'center', paddingHorizontal: 10, color: 'rgb(215,215,215)', fontSize: 20, fontWeight: 'bold', letterSpacing: .5}}>{this.state.directions}</Text>
                 </View>
 
             </View>
