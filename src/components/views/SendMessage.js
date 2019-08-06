@@ -242,6 +242,8 @@ class SendMessage extends React.Component {
                     />
                 </View>
 
+                {/* Need to put the old message block here with a conditional ternary display statement as to whether or not this.state.selectedLayer === 'message' */}
+                {/* Need to change those opacity: 0 to visibility hidden, because the buttons are still active and causing problems */}
                 <Animated.View style={{display: this.state.selectedLayer === 'message' ? 'none' : 'flex', flexDirection: 'column', top: 0, opacity: this.state.fadeInWorkArea}}>
 
                     <KeyboardAvoidingView behavior='padding' style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
@@ -299,7 +301,7 @@ class SendMessage extends React.Component {
 
                             <TouchableOpacity onPress={() => this.setLayerAndDirections('giphyPng5Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='filter-5' color={this.state.newMessage.giphyPng5Id === '' ? (this.state.selectedLayer === 'giphyPng5Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng5Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={(this.state.newMessage.giphyCanvasId === '' && this.state.newMessage.giphyPng1Id === '' && this.state.newMessage.giphyPng2Id === '' && this.state.newMessage.giphyPng3Id === '' && this.state.newMessage.giphyPng4Id === '' && this.state.newMessage.giphyPng5Id === '') ? () => this.setState({selectedLayer: 'message'}) : () => this.setLayerAndDirections('words')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialCommunityIcons style={{marginTop: -1, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='format-text' color={this.state.newMessage.words === '' ? (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.selectedButton)} size={28}/></TouchableOpacity>
+                            <TouchableOpacity onPress={(this.state.newMessage.giphyCanvasId === '' && this.state.newMessage.giphyPng1Id === '' && this.state.newMessage.giphyPng2Id === '' && this.state.newMessage.giphyPng3Id === '' && this.state.newMessage.giphyPng4Id === '' && this.state.newMessage.giphyPng5Id === '') ? () => {this.setState({selectedLayer: 'message'}); this.setLayerAndDirections('message')} : () => this.setLayerAndDirections('words')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialCommunityIcons style={{marginTop: -1, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='format-text' color={this.state.newMessage.words === '' ? (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.selectedButton)} size={28}/></TouchableOpacity>
 
                             <TouchableOpacity onPress={() => this.send()} activeOpacity={0} style={[styles.button, {flex: 1, marginLeft: 2, marginRight: 6}]}><FontAwesome style={{marginTop: -4}} name='send' color={config.colors.sendButton} size={22}/></TouchableOpacity>
 
@@ -311,15 +313,15 @@ class SendMessage extends React.Component {
                             ref={input => this.mainInput = input}
                             autoFocus={this.props.toUser === undefined ? false : true}
                             style={[styles.inputs, {marginBottom: 5, opacity: .6}]}
-                            multiline={this.state.selectedLayer === 'words' ? true : false}
-                            autoCapitalize={this.state.selectedLayer === 'words' ? 'sentences' : 'none'}
+                            multiline={this.state.selectedLayer === 'message' ? true : (this.state.selectedLayer === 'words' ? true : false)}
+                            autoCapitalize={this.state.selectedLayer === 'message' ? 'sentences' : (this.state.selectedLayer === 'words' ? 'sentences' : 'none')}
                             autoCorrect={true}
                             spellCheck={true}
-                            maxLength={this.state.selectedLayer === 'words' ? null : 46}
+                            maxLength={this.state.selectedLayer === 'message' ? null : (this.state.selectedLayer === 'words' ? null : 46)}
                             value={this.state.selectedLayer === 'message' ? this.state.newMessage.message : (this.state.selectedLayer === 'words' ? this.state.newMessage.words : this.state.giphySearchPhrase)}
                             onChangeText={this.state.selectedLayer === 'message' ? text => this.updateNewMessage(text, 'message') : (this.state.selectedLayer === 'words' ? text => this.updateNewMessage(text, 'words') : text => this.searchGiphy(text))}
                             onBlur={()=>this.updateDirections()}
-                            returnKeyType={this.state.selectedLayer === 'words' ? null : 'next'}
+                            returnKeyType={this.state.selectedLayer === 'message' ? null : (this.state.selectedLayer === 'words' ? null : 'next')}
                         />
                 </Animated.View>
 
