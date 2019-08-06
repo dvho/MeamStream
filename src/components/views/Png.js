@@ -33,13 +33,13 @@ class Png extends React.Component {
 
                } else { //...and state will be one step behind position.setValue unless broken into its own setTimeout that comes later.
                    this.setState({
-                       outOfRange: true
+                       outOfRange: true,
+                       coords: {x:0.37362637362637363, y:0.3178963893249608}
                    })
                    setTimeout(() => {
-                       position.setValue({ x: 0, y: config.headerHeight + 41 })
+                       position.setValue({ x: 0, y: 0})
                        this.setState({
-                           outOfRange: false,
-                           coords: {x:0.356112637362637, y:0.3178963893249608},
+                           outOfRange: false
                        })
                    }, 1000)
                }
@@ -63,6 +63,7 @@ class Png extends React.Component {
 
 
    render() {
+       console.log(this.state.coords)
        let handlers = this.state.panResponder.panHandlers
        return (
          <Animated.View style={this.state.position.getLayout()} {...handlers}>
