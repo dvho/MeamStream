@@ -67,7 +67,13 @@ class Message extends React.Component {
 
                         {/*Put a ternary statement on the following view that looks to see if this.props.message.message exists. If so, display the old version's message block, else display the below. */}
 
-                    <View style={styles.bottomRow}>
+                    { this.props.message.message !== '' ? <View style={[styles.bottomRow, {backgroundColor: 'rgb(255,255,255)'}]}>
+                        <Text style={styles.messageText}>{this.props.message.message}</Text>
+                    </View>
+
+                    :
+
+                    <View style={[styles.bottomRow, {backgroundColor: 'rgb(0,0,0)'}]}>
 
                         {this.props.message.giphyCanvasId !== '' ? <Image source={{uri: `https://media2.giphy.com/media/${this.props.message.giphyCanvasId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={{width: Math.floor(config.screenWidth - 61), height: Math.floor((config.screenWidth - 61) * .7), borderRadius: config.borderRadii}}></Image> : <View style={{width: Math.floor(config.screenWidth - 61), height: Math.floor((config.screenWidth - 61) * .7), borderRadius: config.borderRadii, backgroundColor: 'rgb(0,0,0)'}}></View>}
 
@@ -87,8 +93,8 @@ class Message extends React.Component {
 
                         {this.props.message.words !== '' && this.props.message.wordsCoords.x === -0.01 ? <View style={{position: 'absolute', width: 100 + '%', height: 100 + '%', justifyContent: 'center'}}><Text style={{textAlign: 'center', color: 'rgb(215,215,215)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: 27, fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.message.words}</Text></View> : null}
 
-                    </View>
-                    
+                    </View> }
+
                 </TouchableOpacity>
             </Animated.View>
         )
@@ -109,7 +115,6 @@ const styles = StyleSheet.create({
         bottomRow: {
             flexDirection: 'row',
             marginTop: 20,
-            backgroundColor: 'rgb(0,0,0)',
             borderRadius: config.borderRadii
         },
         topRow: {
