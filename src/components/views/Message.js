@@ -65,7 +65,6 @@ class Message extends React.Component {
                         </View>
                     </View>
 
-                        {/*Put a ternary statement on the following view that looks to see if this.props.message.message exists. If so, display the old version's message block, else display the below. */}
 
                     { this.props.message.message !== '' ? <View style={[styles.bottomRow, {backgroundColor: 'rgb(255,255,255)'}]}>
                         <Text style={styles.messageText}>{this.props.message.message}</Text>
@@ -75,7 +74,7 @@ class Message extends React.Component {
 
                     <View style={[styles.bottomRow, {backgroundColor: 'rgb(0,0,0)'}]}>
 
-                        {this.props.message.giphyCanvasId !== '' ? <Image source={{uri: `https://media2.giphy.com/media/${this.props.message.giphyCanvasId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={{width: Math.floor(config.screenWidth - 61), height: Math.floor((config.screenWidth - 61) * .7), borderRadius: config.borderRadii}}></Image> : <View style={{width: Math.floor(config.screenWidth - 61), height: Math.floor((config.screenWidth - 61) * .7), borderRadius: config.borderRadii, backgroundColor: 'rgb(0,0,0)'}}></View>}
+                        {this.props.message.giphyMainId !== '' ? <Image source={{uri: `https://media2.giphy.com/media/${this.props.message.giphyMainId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={{width: Math.floor(config.screenWidth - 61), height: Math.floor((config.screenWidth - 61) * .7), borderRadius: config.borderRadii}}></Image> : <View style={{width: Math.floor(config.screenWidth - 61), height: Math.floor((config.screenWidth - 61) * .7), borderRadius: config.borderRadii, backgroundColor: 'rgb(0,0,0)'}}></View>}
 
                         {this.props.message.giphyPng1Id !== '' ? <Image source={{uri: `https://media2.giphy.com/media/${this.props.message.giphyPng1Id}/100.gif`}} resizeMode='contain' resizeMethod='scale' style={{position: 'absolute', top: Math.floor((config.screenWidth - 62) * .7 * this.props.message.giphyPng1Coords.y), left: Math.floor((config.screenWidth - 62) * this.props.message.giphyPng1Coords.x), width: Math.floor(config.screenWidth - 61 + 61/4)/4, height: Math.floor((config.screenWidth - 61 + 61/4)/4)}}></Image> : null}
 

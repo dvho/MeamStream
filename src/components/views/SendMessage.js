@@ -27,7 +27,7 @@ class SendMessage extends React.Component {
             newMessage: {
                 toUser: '',
                 message: '',
-                giphyCanvasId: '',
+                giphyMainId: '',
                 giphyPng1Id: '',
                 giphyPng1Coords: {x:0.37362637362637363, y:0.3178963893249608},
                 giphyPng2Id: '',
@@ -41,7 +41,7 @@ class SendMessage extends React.Component {
                 words: '',
                 wordsCoords: {x: -0.01, y: -0.01} //need to make this update as one types but be overridden when panResponder starts
             },
-            selectedLayer: 'giphyCanvasId'
+            selectedLayer: 'giphyMainId'
         }
         this._keyboardDidShow = this._keyboardDidShow.bind(this)
         //this._keyboardDidHide = this._keyboardDidHide.bind(this)
@@ -94,7 +94,7 @@ class SendMessage extends React.Component {
 
         updateDirections() {
             this.setState({
-                directions: this.state.selectedLayer === 'message' ? '(Regular text message)' : (this.state.selectedLayer === 'words' ? 'Type something here. Make sure your other layers are where you want them and hit send!' : 'Update this layer by entering a search phrase and selecting an animation.')
+                directions: this.state.selectedLayer === 'message' ? '(Regular text message)' : (this.state.selectedLayer === 'words' ? 'Type something here. Make sure the other layers are where you want them and hit send!' : 'Update this layer by entering a search phrase and selecting an animation.')
             })
         }
 
@@ -109,7 +109,7 @@ class SendMessage extends React.Component {
 
         updateCoords(obj) {
             let coords
-            if (this.state.selectedLayer === 'giphyCanvasId') {
+            if (this.state.selectedLayer === 'giphyMainId') {
                 return
             }
             if (this.state.selectedLayer === 'giphyPng1Id') {
@@ -149,7 +149,7 @@ class SendMessage extends React.Component {
         }
 
         setLayerAndDirections(choice) {
-            const choiceArray = ['giphyCanvasId', 'giphyPng1Id', 'giphyPng2Id', 'giphyPng3Id', 'giphyPng4Id', 'giphyPng5Id', 'words']
+            const choiceArray = ['giphyMainId', 'giphyPng1Id', 'giphyPng2Id', 'giphyPng3Id', 'giphyPng4Id', 'giphyPng5Id', 'words']
             const forward = (choiceArray.indexOf(this.state.selectedLayer) + 1) % 7
             const backward = (7 + (choiceArray.indexOf(this.state.selectedLayer) - 1)) % 7
 
@@ -167,7 +167,7 @@ class SendMessage extends React.Component {
             this.props.toggleCreateMessage()
             this.updateNewMessage('', 'toUser')
             this.updateNewMessage('', 'message')
-            this.updateNewMessage('', 'giphyCanvasId')
+            this.updateNewMessage('', 'giphyMainId')
             this.updateNewMessage('', 'giphyPng1Id')
             this.updateNewMessage('', 'giphyPng2Id')
             this.updateNewMessage('', 'giphyPng3Id')
@@ -195,7 +195,7 @@ class SendMessage extends React.Component {
             await this.setState({
                 giphySearchPhrase: text
             })
-            if (this.state.selectedLayer === 'giphyCanvasId') {
+            if (this.state.selectedLayer === 'giphyMainId') {
                 await giphy.search({
                     q: this.state.giphySearchPhrase,
                     limit: 100
@@ -252,9 +252,9 @@ class SendMessage extends React.Component {
 
                     <KeyboardAvoidingView behavior='padding' style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
 
-                        <Video source={config.videos.waitingMp4} shouldPlay isLooping style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyCanvasId !== '') || (this.state.newMessage.giphyCanvasId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyCanvasId === '') ? 'flex' : 'none'}]} />
+                        <Video source={config.videos.waitingMp4} shouldPlay isLooping style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyMainId !== '') || (this.state.newMessage.giphyMainId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyMainId === '') ? 'flex' : 'none'}]} />
 
-                        <Image source={{uri: `https://media2.giphy.com/media/${this.state.newMessage.giphyCanvasId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyCanvasId === '' ? 'none' : 'flex'}]}/>
+                        <Image source={{uri: `https://media2.giphy.com/media/${this.state.newMessage.giphyMainId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyMainId === '' ? 'none' : 'flex'}]}/>
 
                         <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng1Id' ? 10 : 1, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng1Id'} giphyPngId={this.state.newMessage.giphyPng1Id} onRef={ref => (this.updateCoords = ref)} updateCoords={this.updateCoords.bind(this)}/></View>
 
@@ -293,7 +293,7 @@ class SendMessage extends React.Component {
 
                             <TouchableOpacity onPress={this.state.selectedLayer === 'message' ? null : () => this.setLayerAndDirections('forward')} activeOpacity={0} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4, marginLeft: 4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='forward' color={config.colors.scrollButton} size={22}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={this.state.selectedLayer === 'message' ? null : () => this.setLayerAndDirections('giphyCanvasId')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='file-movie-o' color={this.state.newMessage.giphyCanvasId === '' ? (this.state.selectedLayer === 'giphyCanvasId' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyCanvasId' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
+                            <TouchableOpacity onPress={this.state.selectedLayer === 'message' ? null : () => this.setLayerAndDirections('giphyMainId')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><FontAwesome style={{marginTop: -4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='file-movie-o' color={this.state.newMessage.giphyMainId === '' ? (this.state.selectedLayer === 'giphyMainId' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyMainId' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
                             <TouchableOpacity onPress={this.state.selectedLayer === 'message' ? null : () => this.setLayerAndDirections('giphyPng1Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='filter-1' color={this.state.newMessage.giphyPng1Id === '' ? (this.state.selectedLayer === 'giphyPng1Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng1Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
@@ -305,7 +305,7 @@ class SendMessage extends React.Component {
 
                             <TouchableOpacity onPress={this.state.selectedLayer === 'message' ? null : () => this.setLayerAndDirections('giphyPng5Id')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialIcons style={{marginTop: -4, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='filter-5' color={this.state.newMessage.giphyPng5Id === '' ? (this.state.selectedLayer === 'giphyPng5Id' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'giphyPng5Id' ? config.colors.selectingButton : config.colors.selectedButton)} size={22}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={(this.state.newMessage.giphyCanvasId === '' && this.state.newMessage.giphyPng1Id === '' && this.state.newMessage.giphyPng2Id === '' && this.state.newMessage.giphyPng3Id === '' && this.state.newMessage.giphyPng4Id === '' && this.state.newMessage.giphyPng5Id === '') ? () => {this.setState({selectedLayer: 'message'}); this.setLayerAndDirections('message')} : () => this.setLayerAndDirections('words')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialCommunityIcons style={{marginTop: -1, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='format-text' color={this.state.newMessage.words === '' ? (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.selectedButton)} size={28}/></TouchableOpacity>
+                            <TouchableOpacity onPress={(this.state.newMessage.giphyMainId === '' && this.state.newMessage.giphyPng1Id === '' && this.state.newMessage.giphyPng2Id === '' && this.state.newMessage.giphyPng3Id === '' && this.state.newMessage.giphyPng4Id === '' && this.state.newMessage.giphyPng5Id === '') ? () => {this.setState({selectedLayer: 'message'}); this.setLayerAndDirections('message')} : () => this.setLayerAndDirections('words')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialCommunityIcons style={{marginTop: -1, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='format-text' color={this.state.newMessage.words === '' ? (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.selectedButton)} size={28}/></TouchableOpacity>
 
                             <TouchableOpacity onPress={() => this.send()} activeOpacity={0} style={[styles.button, {flex: 1, marginLeft: 2, marginRight: 6, marginBottom: this.state.selectedLayer === 'message' ? -128 : 0}]}><FontAwesome style={{marginTop: -4}} name='send' color={config.colors.sendButton} size={22}/></TouchableOpacity>
 

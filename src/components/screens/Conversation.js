@@ -5,11 +5,6 @@ import { MessageShort, SendMessage } from '../views'
 import config from '../../config'
 import utils from '../../utils'
 
-// Select of the two:
-// "I'm experiencing" (text input that queries Giphy's general search) or simply "I'm feeling"
-// "I'm reacting" (text input that queries Giphy's reaction search)
-// Remove hashtags from the suggestions that pop up and populate them as something to the extend of "further refine" or "...actually"
-
 class Conversation extends React.Component {
 
     static navigationOptions = ({ navigation }) => {

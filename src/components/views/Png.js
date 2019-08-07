@@ -70,7 +70,7 @@ class Png extends React.Component {
 
             <Image style={{width: config.pngWidth, height: config.pngWidth, borderRadius: config.borderRadii, borderWidth: this.props.selected && this.props.giphyPngId !== '' ? StyleSheet.hairlineWidth : null, borderColor: 'rgb(255,255,255)', opacity: this.state.outOfRange ? 0 : 1}} source={{uri: `https://media2.giphy.com/media/${this.props.giphyPngId}/100.gif`}} resizeMode='contain' resizeMethod='scale'/>
 
-            <View style={{width: config.pngWidth, height: config.pngWidth, position: 'absolute', opacity: this.state.outOfRange ? .8 : 0, borderRadius: config.borderRadii, borderWidth: this.props.selected && this.props.giphyPngId !== '' ? StyleSheet.hairlineWidth : null, borderColor: 'rgb(255,255,255)'}}><FontAwesome name={'undo'} size={config.pngWidth} color={'rgb(255,255,255)'} style={{alignSelf: 'center'}}/></View>
+            <View style={{width: config.pngWidth, height: config.pngWidth, position: 'absolute', opacity: this.state.outOfRange ? .8 : 0, borderRadius: config.borderRadii, borderWidth: this.props.selected && this.props.giphyPngId !== '' ? StyleSheet.hairlineWidth : null, borderColor: 'rgb(255,255,255)'}}><FontAwesome name={'undo'} size={config.pngWidth} color={'rgb(215,215,215)'} style={{alignSelf: 'center', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3}}/></View>
 
          </Animated.View>
       )
