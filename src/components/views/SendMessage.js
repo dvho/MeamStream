@@ -94,7 +94,7 @@ class SendMessage extends React.Component {
 
         updateDirections() {
             this.setState({
-                directions: this.state.selectedLayer === 'message' ? '' : (this.state.selectedLayer === 'words' ? 'Type something here. Make sure your other layers are where you want them and hit send!' : 'Update this layer by entering a search phrase and selecting an animation.')
+                directions: this.state.selectedLayer === 'message' ? '(Regular text message)' : (this.state.selectedLayer === 'words' ? 'Type something here. Make sure your other layers are where you want them and hit send!' : 'Update this layer by entering a search phrase and selecting an animation.')
             })
         }
 
@@ -285,7 +285,7 @@ class SendMessage extends React.Component {
 
                         <View style={{flexDirection: 'row', justifyContent: 'center', height: 30, width: 100 + '%'}}>
 
-                            <TouchableOpacity onPress={() => this.cancel()} activeOpacity={0} style={[styles.button, {flex: 1, marginLeft: 6}]}><MaterialIcons style={{marginTop: -4}} name='cancel' color={config.colors.dormantButton} size={26}/></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.cancel()} activeOpacity={0} style={[styles.button, {flex: 1, marginLeft: 6, marginBottom: this.state.selectedLayer === 'message' ? -128 : 0}]}><MaterialIcons style={{marginTop: -4}} name='cancel' color={config.colors.dormantButton} size={26}/></TouchableOpacity>
 
                             <TouchableOpacity onPress={this.state.selectedLayer === 'message' ? null : () => this.setState({subscreen: !this.state.subscreen})} activeOpacity={1} style={[styles.button, {flex: 1.8}]}><MaterialCommunityIcons style={[{marginTop: -13, opacity: this.state.selectedLayer === 'message' ? 0 : 1}, !this.state.subscreen ? {transform: [{rotateY: '180deg'}]} : null]} color={!this.state.subscreen ? config.colors.toggleArranging : config.colors.toggleSearching} name='toggle-switch' size={52}/></TouchableOpacity>
 
@@ -307,16 +307,16 @@ class SendMessage extends React.Component {
 
                             <TouchableOpacity onPress={(this.state.newMessage.giphyCanvasId === '' && this.state.newMessage.giphyPng1Id === '' && this.state.newMessage.giphyPng2Id === '' && this.state.newMessage.giphyPng3Id === '' && this.state.newMessage.giphyPng4Id === '' && this.state.newMessage.giphyPng5Id === '') ? () => {this.setState({selectedLayer: 'message'}); this.setLayerAndDirections('message')} : () => this.setLayerAndDirections('words')} activeOpacity={0.3} style={[styles.button, {flex: 1}]}><MaterialCommunityIcons style={{marginTop: -1, opacity: this.state.selectedLayer === 'message' ? 0 : 1}} name='format-text' color={this.state.newMessage.words === '' ? (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.dormantButton) : (this.state.selectedLayer === 'words' ? config.colors.selectingButton : config.colors.selectedButton)} size={28}/></TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => this.send()} activeOpacity={0} style={[styles.button, {flex: 1, marginLeft: 2, marginRight: 6}]}><FontAwesome style={{marginTop: -4}} name='send' color={config.colors.sendButton} size={22}/></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.send()} activeOpacity={0} style={[styles.button, {flex: 1, marginLeft: 2, marginRight: 6, marginBottom: this.state.selectedLayer === 'message' ? -128 : 0}]}><FontAwesome style={{marginTop: -4}} name='send' color={config.colors.sendButton} size={22}/></TouchableOpacity>
 
                         </View>
 
                         <TextInput
-                            placeholder={this.state.selectedLayer === 'message' ? 'Regular text message' : (this.state.selectedLayer === 'words' ? "Type something here..." : "Enter a search phrase...")}
+                            placeholder={this.state.selectedLayer === 'message' ? '' : (this.state.selectedLayer === 'words' ? "Type something here..." : "Enter a search phrase...")}
                             placeholderTextColor={'rgba(0,0,0, .6)'}
                             ref={input => this.mainInput = input}
                             autoFocus={this.props.toUser === undefined ? false : true}
-                            style={[styles.inputs, {marginBottom: 5, opacity: .6}]}
+                            style={[styles.inputs, {marginBottom: 5, opacity: .6}, {width: this.state.selectedLayer === 'message' ? config.screenWidth - 80 : config.screenWidth - 10, marginHorizontal: this.state.selectedLayer === 'message' ? 40 : 5, height: this.state.selectedLayer === 'message' ? 96 : 32}]}
                             multiline={this.state.selectedLayer === 'message' ? true : (this.state.selectedLayer === 'words' ? true : false)}
                             autoCapitalize={this.state.selectedLayer === 'message' ? 'sentences' : (this.state.selectedLayer === 'words' ? 'sentences' : 'none')}
                             autoCorrect={true}
