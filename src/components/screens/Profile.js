@@ -16,7 +16,7 @@ class Profile extends React.Component {
         return(
             <View style={styles.container}>
 
-                <StatusBar barStyle='light-content'/>
+                <StatusBar barStyle='dark-content'/>
 
                 <Text style={[styles.texts, styles.dropShadows]}>My Profile</Text>
 

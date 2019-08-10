@@ -9,7 +9,7 @@ import config from '../../config'
 
 //To hide toolbar TouchableOpacities upon clicking the T icon to toggle to regular text message (when all of the Png layers and canvas are empty strings) it would've been ideal to make visiblity 'hidden' when this.state.selectedLayer === 'message' but there's a known bug in React Native so I made opacities 0 AND rendered the onPress functions null https://github.com/facebook/react-native/issues/1322
 
-//TODO: 4) need to validate phone numbers instead of userName in Authenticate, 5) need to gain access to contacts, 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes
+//TODO: 4) need to validate phone numbers instead of userName in Authenticate, 5) need to gain access to contacts, 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 9) need to fix real time display in Conversation.js of meme based messages on send...sometimes it does, sometimes it doesn't (happened once or twice... fluke?).
 
 
 class SendMessage extends React.Component {

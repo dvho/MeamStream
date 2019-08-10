@@ -12,16 +12,16 @@ class Conversation extends React.Component {
         return {
             title: params.currentConversation || null,
             headerStyle: {
-                backgroundColor: config.colors.main
+                backgroundColor: config.colors.pastelGray
             },
-            headerTintColor: 'rgb(255,255,255)',
+            headerTintColor: config.colors.blue,
             headerTitleStyle: {
                 fontWeight: 'bold',
-                color: 'rgb(255,255,255)',
+                color: 'rgb(0,0,0)',
             },
             headerRight: params.showIcon ? (
                 <TouchableOpacity onPress={params.toggleCreateMessage} activeOpacity={0.7} style={{paddingHorizontal: 20, paddingVertical: 10}}>
-                    <Entypo name="new-message" size={config.screenWidth / 18} color="rgb(255,255,255)"/>
+                    <Entypo name="new-message" size={config.screenWidth / 18} color={config.colors.blue}/>
                 </TouchableOpacity>
             ) : null
         }

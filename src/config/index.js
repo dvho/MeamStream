@@ -7,7 +7,9 @@ export default {
     //baseUrl: 'http://localhost:3000',
     userIdKey: 'logged_in_user',
     colors: {
-        main: 'rgb(64,64,64)', //Old one rgb(28,132,250)
+        main: 'rgb(64,64,64)', //Old ones: rgb(28,132,250) 'rgb(64,64,64)'
+        blue: 'rgb(22,128,251)',
+        pastelGray: 'rgb(247,247,247)',
         inactiveButton: 'rgb(215,215,215)',
         activeButton: 'rgb(187,17,23)',
         failButton: 'rgb(210,210,0)',

@@ -274,15 +274,15 @@ class Authenticate extends React.Component {
         Animated.timing(                // Animate over time
             this.state.fadeOutVeil,     // The animated value to drive
             { toValue: 0,               // Animate to opacity: 0
-            delay: 2500,                // Wait for curtains
-            duration: 2000,             // Make it take a 2000ms
+            delay: 2000,                // Wait for curtains
+            duration: 3000,             // Make it take a 2000ms
             easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
             }).start()
         Animated.timing(                // Animate over time
             this.state.fadeInInterface, // The animated value to drive
             { toValue: 1,               // Animate to opacity: 1
-            delay: 2500,                // Wait for curtains
-            duration: 3000,             // Make it take a 3000ms
+            delay: 2000,                // Wait for curtains
+            duration: 4000,             // Make it take a 3000ms
             easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
             }).start()
     }

@@ -14,18 +14,20 @@ const MessageStack = createStackNavigator({
     home: Home,
     conversation: Conversation
 },
-{
-    defaultNavigationOptions: {
-        headerStyle: {
-            backgroundColor: config.colors.main
-        },
-        headerTintColor: 'rgb(255,255,255)',
-        headerTitleStyle: {
-            fontWeight: 'bold',
-            color: 'rgb(255,255,255)',
-        }
-    }
-})
+//Everything commented out here is declared ad hoc in each screen component
+// {
+//     defaultNavigationOptions: {
+//         headerStyle: {
+//             backgroundColor: config.colors.main
+//         },
+//         headerTintColor: 'rgb(255,255,255)',
+//         headerTitleStyle: {
+//             fontWeight: 'bold',
+//             color: 'rgb(255,255,255)',
+//         }
+//     }
+// }
+)
 
 const MainAppTabs = createBottomTabNavigator({
     messages: MessageStack,
@@ -49,20 +51,21 @@ const MainAppTabs = createBottomTabNavigator({
     }),
 
     tabBarOptions: {
-      activeTintColor: config.colors.main,
+      activeTintColor: config.colors.blue,
       inactiveTintColor: '#ccc',
     },
 
-    headerStyle: {
-        backgroundColor: config.colors.main
-    },
-
-    headerTintColor: 'rgb(255,255,255)',
-
-    headerTitleStyle: {
-        fontWeight: 'bold',
-        color: 'rgb(255,255,255)',
-    },
+    //Everything commented out here is declared ad hoc in each screen component
+    // headerStyle: {
+    //     backgroundColor: config.colors.main
+    // },
+    //
+    // headerTintColor: 'rgb(255,255,255)',
+    //
+    // headerTitleStyle: {
+    //     fontWeight: 'bold',
+    //     color: 'rgb(255,255,255)',
+    // },
     tabBarPosition: 'bottom'
 })
 
