@@ -29,6 +29,7 @@ export default {
     headerHeight: Header.HEIGHT,
     images: {
         theaterPng: require('../assets/theater.png'),
+        curtainPng: require('../assets/curtain.png'),
         //countdownVid: 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif' //Pulling this video from giphy on load is about 6MB! the (higher res countdown.mp4 is only 0.4MB)
     },
     videos: {

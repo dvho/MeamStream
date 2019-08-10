@@ -15,7 +15,11 @@ class Authenticate extends React.Component {
     constructor() {
         super()
         this.state = {
+            enterTheater: false,
+            drawLeftCurtain: new Animated.Value(0),
+            drawRightCurtain: new Animated.Value(0),
             fadeOutVeil: new Animated.Value(1),
+            fadeInScreen: new Animated.Value(0),
             fadeOutScreen: new Animated.Value(1),
             fadeInInterface: new Animated.Value(0),
             fadeInProfilePic: new Animated.Value(0),
@@ -134,6 +138,9 @@ class Authenticate extends React.Component {
     }
 
     timerSuccess() {
+        this.setState({
+            enterTheater: false
+        })
         Animated.timing(                // Animate over time
           this.state.fadeOutScreen,     // The animated value to drive
           { toValue: 0,                 // Animate to opacity: 0
@@ -240,15 +247,41 @@ class Authenticate extends React.Component {
 
     componentDidMount() {
         this.getPermissionAsync()
+        this.setState({
+            enterTheater: true
+        })
+        Animated.timing(
+            this.state.fadeInScreen,
+            { toValue: 1,
+            delay: 500,
+            duration: 500,
+            easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
+            }).start()
+        Animated.timing(
+            this.state.drawLeftCurtain,
+            { toValue: -config.screenWidth * .75,
+            delay: 1500,
+            duration: 2500,
+            easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
+            }).start()
+        Animated.timing(
+            this.state.drawRightCurtain,
+            { toValue: -config.screenWidth * .75,
+            delay: 1500,
+            duration: 2500,
+            easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
+            }).start()
         Animated.timing(                // Animate over time
             this.state.fadeOutVeil,     // The animated value to drive
             { toValue: 0,               // Animate to opacity: 0
+            delay: 2500,                // Wait for curtains
             duration: 2000,             // Make it take a 2000ms
             easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
             }).start()
         Animated.timing(                // Animate over time
             this.state.fadeInInterface, // The animated value to drive
             { toValue: 1,               // Animate to opacity: 1
+            delay: 2500,                // Wait for curtains
             duration: 3000,             // Make it take a 3000ms
             easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
             }).start()
@@ -263,7 +296,7 @@ class Authenticate extends React.Component {
         let selectedImage = this.state.selectedImage
 
         return(
-            <Animated.View style={[styles.container, {opacity: this.state.fadeOutScreen}]}>
+            <Animated.View style={[styles.container, {opacity: this.state.enterTheater ? this.state.fadeInScreen : this.state.fadeOutScreen}]}>
 
                 <StatusBar barStyle='light-content'/>
 
@@ -318,6 +351,14 @@ class Authenticate extends React.Component {
                         blurOnSubmit={false} secureTextEntry
                     />
 
+                </Animated.View>
+
+                <Animated.View style={{position: 'absolute', left: this.state.drawLeftCurtain}}>
+                    <Image source={config.images.curtainPng} style={{width: config.screenWidth * .75, height: config.screenWidth * .75 * (33/17)}}/>
+                </Animated.View>
+
+                <Animated.View style={{position: 'absolute', right: this.state.drawRightCurtain}}>
+                    <Image source={config.images.curtainPng} style={{transform: [{rotateY: '180deg'}], width: config.screenWidth * .75, height: config.screenWidth * .75 * (33/17)}}/>
                 </Animated.View>
 
             </Animated.View>
