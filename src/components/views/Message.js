@@ -88,9 +88,9 @@ class Message extends React.Component {
 
 
 
-                        {this.props.message.words !== '' && this.props.message.wordsCoords.x !== -0.01 ? <Text style={{position: 'absolute', textAlign: 'center', color: 'rgb(215,215,215)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: 27, top: Math.round((config.screenWidth - 61) * .7 * this.props.message.wordsCoords.y), left: Math.round((config.screenWidth - 61) * this.props.message.wordsCoords.x), fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.message.words}</Text> : null}
+                        {this.props.message.words !== '' && this.props.message.wordsCoords.x !== -0.01 ? <Text style={{position: 'absolute', textAlign: 'center', color: 'rgb(215,215,215)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: (((config.screenWidth - 61)/10)- 4), top: Math.round((config.screenWidth - 61) * .7 * this.props.message.wordsCoords.y), left: Math.round((config.screenWidth - 61) * this.props.message.wordsCoords.x), fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.message.words}</Text> : null}
 
-                        {this.props.message.words !== '' && this.props.message.wordsCoords.x === -0.01 ? <View style={{position: 'absolute', width: 100 + '%', height: 100 + '%', justifyContent: 'center'}}><Text style={{textAlign: 'center', color: 'rgb(215,215,215)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: 27, fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.message.words}</Text></View> : null}
+                        {this.props.message.words !== '' && this.props.message.wordsCoords.x === -0.01 ? <View style={{position: 'absolute', width: 100 + '%', height: 100 + '%', justifyContent: 'center'}}><Text style={{textAlign: 'center', color: 'rgb(215,215,215)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: (((config.screenWidth - 61)/10)- 4), fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.message.words}</Text></View> : null}
 
                     </View> }
 

@@ -63,7 +63,6 @@ class Png extends React.Component {
 
 
    render() {
-       console.log(this.state.coords)
        let handlers = this.state.panResponder.panHandlers
        return (
          <Animated.View style={this.state.position.getLayout()} {...handlers}>
