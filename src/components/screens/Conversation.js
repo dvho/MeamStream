@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, Text, FlatList, TouchableOpacity, Modal } from 'react-native'
+import { View, StyleSheet, Text, FlatList, TouchableOpacity, Modal, Image } from 'react-native'
 import { Entypo } from '@expo/vector-icons'
 import { MessageShort, SendMessage } from '../views'
 import config from '../../config'
@@ -143,6 +143,8 @@ class Conversation extends React.Component {
             <Modal visible={this.state.showCreateMessage} transparent={true} animationType="fade" onRequestClose={this.cancel} onDismiss={this.renderMessages}>
                 <SendMessage toUser={this.state.fromData.username} navProps={this.props.navigation} toggleCreateMessage={this.toggleCreateMessage}/>
             </Modal>
+
+            <Image source={config.images.moviesPng} resizeMode='repeat' style={{position: 'absolute', opacity: .1, width: config.screenWidth, height: config.screenWidth * 2}}/>
 
             <FlatList
                 data={this.state.messages}
