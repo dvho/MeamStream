@@ -144,7 +144,7 @@ class Conversation extends React.Component {
                 <SendMessage toUser={this.state.fromData.username} navProps={this.props.navigation} toggleCreateMessage={this.toggleCreateMessage}/>
             </Modal>
 
-            <Image source={config.images.moviesPng} resizeMode='repeat' style={{position: 'absolute', opacity: .1, width: config.screenWidth, height: config.screenWidth * 2}}/>
+            <Image source={config.images.moviesPng} resizeMode='repeat' style={{position: 'absolute', width: config.screenWidth, height: config.screenWidth * 2}}/>
 
             <FlatList
                 data={this.state.messages}

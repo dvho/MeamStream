@@ -1,5 +1,7 @@
 import React from 'react'
 import { AsyncStorage, ActivityIndicator, YellowBox } from 'react-native'
+import { Asset } from 'expo-asset'
+import { AppLoading } from 'expo'
 import { Home, Authenticate, Conversation, Profile } from './src/components/screens'
 import config from './src/config'
 import { createAppContainer, createSwitchNavigator, createStackNavigator, createBottomTabNavigator } from 'react-navigation'
@@ -90,7 +92,8 @@ class App extends React.Component {
         super()
         this.state = {
             authChecked: false,
-            authed: false
+            authed: false,
+            isReady: false
         }
     }
 
@@ -116,9 +119,22 @@ class App extends React.Component {
 
     render() {
         const Switch = rootNav(this.state.authed)
+        if (!this.state.isReady) {
+            return (
+                <AppLoading startAsync={this._cacheResourcesAsync} onFinish={() => this.setState({isReady: true})} onError={console.warn}/>
+            )
+        }
         return(
             this.state.authChecked ? <Switch/> : <ActivityIndicator size='large'/>
         )
+    }
+
+    async _cacheResourcesAsync() {
+        const images = [require('./src/assets/logo.png'), require('./src/assets/countdown.mp4'), require('./src/assets/curtain.png'), require('./src/assets/movies.png'), require('./src/assets/theater.png'), require('./src/assets/waiting.mp4')]
+        const cacheImages = images.map(image => {
+            return Asset.fromModule(image).downloadAsync()
+        })
+        return Promise.all(cacheImages)
     }
 }
 
