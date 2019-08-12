@@ -130,7 +130,7 @@ class App extends React.Component {
     }
 
     async _cacheResourcesAsync() {
-        const images = [require('./src/assets/logo.png'), require('./src/assets/curtain.png'), require('./src/assets/theater.png'), require('./src/assets/countdown.mp4'), require('./src/assets/logoName.png'), require('./src/assets/movies.png'), require('./src/assets/waiting.mp4')]
+        const images = [require('./src/assets/logo.png'), require('./src/assets/curtain.png'), require('./src/assets/theater.png'), require('./src/assets/countdown.mp4'), require('./src/assets/logoName.png'), require('./src/assets/backgroundTile.png'), require('./src/assets/waiting.mp4')]
         const cacheImages = images.map(image => {
             return Asset.fromModule(image).downloadAsync()
         })
