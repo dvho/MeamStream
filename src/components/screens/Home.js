@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, ActivityIndicator, AsyncStorage, FlatList, StatusBar, Modal, TouchableOpacity, TextInput } from 'react-native'
 import { Entypo } from '@expo/vector-icons'
-import { Message, SendMessage } from '../views'
+import { Message, SendMessage, LogoName } from '../views'
 import utils from '../../utils'
 import config from '../../config'
 
@@ -10,15 +10,16 @@ class Home extends React.Component {
     static navigationOptions = ({ navigation }) => {
         const params = navigation.state.params || {}
         return {
-            title: 'Messages',
+            headerLeft: <LogoName/>,
             headerStyle: {
-                backgroundColor: config.colors.pastelGray
+                backgroundColor: config.colors.pastelGray,
+                height: 129/900 * config.screenWidth + 30
             },
-            headerTintColor: config.colors.blue,
-            headerTitleStyle: {
-                fontWeight: 'bold',
-                color: 'rgb(0,0,0)',
-            },
+            //headerTintColor: config.colors.blue,
+            // headerTitleStyle: {
+            //     fontWeight: 'bold',
+            //     color: 'rgb(0,0,0)',
+            // },
             headerRight: params.showIcon ? (
                 <TouchableOpacity onPress={params.toggleCreateMessage} activeOpacity={0.7} style={{paddingHorizontal: 20, paddingVertical: 10}}>
                     <Entypo name="new-message" size={config.screenWidth / 18} color={config.colors.blue}/>

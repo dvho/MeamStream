@@ -47,6 +47,7 @@ class Message extends React.Component {
     render() {
 
         const senderImage = this.state.fromData.image !== '' ? `${this.state.fromData.image}=s40-c` : ''
+        console.log(this.props)
 
         return(
             <Animated.View style={{opacity: this.state.fadeInAnim}}>
@@ -105,7 +106,8 @@ const styles = StyleSheet.create({
         message: {
             borderWidth: StyleSheet.hairlineWidth, //This was borderTopWidth when we had no margin between each of the messages.
             marginHorizontal: 15,
-            marginBottom: 15,
+            marginTop: 8,
+            marginBottom: 8,
             padding: 15,
             borderRadius: config.borderRadii,
             borderColor: 'rgb(225, 225, 225)',

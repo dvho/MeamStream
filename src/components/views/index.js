@@ -5,6 +5,7 @@ import TimeStamp from './TimeStamp'
 import GiphyOption from './GifOption'
 import Png from './Png'
 import Words from './Words'
+import LogoName from './LogoName'
 
 
 export {
@@ -14,5 +15,6 @@ export {
     TimeStamp,
     GiphyOption,
     Png,
-    Words
+    Words,
+    LogoName
 }

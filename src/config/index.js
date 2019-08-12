@@ -28,11 +28,12 @@ export default {
     pngWidth: Dimensions.get('window').width / 4,
     canvasWidth: Dimensions.get('window').width - 11,
     canvasHeight: (Dimensions.get('window').width - 11) * .7,
-    headerHeight: Header.HEIGHT,
+    headerHeight: Header.HEIGHT - (129/900 * Dimensions.get('window').width + 30) + 50, //this is the programmed header height minus the dynamic height of the logoName plus a hardcoded 50.
     images: {
         theaterPng: require('../assets/theater.png'),
         curtainPng: require('../assets/curtain.png'),
         moviesPng: require('../assets/movies.png'),
+        logoNamePng: require('../assets/logoName.png'),
         //countdownVid: 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif' //Pulling this video from giphy on load is about 6MB! the (higher res countdown.mp4 is only 0.4MB)
     },
     videos: {
