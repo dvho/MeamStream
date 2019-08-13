@@ -175,6 +175,12 @@ class Authenticate extends React.Component {
     }
 
     async submit() {
+        // Uncomment out the below when you're ready:
+        
+        // if (this.state.credentials.username.length < 7) {
+        //     alert('Must enter a valid phone number.')
+        //     return
+        // }
 
             await fetch(`${config.baseUrl}api/user?username=${this.state.credentials.username}`, {
                 method: 'GET',
