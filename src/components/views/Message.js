@@ -1,21 +1,61 @@
 import React from 'react'
 import { View, TouchableOpacity, StyleSheet, Image, Text, Animated, Easing } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import * as Permissions from 'expo-permissions'
+import * as Contacts from 'expo-contacts'
 import { TimeStamp } from './'
 import config from '../../config'
 
 //Important to note that, in rendering the message object here, StyleSheet.hairlineWidth actually renders differently according to device. I've estimated it at .5 px, thereby displacing the screen width by an extra 1px, but if it ends up causing a rendering problem on different devices I'll have to substitute it for a 1px width of a very light gray.
+//Headsup, Siri automatially generates a contact for the phone itself which lacks a phoneNumbers array in the contacts.data object, however, displays the phone's own number when looking at the contact in the address book of the phone... very confusing so in case you're wondering why your app is crashing with a " "'0' is undefined" error even after buffering for it in a conditional statement check to see if Siri is the culprit.
 
 class Message extends React.Component {
     constructor() {
         super()
         this.state = {
             fadeInAnim: new Animated.Value(0),
-            fromData: {}
+            fromData: {},
+            contacts: [],
+            contact: ''
+        }
+    }
+
+    doesContactExist() {
+        const lastSevenDigitsUser = this.state.fromData.username.split('').reverse().splice(0,7).reverse().join('')
+        this.state.contacts.forEach(i => {
+            if (i.phoneNumbers !== undefined) {
+                if (i.phoneNumbers[0].digits.split('').length >= 7) {
+                    let lastSevenDigitsContact = i.phoneNumbers[0].digits.split('').reverse().splice(0,7).reverse().join('')
+                    if (lastSevenDigitsUser === lastSevenDigitsContact) {
+                        this.setState({
+                            contact: i.name
+                        })
+                    }
+                }
+            }
+        })
+    }
+
+    getContactsPermissionAsync = async () => {
+        const { status } = await Permissions.askAsync(Permissions.CONTACTS)
+        if (status !== 'granted') {
+          alert('Ok, MemeStream won\'t be able to display your friends\' names, hope ya don\'t mind.')
+          return
+        }
+        const contacts = await Contacts.getContactsAsync({
+          fields: [
+            Contacts.PHONE_NUMBERS
+          ]
+        })
+        if (contacts.total > 0) {
+            this.setState({
+                contacts: contacts.data
+            })
         }
     }
 
     componentDidMount() {
+        this.getContactsPermissionAsync()
         const fromId = this.props.message.fromUser
 
         fetch(`${config.baseUrl}api/user/${fromId}`, {
@@ -32,22 +72,27 @@ class Message extends React.Component {
             this.setState({
                 fromData: responseJSON.data
             })
+
+            this.doesContactExist()
+
             Animated.timing(                // Animate over time
               this.state.fadeInAnim,       // The animated value to drive
               { toValue: 1,                 // Animate to opacity: 0
                 duration: 1500,             // Make it take a 1500ms
                 easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
               }).start()
+
         })
         .catch(err => {
             alert('Sorry ' + err.message)
         })
+
     }
 
     render() {
+        //console.log(this.state.fromData)
 
         const senderImage = this.state.fromData.image !== '' ? `${this.state.fromData.image}=s40-c` : ''
-        console.log(this.props)
 
         return(
             <Animated.View style={{opacity: this.state.fadeInAnim}}>
@@ -59,7 +104,7 @@ class Message extends React.Component {
                                 source={{uri: senderImage}}
                                 style={styles.profilePic}/> : <MaterialCommunityIcons name='tag-faces' size={40} color="rgb(250,84,33)" style={{transform: [{rotateY: '180deg'}]}}/> }
 
-                            <Text style={styles.username}>{this.state.fromData.username}</Text>
+                            <Text style={styles.username}>{this.state.contact !== '' ? this.state.contact : this.state.fromData.username}</Text>
                         </View>
                         <View style={styles.timeCol}>
                                 <TimeStamp props={this.props.message.timestamp}/>

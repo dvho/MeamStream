@@ -7,9 +7,6 @@ import { Video } from 'expo-av'
 import Constants from 'expo-constants'
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
-//Need https://www.npmjs.com/package/react-phone-number-input
-
-//I know I can pass logged in profile data through this.props.navigation.navigate but I have to work on it. First trial run I overlooked that these params effectively bypass Home if one is already logged in upon opening the app
 
 class Authenticate extends React.Component {
     constructor() {
@@ -40,7 +37,8 @@ class Authenticate extends React.Component {
                 password: '',
                 //image: ''   For some reason it actually doesn't need username nor password listed in state in order to properly validate users. including image, however, makes the callback url from the CDN part of the validation criteria hence no one would be able to access their accounts. Also for some reason the image is properly linking to the new profiles once new profile is submitted with this.turbo.createUser(cred).
             },
-            userExists: undefined
+            userExists: undefined,
+            contacts: []
         }
         this.turbo = Turbo({site_id: config.turboAppId}) //better than putting it in state because we're no watching for any changes on it, it's static - setting a class variable as such for cases like these is best practice
         this.login = this.login.bind(this)
@@ -55,17 +53,22 @@ class Authenticate extends React.Component {
 
     updateCredentials(text, field) {
         let credentials = Object.assign({}, this.state.credentials)
-        credentials[field] = text
-        this.setState({
-            credentials: credentials
-        })
+        if ((field === 'username') && (isNaN(text))) {
+            return
+        } else {
+            credentials[field] = text
+            this.setState({
+                credentials: credentials
+            })
+        }
     }
 
-    getPermissionAsync = async () => {
+    getCameraRollPermissionAsync = async () => {
       if (Constants.platform.ios) {
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
         if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!')
+          alert('No problem! You can set a profile picture later.')
+          return
         }
       }
     }
@@ -246,7 +249,7 @@ class Authenticate extends React.Component {
     }
 
     componentDidMount() {
-        this.getPermissionAsync()
+        this.getCameraRollPermissionAsync()
         this.setState({
             enterTheater: true
         })
@@ -331,13 +334,14 @@ class Authenticate extends React.Component {
 
                     <TextInput
                         style={[styles.inputs, styles.textInput1Shadow]}
-                        placeholder={'username'}
+                        placeholder={'phone number'}
                         placeholderTextColor={config.colors.activeButton}
                         autoCapitalize={'none'}
                         autoCorrect={false} spellCheck={false}
                         onChangeText={text => this.updateCredentials(text, 'username')}
                         onSubmitEditing={() => this.secondTextInput.focus()}
                         returnKeyType={"next"}
+                        value={this.state.credentials.username}
                     />
 
                     <TextInput
