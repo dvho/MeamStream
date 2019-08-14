@@ -10,7 +10,7 @@ import config from '../../config'
 
 //To hide toolbar TouchableOpacities upon clicking the T icon to toggle to regular text message (when all of the Png layers and canvas are empty strings) it would've been ideal to make visiblity 'hidden' when this.state.selectedLayer === 'message' but there's a known bug in React Native so I made opacities 0 AND rendered the onPress functions null https://github.com/facebook/react-native/issues/1322
 
-//TODO: 4) Need to integrate Redux in Home.js so that both Message.js and MessageShort.js have access to it 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 9) need to fix real time display in Conversation.js of meme based messages on send...sometimes it does, sometimes it doesn't (happened once or twice... fluke?), 10) need to make time stamp behave like time stamps in current apps, 11) need to add Powered By Giphy and appy for a development API key and then production API key https://developers.giphy.com/faq/
+//TODO: 4) Need to integrate Redux in Home.js so that both Message.js and MessageShort.js have access to it, 5) once phone contacts are in redux I can personalize SMS and "to" field in SendMessage.js as well as having names display in messages and Conversation.js navbar 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 10) need to make time stamp behave like time stamps in current apps, 11) need to add Powered By Giphy and appy for a development API key and then production API key https://developers.giphy.com/faq/
 
 
 class SendMessage extends React.Component {
@@ -167,8 +167,8 @@ class SendMessage extends React.Component {
         }
 
         async sendSMS() {
-            let iosMessage = 'Get this App! https://www.apple.com/us/search/memestream'
-            let androidMessage = 'Get this App! https://play.google.com/store/search?q=memestream%20download'
+            let iosMessage = 'Get this App! I\'m trying to send you something https://www.apple.com/us/search/memestream'
+            let androidMessage = 'Get this App! I\'m trying to send you something https://play.google.com/store/search?q=memestream%20download'
             const isAvailable = await SMS.isAvailableAsync();
             if (isAvailable) {
                 SMS.sendSMSAsync(this.state.newMessage.toUser, Platform.OS === 'ios' ? iosMessage : androidMessage)
@@ -182,8 +182,8 @@ class SendMessage extends React.Component {
                 'Tell your friend to download MemeStream!',
                 '(We checked their phone and they don\'t have it)',
               [
-                { text: 'Ask me later', onPress: () => console.log('Ask me later pressed') },
-                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                //{ text: 'Ask me later', onPress: () => console.log('Ask me later pressed') },
+                //{ text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                 { text: 'OK', onPress: () => this.sendSMS() },
               ],
               { cancelable: false }
