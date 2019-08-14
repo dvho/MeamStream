@@ -1,15 +1,16 @@
 import React from 'react'
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Keyboard, Image, FlatList, KeyboardAvoidingView, Animated, Easing } from 'react-native'
+import { View, TextInput, Text, TouchableOpacity, StyleSheet, Keyboard, Image, FlatList, KeyboardAvoidingView, Animated, Easing, Alert, Platform } from 'react-native'
 import { GiphyOption, Png, Words } from './'
 import { Video } from 'expo-av'
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'
+import * as SMS from 'expo-sms'
 const giphy = require('giphy-api')() //eventually apply for development API key and then production API key https://developers.giphy.com/faq/
 import utils from '../../utils'
 import config from '../../config'
 
 //To hide toolbar TouchableOpacities upon clicking the T icon to toggle to regular text message (when all of the Png layers and canvas are empty strings) it would've been ideal to make visiblity 'hidden' when this.state.selectedLayer === 'message' but there's a known bug in React Native so I made opacities 0 AND rendered the onPress functions null https://github.com/facebook/react-native/issues/1322
 
-//TODO: 4) Need to integrate Redux in Home.js so that both Message.js and MessageShort.js have access to it 5) need to send SMS to phone numbers that don't have MemeStream 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 9) need to fix real time display in Conversation.js of meme based messages on send...sometimes it does, sometimes it doesn't (happened once or twice... fluke?), 10) need to make time stamp behave like time stamps in current apps, 11) need to add Powered By Giphy and appy for a development API key and then production API key https://developers.giphy.com/faq/
+//TODO: 4) Need to integrate Redux in Home.js so that both Message.js and MessageShort.js have access to it 6) need to integrate push notifications, 7) Need to make Profile screen do more than just logout 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 9) need to fix real time display in Conversation.js of meme based messages on send...sometimes it does, sometimes it doesn't (happened once or twice... fluke?), 10) need to make time stamp behave like time stamps in current apps, 11) need to add Powered By Giphy and appy for a development API key and then production API key https://developers.giphy.com/faq/
 
 
 class SendMessage extends React.Component {
@@ -98,11 +99,15 @@ class SendMessage extends React.Component {
 
         updateRecipient(text, field) {
             let newMessage = Object.assign({}, this.state.newMessage)
-            newMessage[field] = text
-            this.setState({
-                newMessage: newMessage,
-                subscreen: false
-            })
+            if ((field === 'toUser') && (isNaN(text))) {
+                return
+            } else {
+                newMessage[field] = text
+                this.setState({
+                    newMessage: newMessage,
+                    subscreen: false
+                })
+            }
         }
 
         updateCoords(obj) {
@@ -161,6 +166,30 @@ class SendMessage extends React.Component {
             setTimeout(() => this.updateDirections(), 0)
         }
 
+        async sendSMS() {
+            let iosMessage = 'Get this App! https://www.apple.com/us/search/memestream'
+            let androidMessage = 'Get this App! https://play.google.com/store/search?q=memestream%20download'
+            const isAvailable = await SMS.isAvailableAsync();
+            if (isAvailable) {
+                SMS.sendSMSAsync(this.state.newMessage.toUser, Platform.OS === 'ios' ? iosMessage : androidMessage)
+            } else {
+                setTimeout(()=>{Alert.alert('You don\t have SMS on this device.')}, 1000)
+            }
+        }
+
+        alerting() {
+            Alert.alert(
+                'Tell your friend to download MemeStream!',
+                '(We checked their phone and they don\'t have it)',
+              [
+                { text: 'Ask me later', onPress: () => console.log('Ask me later pressed') },
+                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                { text: 'OK', onPress: () => this.sendSMS() },
+              ],
+              { cancelable: false }
+            )
+        }
+
         cancel() {
             this.props.toggleCreateMessage()
             this.updateNewMessage('', 'toUser')
@@ -179,8 +208,11 @@ class SendMessage extends React.Component {
             utils
             .createMessages(params)
             .then(data => {
-                if(data.confirmation === 'fail') {
-                    throw new Error(data.message)
+                if (data.message === 'User not found') {
+                    setTimeout(()=>this.alerting(), 1000)
+                // }
+                // if(data.confirmation === 'fail') {
+                //     throw new Error(data.message)
                 } else {
                     this.navigateToConversationFromSentMessage(data.data)
                 }
@@ -229,7 +261,7 @@ class SendMessage extends React.Component {
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
 
                     <TextInput
-                        placeholder={'To:'}
+                        placeholder={'To: (phone number)'}
                         placeholderTextColor={'rgba(0,0,0, .6)'}
                         autoFocus={this.props.toUser === undefined ? true : false}
                         style={[styles.inputs, {marginTop: 5}]}
@@ -241,6 +273,7 @@ class SendMessage extends React.Component {
                         onChangeText={text => this.updateRecipient(text, 'toUser')}
                         onSubmitEditing={() => this.mainInput.focus()}
                         returnKeyType={"next"}
+                        value={this.state.newMessage.toUser}
                     />
                 </View>
 
