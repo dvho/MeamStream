@@ -1,9 +1,13 @@
 import React from 'react'
 import { View, Text, StyleSheet, ActivityIndicator, AsyncStorage, FlatList, StatusBar, Modal, TouchableOpacity, TextInput } from 'react-native'
 import { Entypo } from '@expo/vector-icons'
+import { Notifications } from 'expo'
+import * as Permissions from 'expo-permissions'
 import { Message, SendMessage, LogoName } from '../views'
 import utils from '../../utils'
 import config from '../../config'
+
+//Push notifications https://www.youtube.com/watch?v=-2zoM_QWGY0
 
 class Home extends React.Component {
 
@@ -43,6 +47,43 @@ class Home extends React.Component {
         }
         this.toggleCreateMessage = this.toggleCreateMessage.bind(this)
         this.fetchMessages = this.fetchMessages.bind(this)
+        this.setOrVerifyPushToken = this.setOrVerifyPushToken.bind(this)
+    }
+
+    async setOrVerifyPushToken() {
+        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS)
+        let finalStatus = existingStatus
+        if (existingStatus !== 'granted') {
+            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+            finalStatus = status
+        }
+        if (finalStatus !== 'granted') {
+            return;
+        }
+
+        try { 
+            let token = await Notifications.getExpoPushTokenAsync()
+            let userId = await AsyncStorage.getItem(config.userIdKey)
+            // POST the token to your backend server from where you can retrieve it to send push notifications. I created a new route in the API for this that maduse of Turbo360's turbo.updateEntity method
+            return fetch(`${config.baseUrl}api/updateuser`, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    },
+                body: JSON.stringify({
+                    token: {
+                        value: token,
+                    },
+                    user: {
+                        id: userId,
+                    }
+                })
+            })
+        }
+        catch(err) {
+            console.log(err)
+        }
     }
 
     toggleCreateMessage() {
@@ -103,7 +144,8 @@ class Home extends React.Component {
         })
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        this.setOrVerifyPushToken()
         this.props.navigation.setParams({
             toggleCreateMessage: this.toggleCreateMessage,
             showIcon: !this.state.showCreateMessage

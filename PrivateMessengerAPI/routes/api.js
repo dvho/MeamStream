@@ -48,6 +48,27 @@ router.get("/user", (req, res) => {
 // })
 
 
+router.post('/updateuser', function(req, res){
+    const resource = 'user'
+    const userId = req.body.user.id
+    const pushToken = req.body.token.value
+
+	turbo.updateEntity(resource, userId, { pushToken: pushToken })
+	.then(data => {
+		res.json({
+			confirmation: 'success',
+			data: data
+		})
+	})
+	.catch(err => {
+		res.json({
+			confirmation: 'fail',
+			message: err.message
+		})
+	})
+})
+
+
 //Need to implement some pagination for this route
 router.get("/user/:id", function(req, res) {
     const resource = 'user'
