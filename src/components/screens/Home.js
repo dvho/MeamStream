@@ -61,10 +61,12 @@ class Home extends React.Component {
             return;
         }
 
-        try { 
-            let token = await Notifications.getExpoPushTokenAsync()
-            let userId = await AsyncStorage.getItem(config.userIdKey)
-            // POST the token to your backend server from where you can retrieve it to send push notifications. I created a new route in the API for this that maduse of Turbo360's turbo.updateEntity method
+        let token = await Notifications.getExpoPushTokenAsync()
+        let userId = await AsyncStorage.getItem(config.userIdKey)
+        //Here's where to store the above, token and userId, in Redux
+
+        try {
+            // Each user who permits push notifications gets their unique token posted to the server under their User id so that it can be retrieved when a push notification is sent. I created a new route in the API for this that uses Turbo360's turbo.updateEntity method.
             return fetch(`${config.baseUrl}api/updateuser`, {
                 method: 'POST',
                 headers: {
@@ -80,10 +82,12 @@ class Home extends React.Component {
                     }
                 })
             })
+            console.log('can i log here?')
         }
         catch(err) {
             console.log(err)
         }
+
     }
 
     toggleCreateMessage() {
@@ -115,7 +119,7 @@ class Home extends React.Component {
                 const endReached = sorted.length === 0
                 this.setState({
                     lastSuccessfullyFetchedPage: page,
-                    messages: newMessages, //temporarily commenting this out so that state isn't set with an empty array until I can get messages on the backend
+                    messages: newMessages, //I was temporarily commenting this out (so that state wasn't set with an empty array) until I could get messages on the backend.
                     showActivityIndictor: false,
                     fetchingPage: false,
                     endReached: endReached
@@ -129,9 +133,11 @@ class Home extends React.Component {
             })
     }
 
-    navigateToConversationFromSentMessage(data) {
-        this.props.navigation.navigate('conversation', {me: data.fromUser, user: data.toUser})
-    }
+    // navigateToConversationFromSentMessage(data) {
+    //     console.log('calling from home')
+    //     this.props.navigation.navigate('conversation', {me: data.fromUser, user: data.toUser, newMessage: data})
+    // }
+    
     navigateToConversationFromReadingMessages(data) {
         this.props.navigation.navigate('conversation', {me: data.toUser, user: data.fromUser})
     }
@@ -161,7 +167,7 @@ class Home extends React.Component {
             <View style={styles.container}>
 
             <Modal visible={this.state.showCreateMessage} transparent={true} animationType="fade" onRequestClose={this.cancel}>
-                <SendMessage navProps={this.props.navigation} toggleCreateMessage={this.toggleCreateMessage} navigateToConversationFromSentMessage={this.navigateToConversationFromSentMessage}/>
+                <SendMessage navProps={this.props.navigation} toggleCreateMessage={this.toggleCreateMessage}/>
             </Modal>
 
             <StatusBar barStyle='dark-content'/>

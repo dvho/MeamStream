@@ -54,7 +54,7 @@ class Conversation extends React.Component {
 
         if (this.state.messages.length === 0) {
                 this.setState({
-                    messages: sorted, //I was temporarily commenting this out, and hardcoding messages into state, so that state wasn't set with an empty array until I could get messages on the backend
+                    messages: sorted, //I was temporarily commenting this out (hardcoding messages into state) so that state wasn't set with an empty array until I could get messages on the backend.
                     showActivityIndictor: false
                 })
         } else if (this.props.navigation.state.params.newMessage !== undefined && this.props.navigation.state.params.newMessage.id !== this.state.messages[0].id) {

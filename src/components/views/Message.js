@@ -36,6 +36,7 @@ class Message extends React.Component {
         })
     }
 
+    //Technically, you don't want to do the below here in Message.js. You should do it when the Home.js component mounts, and instead of doing this.setState(contacts: contacts.data), set the global state in Redux. Then in both Message.js and Conversation.js (for the Conversation.js navbar) you want to run doesContactExist() from a common util function.
     getContactsPermissionAsync = async () => {
         const { status } = await Permissions.askAsync(Permissions.CONTACTS)
         if (status !== 'granted') {
@@ -55,7 +56,7 @@ class Message extends React.Component {
     }
 
     componentDidMount() {
-        this.getContactsPermissionAsync()
+        this.getContactsPermissionAsync() //This will happen once from Home.js with Redux
         const fromId = this.props.message.fromUser
 
         fetch(`${config.baseUrl}api/user/${fromId}`, {
@@ -90,8 +91,6 @@ class Message extends React.Component {
     }
 
     render() {
-        //console.log(this.state.fromData)
-
         const senderImage = this.state.fromData.image !== '' ? `${this.state.fromData.image}=s40-c` : ''
 
         return(

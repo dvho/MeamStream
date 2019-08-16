@@ -3,8 +3,6 @@ import { View, StyleSheet, Image, Text, Animated, Easing } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import config from '../../config'
 
-//Change this into a class based component in order to utilize react animations as in Message.js component
-
 class MessageShort extends React.Component {
 
     constructor() {
