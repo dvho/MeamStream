@@ -17,15 +17,15 @@ class Png extends React.Component {
         const panResponder = PanResponder.create({
            onStartShouldSetPanResponder: () => true,
            onPanResponderMove: (event, gesture) => {
-               if (((gesture.moveX - event.nativeEvent.locationX - 11) > 0) && ((gesture.moveX - event.nativeEvent.locationX + config.pngWidth - 11) < config.canvasWidth ) && ((gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 41) > 0) && ((gesture.moveY - event.nativeEvent.locationY + config.pngWidth - 41) < (config.canvasHeight + config.headerHeight))) {
+               if (((gesture.moveX - event.nativeEvent.locationX - 10) > 0) && ((gesture.moveX - event.nativeEvent.locationX + config.pngWidth - 10) < config.canvasWidth ) && ((gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 42) > 0) && ((gesture.moveY - event.nativeEvent.locationY + config.pngWidth - 42) < (config.canvasHeight + config.headerHeight))) {
                    let locationX = event.nativeEvent.locationX
                    let locationY = event.nativeEvent.locationY
                    setTimeout(() => {
                        position.setValue({ x: gesture.dx, y: gesture.dy })
                            this.setState({
                                coords: {
-                                   x: (gesture.moveX - locationX - 11) / config.canvasWidth,
-                                   y: (gesture.moveY - locationY - config.headerHeight - 41) / config.canvasHeight
+                                   x: (gesture.moveX - locationX - 10) / config.canvasWidth,
+                                   y: (gesture.moveY - locationY - config.headerHeight - 42) / config.canvasHeight
                                },
                                outOfRange: false
                            })

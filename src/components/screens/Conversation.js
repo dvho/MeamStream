@@ -14,11 +14,11 @@ class Conversation extends React.Component {
             headerStyle: {
                 backgroundColor: config.colors.pastelGray
             },
-            headerTintColor: config.colors.blue,
-            headerTitleStyle: {
-                fontWeight: 'bold',
-                color: 'rgb(0,0,0)',
-            },
+            // headerTintColor: config.colors.blue,
+            // headerTitleStyle: {
+            //     fontWeight: 'bold',
+            //     color: 'rgb(0,0,0)',
+            // },
             headerRight: params.showIcon ? (
                 <TouchableOpacity onPress={params.toggleCreateMessage} activeOpacity={0.7} style={{paddingHorizontal: 20, paddingVertical: 10}}>
                     <Entypo name="new-message" size={config.screenWidth / 18} color={config.colors.blue}/>

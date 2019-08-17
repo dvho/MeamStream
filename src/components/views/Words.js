@@ -15,12 +15,12 @@ class Png extends React.Component {
         const panResponder = PanResponder.create({
            onStartShouldSetPanResponder: () => true,
            onPanResponderMove: (event, gesture) => { //For the conditional statement and function below one could grab x and y locations from the View's onLayout properties but then the gestures themselves wouldn't work for some reason.
-               if (((gesture.moveX - event.nativeEvent.locationX - 5) > 0) && ((gesture.moveX - event.nativeEvent.locationX + this.state.textWidth - 5) < config.canvasWidth ) && ((gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 41) > 0) && ((gesture.moveY - event.nativeEvent.locationY + this.state.textHeight - 41) < (config.canvasHeight + config.headerHeight))) {
+               if (((gesture.moveX - event.nativeEvent.locationX - 5) > 0) && ((gesture.moveX - event.nativeEvent.locationX + this.state.textWidth - 5) < config.canvasWidth ) && ((gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 42) > 0) && ((gesture.moveY - event.nativeEvent.locationY + this.state.textHeight - 42) < (config.canvasHeight + config.headerHeight))) {
                    setTimeout(() => position.setValue({ x: gesture.dx, y: gesture.dy }), 0) //draggable content will get lost unless position.setValue is broken out into a setTimeout.
                    this.setState({
                        coords: {
                            x: (gesture.moveX - event.nativeEvent.locationX - 5) / config.canvasWidth,
-                           y: (gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 41) / config.canvasHeight
+                           y: (gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 42) / config.canvasHeight
                        },
                        outOfRange: false
                    })
