@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, ActivityIndicator, TextInput, AsyncStorage, StatusBar, TouchableOpacity, Keyboard, Image, Animated, Easing, ImageEditor} from 'react-native'
+import { View, Text, StyleSheet, TextInput, AsyncStorage, StatusBar, TouchableOpacity, Keyboard, Image, Animated, Easing, ImageEditor} from 'react-native'
 import config from '../../config'
 import Turbo from 'turbo360'
 import { Entypo, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons'
