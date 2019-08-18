@@ -10,8 +10,10 @@ import actions from '../../redux/actions'
 class Conversation extends React.Component {
 
     static navigationOptions = ({ navigation }) => {
+
         const params = navigation.state.params || {}
         return {
+            //In both Message.js and Conversation.js (for the Conversation.js navbar) you want to run doesContactExist() from a common util function.
             title: params.currentConversation || null,
             headerStyle: {
                 backgroundColor: config.colors.pastelGray
@@ -73,11 +75,10 @@ class Conversation extends React.Component {
     }
 
     async componentDidMount() {
-        console.log(this.props.state)
 
         this.props.navigation.setParams({
             toggleCreateMessage: this.toggleCreateMessage,
-            showIcon: !this.state.showCreateMessage
+            showIcon: !this.state.showCreateMessage,
         })
 
         const fromId = this.props.navigation.state.params.user
@@ -121,8 +122,24 @@ class Conversation extends React.Component {
             alert('Sorry ' + err.message)
         })
 
+        //Unable to put the below shared method (refered to as "doesContactExist" in Message.js) in utils because it doesn't properly return a single value when arguments are passed to it.
+
+        let currentConversation = this.state.fromData.username
+
+        const lastSevenDigitsUser = currentConversation.split('').reverse().splice(0,7).reverse().join('')
+        this.props.state.account.user.contacts.forEach(i => {
+            if (i.phoneNumbers !== undefined) {
+                if (i.phoneNumbers[0].digits.split('').length >= 7) {
+                    let lastSevenDigitsContact = i.phoneNumbers[0].digits.split('').reverse().splice(0,7).reverse().join('')
+                    if (lastSevenDigitsUser === lastSevenDigitsContact) {
+                        currentConversation = i.name
+                    }
+                }
+            }
+        })
+
         this.props.navigation.setParams({
-            currentConversation: this.state.fromData.username
+            currentConversation: currentConversation
         })
 
         utils
@@ -140,11 +157,12 @@ class Conversation extends React.Component {
     }
 
     render() {
+
         return (
             <View style={styles.container}>
 
             <Modal visible={this.state.showCreateMessage} transparent={true} animationType="fade" onRequestClose={this.cancel} onDismiss={this.renderMessages}>
-                <SendMessage toUser={this.state.fromData.username} navProps={this.props.navigation} toggleCreateMessage={this.toggleCreateMessage}/>
+                <SendMessage toUserName={this.props.navigation.state.params.currentConversation} toUser={this.state.fromData.username} navProps={this.props.navigation} toggleCreateMessage={this.toggleCreateMessage}/>
             </Modal>
 
             <Image source={config.images.backgroundTilePng} resizeMode='repeat' style={{position: 'absolute', width: config.screenWidth, height: config.screenWidth * 2}}/>

@@ -1,10 +1,11 @@
 import React from 'react'
 import { View, TouchableOpacity, StyleSheet, Image, Text, Animated, Easing } from 'react-native'
+import { connect } from 'react-redux'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import * as Permissions from 'expo-permissions'
-import * as Contacts from 'expo-contacts'
 import { TimeStamp } from './'
 import config from '../../config'
+import actions from '../../redux/actions'
 
 //Important to note that, in rendering the message object here, StyleSheet.hairlineWidth actually renders differently according to device. I've estimated it at .5 px, thereby displacing the screen width by an extra 1px, but if it ends up causing a rendering problem on different devices I'll have to substitute it for a 1px width of a very light gray.
 //Headsup, Siri automatially generates a contact for the phone itself which lacks a phoneNumbers array in the contacts.data object, however, displays the phone's own number when looking at the contact in the address book of the phone... very confusing so in case you're wondering why your app is crashing with a " "'0' is undefined" error even after buffering for it in a conditional statement check to see if Siri is the culprit.
@@ -15,14 +16,13 @@ class Message extends React.Component {
         this.state = {
             fadeInAnim: new Animated.Value(0),
             fromData: {},
-            contacts: [],
             contact: ''
         }
     }
 
-    doesContactExist() {
+    async doesContactExist() {
         const lastSevenDigitsUser = this.state.fromData.username.split('').reverse().splice(0,7).reverse().join('')
-        this.state.contacts.forEach(i => {
+        this.props.state.account.user.contacts.forEach(i => {
             if (i.phoneNumbers !== undefined) {
                 if (i.phoneNumbers[0].digits.split('').length >= 7) {
                     let lastSevenDigitsContact = i.phoneNumbers[0].digits.split('').reverse().splice(0,7).reverse().join('')
@@ -36,27 +36,8 @@ class Message extends React.Component {
         })
     }
 
-    //Technically, you don't want to do the below here in Message.js. You should do it when the Home.js component mounts, and instead of doing this.setState(contacts: contacts.data), set the global state in Redux. Then in both Message.js and Conversation.js (for the Conversation.js navbar) you want to run doesContactExist() from a common util function.
-    getContactsPermissionAsync = async () => {
-        const { status } = await Permissions.askAsync(Permissions.CONTACTS)
-        if (status !== 'granted') {
-          alert('Ok, MemeStream won\'t be able to display your friends\' names, hope ya don\'t mind.')
-          return
-        }
-        const contacts = await Contacts.getContactsAsync({
-          fields: [
-            Contacts.PHONE_NUMBERS
-          ]
-        })
-        if (contacts.total > 0) {
-            this.setState({
-                contacts: contacts.data
-            })
-        }
-    }
+    async componentDidMount() {
 
-    componentDidMount() {
-        this.getContactsPermissionAsync() //This will happen once from Home.js with Redux
         const fromId = this.props.message.fromUser
 
         fetch(`${config.baseUrl}api/user/${fromId}`, {
@@ -75,6 +56,7 @@ class Message extends React.Component {
             })
 
             this.doesContactExist()
+            //console.log(this.props.state.account.user.contacts)
 
             Animated.timing(                // Animate over time
               this.state.fadeInAnim,       // The animated value to drive
@@ -95,7 +77,7 @@ class Message extends React.Component {
 
         return(
             <Animated.View style={{opacity: this.state.fadeInAnim}}>
-                <TouchableOpacity onPress={() => this.props.nav()} activeOpacity={.7} style={styles.message} key={this.props.message.id}>
+                <TouchableOpacity onPress={() => this.props.nav('tim')} activeOpacity={.7} style={styles.message} key={this.props.message.id}>
                     <View style={styles.topRow}>
                         <View style={styles.userCol}>
 
@@ -193,4 +175,16 @@ const styles = StyleSheet.create({
         }
 })
 
-export default Message
+const stateToProps = state => {
+    return {
+        state: state
+    }
+}
+
+const dispatchToProps = dispatch => {
+    return {
+
+    }
+}
+
+export default connect(stateToProps, dispatchToProps)(Message)

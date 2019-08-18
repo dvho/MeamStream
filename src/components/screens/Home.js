@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Entypo } from '@expo/vector-icons'
 import { Notifications } from 'expo'
 import * as Permissions from 'expo-permissions'
+import * as Contacts from 'expo-contacts'
 import { Message, SendMessage, LogoName } from '../views'
 import utils from '../../utils'
 import config from '../../config'
@@ -39,6 +40,7 @@ class Home extends React.Component {
         this.state = {
             userId: '',
             pushToken: '',
+            contacts: [],
             showActivityIndictor: false,
             fetchingPage: false,
             showCreateMessage: false,
@@ -54,6 +56,16 @@ class Home extends React.Component {
         this.setOrVerifyPushToken = this.setOrVerifyPushToken.bind(this)
     }
 
+    //In both Message.js and Conversation.js (for the Conversation.js navbar) you want to run doesContactExist() from a common util function.
+
+    async getContactsPermission() {
+        const { status } = await Permissions.askAsync(Permissions.CONTACTS)
+        if (status !== 'granted') {
+          alert('Ok, MemeStream won\'t be able to display your friends\' names, hope ya don\'t mind.')
+          return
+        }
+    }
+
     async setOrVerifyPushToken() {
 
         const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS)
@@ -63,7 +75,7 @@ class Home extends React.Component {
             finalStatus = status
         }
         if (finalStatus !== 'granted') {
-            return;
+            return
         }
 
         try {
@@ -139,7 +151,7 @@ class Home extends React.Component {
     // }
 
     navigateToConversationFromReadingMessages(data) {
-        this.props.navigation.navigate('conversation', {me: data.toUser, user: data.fromUser})
+        this.props.navigation.navigate('conversation', {me: data.toUser, user: data.fromUser, contacts: this.state.contacts})
     }
 
     updateNewMessage(text, field) {
@@ -151,18 +163,27 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
+
+        this.getContactsPermission()
+        this.setOrVerifyPushToken()
+
+        this.fetchMessages()
+
         let userId = await AsyncStorage.getItem(config.userIdKey)
         let token = await Notifications.getExpoPushTokenAsync()
-        this.setState({userId: userId, pushToken: token})
+        let contacts = await Contacts.getContactsAsync({
+          fields: [
+            Contacts.PHONE_NUMBERS
+          ]
+        })
+        await this.setState({userId: userId, pushToken: token, contacts: contacts.data})
 
-        this.setOrVerifyPushToken()
         this.props.navigation.setParams({
             toggleCreateMessage: this.toggleCreateMessage,
             showIcon: !this.state.showCreateMessage
         })
-        this.fetchMessages()
 
-        this.props.userReceived(this.state)
+        await this.props.userReceived(this.state)
     }
 
     render() {

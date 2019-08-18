@@ -12,7 +12,7 @@ import actions from '../../redux/actions'
 
 //To hide toolbar TouchableOpacities upon clicking the T icon to toggle to regular text message (when all of the Png layers and canvas are empty strings) it would've been ideal to make visiblity 'hidden' when this.state.selectedLayer === 'message' but there's a known bug in React Native so I made opacities 0 AND rendered the onPress functions null https://github.com/facebook/react-native/issues/1322
 
-//TODO: 4) Need to integrate Redux in Home.js so that both Message.js and MessageShort.js have access to it, 5) once phone contacts are in redux I can personalize SMS and the "to" field in SendMessage.js as well as having names display in Messages.js and Conversation.js navbar, 7) Need to make Profile screen do more than just logout... it should look like the Authenticate.js screen and just show the user pic if that exists or countdownMp4 if not... and it should allow for user to update their profile pic using turbo.updateEntity in a new route in the API. Strangely, the optimal way to get the user profile photo to display on this screen is to just query for it because you really don't need to from Home and when querying for user data in Conversation you're already getting all the data back but it wouldn't make any sense to set global state here because you don't have to pass through it to get to profile screen 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 10) need to make time stamp behave like time stamps in current apps, 11) need to add Powered By Giphy and appy for a development API key and then production API key https://developers.giphy.com/faq/, 12) Need to move API from staging site to production (new acct)
+//TODO: 7) Need to make Profile screen do more than just logout... it should look like the Authenticate.js screen and just show the user pic if that exists or countdownMp4 if not... and it should allow for user to update their profile pic using turbo.updateEntity in a new route in the API. Strangely, the optimal way to get the user profile photo to display on this screen is to just query for it because you really don't need to from Home and when querying for user data in Conversation you're already getting all the data back but it wouldn't make any sense to set global state here because you don't have to pass through it to get to profile screen 8) need to make 3rd BottomTabNavigator tab that shows all my sent memes, 10) need to make time stamp behave like time stamps in current apps, 11) need to add Powered By Giphy and appy for a development API key and then production API key https://developers.giphy.com/faq/, 12) Need to move API from staging site to production (new acct)
 
 
 class SendMessage extends React.Component {
@@ -235,7 +235,7 @@ class SendMessage extends React.Component {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    to: this.props.state.account.user.pushToken, //Pull this from Redux
+                    to: this.props.state.account.user.pushToken, //Pulled from Redux
                     sound: 'default',
                     title: 'New message!',
                     body: this.state.newMessage.message !== '' ? this.state.newMessage.message : 'Click to see the animation.'
@@ -291,11 +291,10 @@ class SendMessage extends React.Component {
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         spellCheck={false}
-                        value={this.state.newMessage.toUser}
                         onChangeText={text => this.updateRecipient(text, 'toUser')}
                         onSubmitEditing={() => this.mainInput.focus()}
                         returnKeyType={"next"}
-                        value={this.state.newMessage.toUser}
+                        value={this.props.toUserName !== '' ? this.props.toUserName : this.state.newMessage.toUser}
                     />
                 </View>
 
