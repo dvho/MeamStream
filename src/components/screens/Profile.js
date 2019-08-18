@@ -1,12 +1,14 @@
 import React from 'react'
 import { View, Text, StyleSheet, AsyncStorage, StatusBar, TouchableOpacity, Image, Animated, Easing, ImageEditor} from 'react-native'
+import { connect } from 'react-redux'
 import config from '../../config'
 import Turbo from 'turbo360'
-import { Entypo, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons'
+import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Video } from 'expo-av'
 import Constants from 'expo-constants'
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
+import actions from '../../redux/actions'
 
 class Profile extends React.Component {
     constructor() {
@@ -19,6 +21,7 @@ class Profile extends React.Component {
             fadeInInterface: new Animated.Value(0),
             //fadeInProfilePic: new Animated.Value(0),
             selfieIconHue: 0,
+            logoutIconHue: 180,
             intervalId: null,
             imageProcessingStatus: '',
             profileImage: '',
@@ -31,7 +34,6 @@ class Profile extends React.Component {
         this.startHueIncrement = this.startHueIncrement.bind(this)
     }
 
-
     logout() {
         AsyncStorage.removeItem(config.userIdKey)
         .then(removed => {
@@ -40,11 +42,12 @@ class Profile extends React.Component {
     }
 
     updateProfilePic(image) {
+        //In addition to setting this in state (and displaying it in place of the old image / video placeholder) need to update the user's account with the image with fetch, so you'll already need to have profile info from Redux and an API route that uses turbo.updateEntity to handle it. The image isn't in the Redux state at this point so you'll have to fetch it on componentDidMount. Once the image is updated you'll have to update it in Redux as well in the event the user updated their pic and then navigated away from Profile and back again, otherwise they'll just keep seeing the pre-updated image.
         this.setState({
-            selectedImage: image
+            selectedImage: image,
+            showImagePicker: !this.state.showImagePicker
         })
         console.log(image)
-        //here's where I need to alrady have the user profile info from Redux and tie this new profile pic to the user instead of setting in state
     }
 
     getCameraRollPermissionAsync = async () => {
@@ -85,19 +88,13 @@ class Profile extends React.Component {
             this.setState({
                 imageProcessingStatus: ''
             })
-
         this.updateProfilePic(cdnResp.result.url)
-
-        //In addition to setting this in state (and displaying it in place of the old image / video placeholder) update the user's account with the image
-        this.setState({
-            selectedImage: result.uri,
-            showImagePicker: !this.state.showImagePicker
-        })
     }
 
     startHueIncrement() {
             this.setState({
-                selfieIconHue: (this.state.selfieIconHue + 1) % 360
+                selfieIconHue: (this.state.selfieIconHue + 1) % 360,
+                logoutIconHue: (this.state.logoutIconHue + 1) % 360,
             })
     }
 
@@ -113,6 +110,7 @@ class Profile extends React.Component {
     }
 
     componentDidMount() {
+        console.log(this.props.state.account.user)
         this.getCameraRollPermissionAsync()
         const intervalId = setInterval(this.startHueIncrement, 2)
         this.setState({intervalId: intervalId})
@@ -164,7 +162,7 @@ class Profile extends React.Component {
         return(
             <Animated.View style={[styles.container, {opacity: this.state.fadeInScreen}]}>
 
-                <StatusBar barStyle='light-content'/>
+                {/* <StatusBar barStyle='light-content'/> //There's an issue here that light-content is not going back to dark-content when navigating back to Home.js, need to search that */}
 
                 <View style={{position: 'absolute', backgroundColor: 'rgb(255,255,255)', width: config.screenWidth, height: config.screenWidth}}></View>
 
@@ -186,7 +184,7 @@ class Profile extends React.Component {
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={() => this.logout()} activeOpacity={0.1} style={{padding: 15, flexDirection: 'row', alignItems: 'center'}}>
-                            <Text style={[styles.texts, styles.dropShadows]}>Logout</Text>
+                            <Entypo name="log-out" size={45} color={`'hsl(${this.state.logoutIconHue}, 75%, 25%)'`} style={[{paddingVertical: 4}, styles.leftIconShadow]}/>
                         </TouchableOpacity>
                     </View>
 
@@ -223,4 +221,16 @@ const styles = StyleSheet.create({
     },
 })
 
-export default Profile
+const stateToProps = state => {
+    return {
+        state: state
+    }
+}
+
+const dispatchToProps = dispatch => {
+    return {
+
+    }
+}
+
+export default connect(stateToProps, dispatchToProps)(Profile)

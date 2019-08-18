@@ -21,6 +21,7 @@ class Authenticate extends React.Component {
             fadeInInterface: new Animated.Value(0),
             fadeInProfilePic: new Animated.Value(0),
             selfieIconHue: 0,
+            newBoxIconHue: 180,
             intervalId: null,
             imageProcessingStatus: '',
             profileImage: '',
@@ -113,7 +114,8 @@ class Authenticate extends React.Component {
 
     startHueIncrement() {
             this.setState({
-                selfieIconHue: (this.state.selfieIconHue + 1) % 360
+                selfieIconHue: (this.state.selfieIconHue + 1) % 360,
+                newBoxIconHue: (this.state.newBoxIconHue + 1) % 360
             })
     }
 
@@ -331,7 +333,7 @@ class Authenticate extends React.Component {
                             <MaterialCommunityIcons name="tag-faces" size={45} color={`'hsl(${this.state.selfieIconHue}, 75%, 25%)'`} style={[{paddingVertical: 4}, styles.leftIconShadow]}/>
                         </TouchableOpacity> }
                         <TouchableOpacity onPress={() => this.togglePage()} activeOpacity={0.1} style={{paddingVertical: 15, paddingHorizontal: 5}}>
-                            <MaterialCommunityIcons name="new-box" size={48} color={this.state.loginScreen ? config.colors.inactiveButton : config.colors.activeButton}  style={styles.newIconShadow}/>
+                            <MaterialCommunityIcons name="new-box" size={48} color={this.state.loginScreen ? config.colors.inactiveButton : `'hsl(${this.state.newBoxIconHue}, 75%, 25%)'`}  style={styles.newIconShadow}/>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => this.submit()} activeOpacity={0.1} style={[{paddingHorizontal: 10, paddingVertical: 5, flexDirection: 'row', alignItems: 'center', borderWidth: StyleSheet.hairlineWidth, borderColor: this.state.textColor, borderRadius: 10}, styles.loginStatusShadow]}>
                             <Text style={{fontSize: 16, fontWeight: 'bold', color: this.state.textColor}}>{this.state.loginStatus}</Text>

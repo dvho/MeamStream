@@ -99,7 +99,6 @@ class Home extends React.Component {
         catch(err) {
             console.log(err)
         }
-
     }
 
     toggleCreateMessage() {
@@ -144,7 +143,6 @@ class Home extends React.Component {
                 })
             })
     }
-
     // navigateToConversationFromSentMessage(data) {
     //     console.log('calling from home')
     //     this.props.navigation.navigate('conversation', {me: data.fromUser, user: data.toUser, newMessage: data})
@@ -166,7 +164,6 @@ class Home extends React.Component {
 
         this.getContactsPermission()
         this.setOrVerifyPushToken()
-
         this.fetchMessages()
 
         let userId = await AsyncStorage.getItem(config.userIdKey)
@@ -182,8 +179,8 @@ class Home extends React.Component {
             toggleCreateMessage: this.toggleCreateMessage,
             showIcon: !this.state.showCreateMessage
         })
-
-        await this.props.userReceived(this.state)
+        
+        this.props.userReceived(this.state)
     }
 
     render() {
