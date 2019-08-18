@@ -110,7 +110,6 @@ class Profile extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.state.account.user)
         this.getCameraRollPermissionAsync()
         const intervalId = setInterval(this.startHueIncrement, 2)
         this.setState({intervalId: intervalId})
@@ -149,6 +148,7 @@ class Profile extends React.Component {
             duration: 4000,             // Make it take a 3000ms
             easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
             }).start()
+        //Need an animation here for the profile pic that will load in when it's changed
     }
 
     componentWillUnmount() {

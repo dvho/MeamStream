@@ -39,6 +39,8 @@ class Home extends React.Component {
         super()
         this.state = {
             userId: '',
+            username: '',
+            profileImage: '',
             pushToken: '',
             contacts: [],
             showActivityIndictor: false,
@@ -53,6 +55,7 @@ class Home extends React.Component {
         }
         this.toggleCreateMessage = this.toggleCreateMessage.bind(this)
         this.fetchMessages = this.fetchMessages.bind(this)
+        this.fetchUserData = this.fetchUserData.bind(this)
         this.setOrVerifyPushToken = this.setOrVerifyPushToken.bind(this)
     }
 
@@ -112,6 +115,30 @@ class Home extends React.Component {
         })
     }
 
+    async fetchUserData() {
+        fetch(`${config.baseUrl}api/user/${this.state.userId}`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+        .then(response => {
+            return(response.json())
+        })
+        .then(responseJSON => {
+            this.setState({
+                username: responseJSON.data.username,
+                profileImage: responseJSON.data.image
+            })
+        })
+        .catch(err => {
+            this.setState({
+                userExists: undefined
+            })
+        })
+    }
+
     fetchMessages() {
         if (this.state.fetchingPage || this.state.endReached) {
             return
@@ -148,8 +175,9 @@ class Home extends React.Component {
     //     this.props.navigation.navigate('conversation', {me: data.fromUser, user: data.toUser, newMessage: data})
     // }
 
-    navigateToConversationFromReadingMessages(data) {
-        this.props.navigation.navigate('conversation', {me: data.toUser, user: data.fromUser, contacts: this.state.contacts})
+    async navigateToConversationFromReadingMessages(data) {
+        await this.props.userReceived(this.state) //Just calling it again here to fix a bug that contacts weren't coming through sometimes
+        await this.props.navigation.navigate('conversation', {me: data.toUser, user: data.fromUser, contacts: this.state.contacts})
     }
 
     updateNewMessage(text, field) {
@@ -161,6 +189,7 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
+        //Need to get the profile image here as well, set it in state, and let that update in Redux below so that Profile.js has access to it
 
         this.getContactsPermission()
         this.setOrVerifyPushToken()
@@ -173,14 +202,15 @@ class Home extends React.Component {
             Contacts.PHONE_NUMBERS
           ]
         })
-        await this.setState({userId: userId, pushToken: token, contacts: contacts.data})
 
         this.props.navigation.setParams({
             toggleCreateMessage: this.toggleCreateMessage,
             showIcon: !this.state.showCreateMessage
         })
-        
-        this.props.userReceived(this.state)
+        await this.setState({userId: userId, pushToken: token, contacts: contacts.data})
+        await this.props.userReceived(this.state)
+
+        this.fetchUserData()
     }
 
     render() {
