@@ -1,9 +1,11 @@
 import React from 'react'
 import { View, StyleSheet, Text, FlatList, TouchableOpacity, Modal, Image } from 'react-native'
+import { connect } from 'react-redux'
 import { Entypo } from '@expo/vector-icons'
 import { MessageShort, SendMessage } from '../views'
 import config from '../../config'
 import utils from '../../utils'
+import actions from '../../redux/actions'
 
 class Conversation extends React.Component {
 
@@ -71,6 +73,7 @@ class Conversation extends React.Component {
     }
 
     async componentDidMount() {
+        console.log(this.props.state)
 
         this.props.navigation.setParams({
             toggleCreateMessage: this.toggleCreateMessage,
@@ -168,4 +171,16 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Conversation
+const stateToProps = state => {
+    return {
+        state: state
+    }
+}
+
+const dispatchToProps = dispatch => {
+    return {
+
+    }
+}
+
+export default connect(stateToProps, dispatchToProps)(Conversation)

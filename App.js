@@ -5,6 +5,8 @@ import { AppLoading } from 'expo'
 import { Home, Authenticate, Conversation, Profile } from './src/components/screens'
 import config from './src/config'
 import { createAppContainer, createSwitchNavigator, createStackNavigator, createBottomTabNavigator } from 'react-navigation'
+import store from './src/redux/stores'
+import { Provider } from 'react-redux'
 
 import { Zocial, Ionicons } from '@expo/vector-icons'
 
@@ -111,7 +113,7 @@ class App extends React.Component {
             )
         }
         return(
-            this.state.authChecked ? <Switch/> : <ActivityIndicator size='large'/>
+            this.state.authChecked ? <Provider store={store.configureStore()}><Switch/></Provider> : <ActivityIndicator size='large'/>
         )
     }
 

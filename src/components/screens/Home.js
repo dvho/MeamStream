@@ -1,11 +1,13 @@
 import React from 'react'
 import { View, Text, StyleSheet, ActivityIndicator, AsyncStorage, FlatList, StatusBar, Modal, TouchableOpacity, TextInput } from 'react-native'
+import { connect } from 'react-redux'
 import { Entypo } from '@expo/vector-icons'
 import { Notifications } from 'expo'
 import * as Permissions from 'expo-permissions'
 import { Message, SendMessage, LogoName } from '../views'
 import utils from '../../utils'
 import config from '../../config'
+import actions from '../../redux/actions'
 
 //Push notifications https://www.youtube.com/watch?v=-2zoM_QWGY0
 
@@ -35,6 +37,8 @@ class Home extends React.Component {
     constructor() {
         super()
         this.state = {
+            userId: '',
+            pushToken: '',
             showActivityIndictor: false,
             fetchingPage: false,
             showCreateMessage: false,
@@ -51,6 +55,7 @@ class Home extends React.Component {
     }
 
     async setOrVerifyPushToken() {
+
         const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS)
         let finalStatus = existingStatus
         if (existingStatus !== 'granted') {
@@ -60,10 +65,6 @@ class Home extends React.Component {
         if (finalStatus !== 'granted') {
             return;
         }
-
-        let token = await Notifications.getExpoPushTokenAsync()
-        let userId = await AsyncStorage.getItem(config.userIdKey)
-        //Here's where to store the above, token and userId, in Redux
 
         try {
             // Each user who permits push notifications gets their unique token posted to the server under their User id so that it can be retrieved when a push notification is sent. I created a new route in the API for this that uses Turbo360's turbo.updateEntity method.
@@ -75,14 +76,13 @@ class Home extends React.Component {
                     },
                 body: JSON.stringify({
                     token: {
-                        value: token,
+                        value: this.state.pushToken,
                     },
                     user: {
-                        id: userId,
+                        id: this.state.userId,
                     }
                 })
             })
-            console.log('can i log here?')
         }
         catch(err) {
             console.log(err)
@@ -137,7 +137,7 @@ class Home extends React.Component {
     //     console.log('calling from home')
     //     this.props.navigation.navigate('conversation', {me: data.fromUser, user: data.toUser, newMessage: data})
     // }
-    
+
     navigateToConversationFromReadingMessages(data) {
         this.props.navigation.navigate('conversation', {me: data.toUser, user: data.fromUser})
     }
@@ -151,12 +151,18 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
+        let userId = await AsyncStorage.getItem(config.userIdKey)
+        let token = await Notifications.getExpoPushTokenAsync()
+        this.setState({userId: userId, pushToken: token})
+
         this.setOrVerifyPushToken()
         this.props.navigation.setParams({
             toggleCreateMessage: this.toggleCreateMessage,
             showIcon: !this.state.showCreateMessage
         })
         this.fetchMessages()
+
+        this.props.userReceived(this.state)
     }
 
     render() {
@@ -227,4 +233,16 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Home
+const stateToProps = state => {
+    return {
+
+    }
+}
+
+const dispatchToProps = dispatch => {
+    return {
+        userReceived: (user) => dispatch(actions.userReceived(user))
+    }
+}
+
+export default connect(stateToProps, dispatchToProps)(Home)

@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, TextInput, Text, TouchableOpacity, StyleSheet, Keyboard, Image, FlatList, KeyboardAvoidingView, Animated, Easing, Alert, Platform } from 'react-native'
+import { connect } from 'react-redux'
 import { GiphyOption, Png, Words } from './'
 import { Video } from 'expo-av'
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'
@@ -7,6 +8,7 @@ import * as SMS from 'expo-sms'
 const giphy = require('giphy-api')() //eventually apply for development API key and then production API key https://developers.giphy.com/faq/
 import utils from '../../utils'
 import config from '../../config'
+import actions from '../../redux/actions'
 
 //To hide toolbar TouchableOpacities upon clicking the T icon to toggle to regular text message (when all of the Png layers and canvas are empty strings) it would've been ideal to make visiblity 'hidden' when this.state.selectedLayer === 'message' but there's a known bug in React Native so I made opacities 0 AND rendered the onPress functions null https://github.com/facebook/react-native/issues/1322
 
@@ -223,7 +225,9 @@ class SendMessage extends React.Component {
         }
 
         sendPushNotification() {
-            //Check Redux to see if push token exists (i.e. if user has permitted push notifications) and if not just return here, else run the below fetch
+            if (this.props.state.account.user.pushToken === '') {
+                return
+            }
             let response = fetch('https://exp.host/--/api/v2/push/send', {
                 method: 'POST',
                 headers: {
@@ -231,7 +235,7 @@ class SendMessage extends React.Component {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    to: 'ExponentPushToken[4EgM6xOEljKKnXTTuu7-ih]', //Pull this from Redux
+                    to: this.props.state.account.user.pushToken, //Pull this from Redux
                     sound: 'default',
                     title: 'New message!',
                     body: this.state.newMessage.message !== '' ? this.state.newMessage.message : 'Click to see the animation.'
@@ -428,4 +432,16 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SendMessage
+const stateToProps = state => {
+    return {
+        state: state
+    }
+}
+
+const dispatchToProps = dispatch => {
+    return {
+
+    }
+}
+
+export default connect(stateToProps, dispatchToProps)(SendMessage)
