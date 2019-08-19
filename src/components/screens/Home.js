@@ -70,7 +70,6 @@ class Home extends React.Component {
     }
 
     async setOrVerifyPushToken() {
-
         const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS)
         let finalStatus = existingStatus
         if (existingStatus !== 'granted') {
@@ -79,28 +78,6 @@ class Home extends React.Component {
         }
         if (finalStatus !== 'granted') {
             return
-        }
-
-        try {
-            // Each user who permits push notifications gets their unique token posted to the server under their User id so that it can be retrieved when a push notification is sent. I created a new route in the API for this that uses Turbo360's turbo.updateEntity method.
-            return fetch(`${config.baseUrl}api/updateuser`, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    },
-                body: JSON.stringify({
-                    token: {
-                        value: this.state.pushToken,
-                    },
-                    user: {
-                        id: this.state.userId,
-                    }
-                })
-            })
-        }
-        catch(err) {
-            console.log(err)
         }
     }
 
@@ -193,9 +170,9 @@ class Home extends React.Component {
     async componentDidMount() {
         //Need to get the profile image here as well, set it in state, and let that update in Redux below so that Profile.js has access to it
 
-        this.getContactsPermission()
-        this.setOrVerifyPushToken()
-        this.fetchMessages()
+        await this.getContactsPermission()
+        await this.setOrVerifyPushToken()
+        await this.fetchMessages()
 
         let userId = await AsyncStorage.getItem(config.userIdKey)
         let token = await Notifications.getExpoPushTokenAsync()
@@ -209,10 +186,34 @@ class Home extends React.Component {
             toggleCreateMessage: this.toggleCreateMessage,
             showIcon: !this.state.showCreateMessage
         })
+
         await this.setState({userId: userId, pushToken: token, contacts: contacts.data})
         await this.props.userReceived(this.state)
 
-        this.fetchUserData()
+        //the fetch below needs to be updated to handle a more dynamic route in the API which can also be used for updating the image. (i.e. put a type: pushToken object in the body
+
+        try {
+            // Each user who permits push notifications gets their unique token posted to the server under their User id so that it can be retrieved when a push notification is sent. I created a new route in the API for this that uses Turbo360's turbo.updateEntity method.
+            return fetch(`${config.baseUrl}api/updateuser`, {
+            method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    },
+                body: JSON.stringify({
+                    token: {
+                        value: this.state.pushToken,
+                    },
+                    user: {
+                        id: this.state.userId,
+                    }
+                })
+            })
+        }
+        catch(err) {
+            console.log(err)
+        }
+        await this.fetchUserData()
     }
 
     render() {
