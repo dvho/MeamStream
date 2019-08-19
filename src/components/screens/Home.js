@@ -132,6 +132,9 @@ class Home extends React.Component {
                 profileImage: responseJSON.data.image
             })
         })
+        .then(() => {
+            this.props.userReceived(this.state)
+        })
         .catch(err => {
             this.setState({
                 userExists: undefined
@@ -176,7 +179,6 @@ class Home extends React.Component {
     // }
 
     async navigateToConversationFromReadingMessages(data) {
-        await this.props.userReceived(this.state) //Just calling it again here to fix a bug that contacts weren't coming through sometimes
         await this.props.navigation.navigate('conversation', {me: data.toUser, user: data.fromUser, contacts: this.state.contacts})
     }
 

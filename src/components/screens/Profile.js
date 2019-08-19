@@ -19,9 +19,10 @@ class Profile extends React.Component {
             fadeOutVeil: new Animated.Value(1),
             fadeInScreen: new Animated.Value(0),
             fadeInInterface: new Animated.Value(0),
-            //fadeInProfilePic: new Animated.Value(0),
+            fadeInProfilePic: new Animated.Value(0),
             selfieIconHue: 0,
-            logoutIconHue: 180,
+            logoutIconHue: 120,
+            profilePicBackgroundHue: 240,
             intervalId: null,
             imageProcessingStatus: '',
             profileImage: '',
@@ -47,7 +48,6 @@ class Profile extends React.Component {
             selectedImage: image,
             showImagePicker: !this.state.showImagePicker
         })
-        console.log(image)
     }
 
     getCameraRollPermissionAsync = async () => {
@@ -95,6 +95,7 @@ class Profile extends React.Component {
             this.setState({
                 selfieIconHue: (this.state.selfieIconHue + 1) % 360,
                 logoutIconHue: (this.state.logoutIconHue + 1) % 360,
+                profilePicBackgroundHue: (this.state.profilePicBackgroundHue + 1) % 360
             })
     }
 
@@ -148,7 +149,12 @@ class Profile extends React.Component {
             duration: 4000,             // Make it take a 3000ms
             easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
             }).start()
-        //Need an animation here for the profile pic that will load in when it's changed
+        Animated.timing(                // Animate over time
+            this.state.fadeInProfilePic,  // The animated value to drive
+            { toValue: .5,                 // Animate to opacity: 1
+            duration: 2500,             // Make it take 2500ms
+            easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
+            }).start()
     }
 
     componentWillUnmount() {
@@ -166,9 +172,9 @@ class Profile extends React.Component {
 
                 <View style={{position: 'absolute', backgroundColor: 'rgb(255,255,255)', width: config.screenWidth, height: config.screenWidth}}></View>
 
-                <Video source={config.videos.countdownMp4} shouldPlay isLooping style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6)}} />
+                {this.props.state.account.user.profileImage === '' ? <Video source={config.videos.countdownMp4} shouldPlay isLooping style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6)}} /> : <View style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6), backgroundColor: `hsl(${this.state.profilePicBackgroundHue}, 100%, 50%)`}}></View>}
 
-                <Animated.View style={{opacity: this.state.fadeInProfilePic, position: 'absolute', top: Math.round(config.screenWidth * .16667)}}><Image source={{uri: this.state.profileImage !== '' ? this.state.profileImage : null}} style={{width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .58333)}}/></Animated.View>
+                <Animated.View style={{opacity: this.state.fadeInProfilePic, position: 'absolute', top: Math.round(config.screenWidth * .16667)}}><Image source={{uri: this.props.state.account.user.profileImage !== '' ? this.props.state.account.user.profileImage : null}} style={{width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .58333)}}/></Animated.View>
 
                 <Image source={config.images.theaterPng} style={{position: 'absolute', width: config.screenWidth, height: Math.round(config.screenWidth * 1.58333)}}/>
 
@@ -178,13 +184,13 @@ class Profile extends React.Component {
 
                 <Animated.View style={{opacity: this.state.fadeInInterface}}>
 
-                    <View style={{flexDirection: 'row', alignItems: 'center', marginTop: Math.round(config.screenWidth * .16667), padding: 8}}>
-                        <TouchableOpacity onPress={() => this.toggleSelectImage()} activeOpacity={0.1} style={{paddingVertical: 15, paddingHorizontal: 2}}>
-                            <MaterialCommunityIcons name="tag-faces" size={45} color={`'hsl(${this.state.selfieIconHue}, 75%, 25%)'`} style={[{paddingVertical: 4}, styles.leftIconShadow]}/>
+                    <View style={{width: config.screenWidth, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', top: config.screenWidth * .34}}>
+                        <TouchableOpacity onPress={() => this.toggleSelectImage()} activeOpacity={0.1} >
+                            <MaterialCommunityIcons name="tag-faces" size={54} color={`'hsl(${this.state.selfieIconHue}, 20%, 70%)'`} style={[{padding: 12, marginLeft: 40}, styles.leftIconShadow]}/>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.logout()} activeOpacity={0.1} style={{padding: 15, flexDirection: 'row', alignItems: 'center'}}>
-                            <Entypo name="log-out" size={45} color={`'hsl(${this.state.logoutIconHue}, 75%, 25%)'`} style={[{paddingVertical: 4}, styles.leftIconShadow]}/>
+                        <TouchableOpacity onPress={() => this.logout()} activeOpacity={0.1} >
+                            <Entypo name="log-out" size={45} color={`'hsl(${this.state.logoutIconHue}, 20%, 70%)'`} style={[{paddingRight: 12, marginTop: -6, marginRight: 36}, styles.rightIconShadow]}/>
                         </TouchableOpacity>
                     </View>
 
@@ -218,6 +224,12 @@ const styles = StyleSheet.create({
         shadowOpacity: .6,
         shadowRadius: 2,
         shadowOffset: {width: -10, height: 12}
+    },
+    rightIconShadow: {
+        textShadowColor: 'rgb(0,0,0)',
+        shadowOpacity: .6,
+        shadowRadius: 2,
+        shadowOffset: {width: 10, height: 12}
     },
 })
 
