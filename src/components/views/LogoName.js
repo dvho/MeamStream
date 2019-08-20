@@ -7,7 +7,7 @@ class LogoName extends React.Component {
   render() {
     return (
         <View style={{width: 100 + '%'}}>
-            <Image source={config.images.logoNamePng} style={{left: 20, width: 351/900 * config.screenWidth, height: 129/900 * config.screenWidth}}/>
+            <Image source={config.images.logoNamePng} style={{left: 20, width: 400/900 * config.screenWidth, height: 200/900 * config.screenWidth}}/>
         </View>
     );
   }

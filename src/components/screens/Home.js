@@ -20,7 +20,7 @@ class Home extends React.Component {
             headerLeft: <LogoName/>,
             headerStyle: {
                 backgroundColor: config.colors.pastelGray,
-                height: 129/900 * config.screenWidth + 30
+                height: 120/900 * config.screenWidth + 30
             },
             //headerTintColor: config.colors.blue,
             // headerTitleStyle: {
@@ -28,8 +28,8 @@ class Home extends React.Component {
             //     color: 'rgb(0,0,0)',
             // },
             headerRight: params.showIcon ? (
-                <TouchableOpacity onPress={params.toggleCreateMessage} activeOpacity={0.7} style={{paddingHorizontal: 20, paddingVertical: 10}}>
-                    <Entypo name="new-message" size={config.screenWidth / 18} color={config.colors.blue}/>
+                <TouchableOpacity onPress={params.toggleCreateMessage} activeOpacity={0.7} style={{paddingHorizontal: 22, paddingVertical: 10}}>
+                    <Entypo name="new-message" size={config.screenWidth / 16} color={config.colors.blue}/>
                 </TouchableOpacity>
             ) : null
         }

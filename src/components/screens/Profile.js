@@ -128,7 +128,7 @@ class Profile extends React.Component {
     componentDidMount() {
         this.getCameraRollPermissionAsync()
         const intervalId = setInterval(this.startHueIncrement, 2)
-        this.setState({intervalId: intervalId, profileImage: this.props.state.account.user.profileImage})
+        this.setState({intervalId: intervalId, profileImage: this.state.profileImage === '' ? this.props.state.account.user.profileImage : this.state.profileImage})
         Animated.timing(
             this.state.fadeInScreen,
             { toValue: 1,
@@ -191,6 +191,8 @@ class Profile extends React.Component {
 
                 <Image source={config.images.theaterPng} style={{position: 'absolute', width: config.screenWidth, height: Math.round(config.screenWidth * 1.58333)}}/>
 
+                <Animated.View style={{opacity: this.state.fadeInInterface, position: 'absolute', top: Math.round(config.screenWidth * .20)}}><Image source={config.images.logoNamePng} style={[{width: Math.round(config.screenWidth * .55), height: Math.round(config.screenWidth * .5 * .55), opacity: .65}, styles.logoShadow]}/></Animated.View>
+
                 <Text style={[{position: 'absolute', top: Math.round(config.screenWidth * .39), left: Math.round(config.screenWidth * .17), fontSize: 14, fontWeight: 'bold', color: `'hsl(${this.state.selfieIconHue}, 75%, 25%)'`}, styles.leftIconShadow]}>{this.state.imageProcessingStatus}</Text>
 
                 <Animated.View style={{opacity: this.state.fadeOutVeil, position: 'absolute', width: config.screenWidth, height: config.screenWidth * 2, backgroundColor: 'rgb(0,0,0)'}}/>
@@ -243,6 +245,12 @@ const styles = StyleSheet.create({
         shadowOpacity: .6,
         shadowRadius: 2,
         shadowOffset: {width: 10, height: 12}
+    },
+    logoShadow: {
+        textShadowColor: 'rgb(0,0,0)',
+        shadowOpacity: .6,
+        shadowRadius: 2,
+        shadowOffset: {width: -2, height: 12}
     },
 })
 
