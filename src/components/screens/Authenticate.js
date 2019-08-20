@@ -335,7 +335,7 @@ class Authenticate extends React.Component {
                         <TouchableOpacity onPress={() => this.togglePage()} activeOpacity={0.1} style={{paddingVertical: 15, paddingHorizontal: 5}}>
                             <MaterialCommunityIcons name="new-box" size={48} color={this.state.loginScreen ? config.colors.inactiveButton : `'hsl(${this.state.newBoxIconHue}, 75%, 25%)'`}  style={styles.newIconShadow}/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.submit()} activeOpacity={0.1} style={[{paddingHorizontal: 10, paddingVertical: 5, flexDirection: 'row', alignItems: 'center', borderWidth: StyleSheet.hairlineWidth, borderColor: this.state.textColor, borderRadius: 10}, styles.loginStatusShadow]}>
+                        <TouchableOpacity onPress={this.state.imageProcessingStatus === '' ? () => this.submit() : null} activeOpacity={0.1} style={[{paddingHorizontal: 10, paddingVertical: 5, flexDirection: 'row', alignItems: 'center', borderWidth: StyleSheet.hairlineWidth, borderColor: this.state.textColor, borderRadius: 10}, styles.loginStatusShadow]}>
                             <Text style={{fontSize: 16, fontWeight: 'bold', color: this.state.textColor}}>{this.state.loginStatus}</Text>
                             <Entypo style={this.state.loginHand === 'thumbs-up' ? {transform: [{rotateY: '180deg'}]} : null} name={this.state.loginHand} size={this.state.handSize} color={this.state.loginColor}/>
                         </TouchableOpacity>

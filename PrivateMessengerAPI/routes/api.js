@@ -49,11 +49,19 @@ router.get("/user", (req, res) => {
 
 
 router.post('/updateuser', function(req, res){
+    let obj
+
+    if (req.body.type === 'image') {
+        obj = {image: req.body.image.url}
+    }
+    if (req.body.type === 'pushToken') {
+        obj = {pushToken: req.body.token.value}
+    }
+
     const resource = 'user'
     const userId = req.body.user.id
-    const pushToken = req.body.token.value
 
-	turbo.updateEntity(resource, userId, { pushToken: pushToken })
+	turbo.updateEntity(resource, userId, obj)
 	.then(data => {
 		res.json({
 			confirmation: 'success',

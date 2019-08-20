@@ -76,8 +76,6 @@ class Conversation extends React.Component {
 
     async componentDidMount() {
 
-        await console.log(this.props.state)
-
         this.props.navigation.setParams({
             toggleCreateMessage: this.toggleCreateMessage,
             showIcon: !this.state.showCreateMessage,

@@ -26,8 +26,7 @@ class Profile extends React.Component {
             intervalId: null,
             imageProcessingStatus: '',
             profileImage: '',
-            showImagePicker: false,
-            selectedImage: null
+            showImagePicker: false
         }
         this.turbo = Turbo({site_id: config.turboAppId}) //better than putting it in state because we're no watching for any changes on it, it's static - setting a class variable as such for cases like these is best practice
         this.toggleSelectImage = this.toggleSelectImage.bind(this)
@@ -45,8 +44,24 @@ class Profile extends React.Component {
     updateProfilePic(image) {
         //In addition to setting this in state (and displaying it in place of the old image / video placeholder) need to update the user's account with the image with fetch, so you'll already need to have profile info from Redux and an API route that uses turbo.updateEntity to handle it. The image isn't in the Redux state at this point so you'll have to fetch it on componentDidMount. Once the image is updated you'll have to update it in Redux as well in the event the user updated their pic and then navigated away from Profile and back again, otherwise they'll just keep seeing the pre-updated image.
         this.setState({
-            selectedImage: image,
+            profileImage: image,
             showImagePicker: !this.state.showImagePicker
+        })
+        fetch(`${config.baseUrl}api/updateuser`, {
+        method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                },
+            body: JSON.stringify({
+                type: 'image',
+                image: {
+                    url: image,
+                },
+                user: {
+                    id: this.props.state.account.user.userId,
+                }
+            })
         })
     }
 
@@ -113,7 +128,7 @@ class Profile extends React.Component {
     componentDidMount() {
         this.getCameraRollPermissionAsync()
         const intervalId = setInterval(this.startHueIncrement, 2)
-        this.setState({intervalId: intervalId})
+        this.setState({intervalId: intervalId, profileImage: this.props.state.account.user.profileImage})
         Animated.timing(
             this.state.fadeInScreen,
             { toValue: 1,
@@ -163,8 +178,6 @@ class Profile extends React.Component {
 
     render() {
 
-        let selectedImage = this.state.selectedImage
-
         return(
             <Animated.View style={[styles.container, {opacity: this.state.fadeInScreen}]}>
 
@@ -172,9 +185,9 @@ class Profile extends React.Component {
 
                 <View style={{position: 'absolute', backgroundColor: 'rgb(255,255,255)', width: config.screenWidth, height: config.screenWidth}}></View>
 
-                {this.props.state.account.user.profileImage === '' ? <Video source={config.videos.countdownMp4} shouldPlay isLooping style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6)}} /> : <View style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6), backgroundColor: `hsl(${this.state.profilePicBackgroundHue}, 100%, 50%)`}}></View>}
+                {this.state.profileImage === '' ? <Video source={config.videos.countdownMp4} shouldPlay isLooping style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6)}} /> : <View style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6), backgroundColor: `hsl(${this.state.profilePicBackgroundHue}, 100%, 50%)`}}></View>}
 
-                <Animated.View style={{opacity: this.state.fadeInProfilePic, position: 'absolute', top: Math.round(config.screenWidth * .16667)}}><Image source={{uri: this.props.state.account.user.profileImage !== '' ? this.props.state.account.user.profileImage : null}} style={{width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .58333)}}/></Animated.View>
+                <Animated.View style={{opacity: this.state.fadeInProfilePic, position: 'absolute', top: Math.round(config.screenWidth * .16667)}}><Image source={{uri: this.state.profileImage !== '' ? this.state.profileImage : null}} style={{width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .58333)}}/></Animated.View>
 
                 <Image source={config.images.theaterPng} style={{position: 'absolute', width: config.screenWidth, height: Math.round(config.screenWidth * 1.58333)}}/>
 

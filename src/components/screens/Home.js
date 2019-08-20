@@ -38,6 +38,7 @@ class Home extends React.Component {
     constructor() {
         super()
         this.state = {
+            reduxStateUpdated: false,
             userId: '',
             username: '',
             profileImage: '',
@@ -92,8 +93,8 @@ class Home extends React.Component {
         })
     }
 
-    async fetchUserData() {
-        fetch(`${config.baseUrl}api/user/${this.state.userId}`, {
+    async fetchUserData(userId) {
+        fetch(`${config.baseUrl}api/user/${userId}`, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -156,6 +157,9 @@ class Home extends React.Component {
     // }
 
     async navigateToConversationFromReadingMessages(data) {
+        if (!this.state.reduxStateUpdated) {
+            return
+        }
         await this.props.navigation.navigate('conversation', {me: data.toUser, user: data.fromUser, contacts: this.state.contacts})
     }
 
@@ -172,7 +176,6 @@ class Home extends React.Component {
 
         await this.getContactsPermission()
         await this.setOrVerifyPushToken()
-        await this.fetchMessages()
 
         let userId = await AsyncStorage.getItem(config.userIdKey)
         let token = await Notifications.getExpoPushTokenAsync()
@@ -187,25 +190,23 @@ class Home extends React.Component {
             showIcon: !this.state.showCreateMessage
         })
 
-        await this.setState({userId: userId, pushToken: token, contacts: contacts.data})
-        await this.props.userReceived(this.state)
-
         //the fetch below needs to be updated to handle a more dynamic route in the API which can also be used for updating the image. (i.e. put a type: pushToken object in the body
 
         try {
             // Each user who permits push notifications gets their unique token posted to the server under their User id so that it can be retrieved when a push notification is sent. I created a new route in the API for this that uses Turbo360's turbo.updateEntity method.
-            return fetch(`${config.baseUrl}api/updateuser`, {
+            fetch(`${config.baseUrl}api/updateuser`, {
             method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                     },
                 body: JSON.stringify({
+                    type: 'pushToken',
                     token: {
-                        value: this.state.pushToken,
+                        value: token,
                     },
                     user: {
-                        id: this.state.userId,
+                        id: userId,
                     }
                 })
             })
@@ -213,7 +214,11 @@ class Home extends React.Component {
         catch(err) {
             console.log(err)
         }
-        await this.fetchUserData()
+
+        await this.fetchMessages()
+        await this.fetchUserData(userId)
+        await this.setState({userId: userId, pushToken: token, contacts: contacts.data, reduxStateUpdated: true})
+        await this.props.userReceived(this.state)
     }
 
     render() {
