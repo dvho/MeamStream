@@ -172,6 +172,7 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
+        console.log(this.props.state)
         //Need to get the profile image here as well, set it in state, and let that update in Redux below so that Profile.js has access to it
 
         await this.getContactsPermission()

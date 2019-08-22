@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
         shadowOffset: {width: 10, height: 12}
     },
     logoShadow: {
-        textShadowColor: 'rgb(0,0,0)',
+        shadowColor: 'rgb(0,0,0)',
         shadowOpacity: .6,
         shadowRadius: 2,
         shadowOffset: {width: -2, height: 12}
