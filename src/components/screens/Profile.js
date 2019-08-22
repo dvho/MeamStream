@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, AsyncStorage, StatusBar, TouchableOpacity, Image, Animated, Easing, ImageEditor} from 'react-native'
+import { View, Text, StyleSheet, AsyncStorage, TouchableOpacity, Image, StatusBar, Animated, Easing, ImageEditor} from 'react-native'
 import { connect } from 'react-redux'
 import config from '../../config'
 import Turbo from 'turbo360'
@@ -126,9 +126,11 @@ class Profile extends React.Component {
     }
 
     componentDidMount() {
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('light-content')
+        })
         this.getCameraRollPermissionAsync()
-        const intervalId = setInterval(this.startHueIncrement, 2)
-        this.setState({intervalId: intervalId, profileImage: this.state.profileImage === '' ? this.props.state.account.user.profileImage : this.state.profileImage})
+        this.setState({profileImage: this.state.profileImage === '' ? this.props.state.account.user.profileImage : this.state.profileImage})
         Animated.timing(
             this.state.fadeInScreen,
             { toValue: 1,
@@ -170,9 +172,16 @@ class Profile extends React.Component {
             duration: 2500,             // Make it take 2500ms
             easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
             }).start()
+        setTimeout(() => { //At least wait 4000ms (until curtains open) to start this huge changing otherwise you won't get a smooth curtain animation
+            const intervalId = setInterval(this.startHueIncrement, 2)
+            this.setState({
+                intervalId: intervalId
+            })
+        }, 4000)
     }
 
     componentWillUnmount() {
+        this._navListener.remove()
         clearInterval(this.state.intervalId)
     }
 
@@ -180,8 +189,6 @@ class Profile extends React.Component {
 
         return(
             <Animated.View style={[styles.container, {opacity: this.state.fadeInScreen}]}>
-
-                {/* <StatusBar barStyle='light-content'/> //There's an issue here that light-content is not going back to dark-content when navigating back to Home.js, need to search that */}
 
                 <View style={{position: 'absolute', backgroundColor: 'rgb(255,255,255)', width: config.screenWidth, height: config.screenWidth}}></View>
 

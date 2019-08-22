@@ -2,7 +2,7 @@ import React from 'react'
 import { AsyncStorage, ActivityIndicator, YellowBox } from 'react-native'
 import { Asset } from 'expo-asset'
 import { AppLoading } from 'expo'
-import { Home, Authenticate, Conversation, Profile } from './src/components/screens'
+import { Home, Authenticate, Conversation, Profile, AddressBook } from './src/components/screens'
 import config from './src/config'
 import { createAppContainer, createSwitchNavigator, createStackNavigator, createBottomTabNavigator } from 'react-navigation'
 import store from './src/redux/stores'
@@ -21,6 +21,7 @@ const MessageStack = createStackNavigator({
 
 const MainAppTabs = createBottomTabNavigator({
     messages: MessageStack,
+    addressBook: AddressBook,
     profile: Profile
 },
 {
@@ -35,7 +36,10 @@ const MainAppTabs = createBottomTabNavigator({
             } else if (routeName === 'messages') {
                 iconName = 'email'
                 IconComponent = Zocial
-        }
+            } else if (routeName === 'addressBook') {
+                iconName = 'email'
+                IconComponent = Zocial
+            }
         return <IconComponent name={iconName} size={25} color={tintColor} />
         },
     }),

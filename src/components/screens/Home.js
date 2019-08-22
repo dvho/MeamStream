@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, ActivityIndicator, AsyncStorage, FlatList, StatusBar, Modal, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator, AsyncStorage, FlatList, Modal, TouchableOpacity, TextInput, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 import { Entypo } from '@expo/vector-icons'
 import { Notifications } from 'expo'
@@ -172,8 +172,10 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
-        console.log(this.props.state)
         //Need to get the profile image here as well, set it in state, and let that update in Redux below so that Profile.js has access to it
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content')
+        })
 
         await this.getContactsPermission()
         await this.setOrVerifyPushToken()
@@ -222,6 +224,10 @@ class Home extends React.Component {
         await this.props.userReceived(this.state)
     }
 
+    componentWillUnmount() {
+        this._navListener.remove()
+    }
+
     render() {
         const messages = this.state.messages
         const lastIndex = messages.length - 1
@@ -233,7 +239,6 @@ class Home extends React.Component {
                 <SendMessage navProps={this.props.navigation} toggleCreateMessage={this.toggleCreateMessage}/>
             </Modal>
 
-            <StatusBar barStyle='dark-content'/>
                 {(this.state.showActivityIndictor) ? <ActivityIndicator style={{width: 100 + '%', height: 100 + '%'}} animating size='large'/> : null }
 
                 <FlatList
