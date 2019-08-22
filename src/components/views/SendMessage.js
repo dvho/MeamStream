@@ -333,7 +333,7 @@ class SendMessage extends React.Component {
 
                 <Animated.View style={{bottom: this.state.keyboardHeight + 66, position: 'absolute', opacity: this.state.fadeInWorkArea}}>
 
-                    <View style={{flexDirection: 'row', justifyContent: 'center', height: 30, width: 100 + '%'}}>
+                    <View style={{zIndex: 0, flexDirection: 'row', justifyContent: 'center', height: 30, width: 100 + '%'}}>
 
                         <TouchableOpacity onPress={() => this.cancel()} activeOpacity={0} style={[styles.button, {flex: 1, marginLeft: 6, marginBottom: this.state.selectedLayer === 'message' ? -128 : 0}]}><MaterialIcons style={{marginTop: -4}} name='cancel' color={config.colors.dormantButton} size={26}/></TouchableOpacity>
 
