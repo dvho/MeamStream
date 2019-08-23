@@ -35,6 +35,7 @@ class Profile extends React.Component {
     }
 
     logout() {
+        clearInterval(this.state.intervalId)
         AsyncStorage.removeItem(config.userIdKey)
         .then(removed => {
             this.props.navigation.navigate('auth')
