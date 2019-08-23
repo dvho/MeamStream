@@ -12,8 +12,8 @@ class AddressBook extends React.Component {
         super()
         this.state = {
             newMessage: {
-                toUser: '2222222222',
-                username: 'someone'
+                toUser: '',
+                username: ''
             },
             contacts: [],
             profileImage: '',

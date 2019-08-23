@@ -235,6 +235,7 @@ class Home extends React.Component {
     }
 
     render() {
+        console.log(this.props.state.account.user)
 
         const messages = this.state.messages
         const lastIndex = messages.length - 1
@@ -242,7 +243,7 @@ class Home extends React.Component {
         return(
             <View style={styles.container}>
 
-            <Modal visible={this.props.state.account.user === undefined ? false : this.props.state.account.user.showCreateMessage} transparent={true} animationType="fade" onRequestClose={this.cancel}>
+            <Modal visible={this.props.state.account.user === undefined ? false : (this.props.state.account.user.showCreateMessage && this.props.state.account.user.endReached)} transparent={true} animationType="fade" onRequestClose={this.cancel}>
                 <SendMessage navProps={this.props.navigation} toggleCreateMessage={this.toggleCreateMessage}/>
             </Modal>
 
