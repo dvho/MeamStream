@@ -28,7 +28,7 @@ class Profile extends React.Component {
             profileImage: '',
             showImagePicker: false
         }
-        this.turbo = Turbo({site_id: config.turboAppId}) //better than putting it in state because we're no watching for any changes on it, it's static - setting a class variable as such for cases like these is best practice
+        this.turbo = Turbo({site_id: config.turboAppId}) //better than putting it in state because we're not watching for any changes on it, it's static - setting a class variable as such for cases like these is best practice
         this.toggleSelectImage = this.toggleSelectImage.bind(this)
         this.selectImage = this.selectImage.bind(this)
         this.startHueIncrement = this.startHueIncrement.bind(this)
@@ -186,7 +186,6 @@ class Profile extends React.Component {
     }
 
     render() {
-
         return(
             <Animated.View style={[styles.container, {opacity: this.state.fadeInScreen}]}>
 

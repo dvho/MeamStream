@@ -49,7 +49,7 @@ class SendMessage extends React.Component {
         this.updateCoords = this.updateCoords.bind(this)
     }
 
-        componentDidMount() {
+        async componentDidMount() {
             Animated.timing(                // Animate over time
               this.state.fadeInWorkArea,     // The animated value to drive
               { toValue: 1,                 // Animate to opacity: 1
@@ -67,7 +67,10 @@ class SendMessage extends React.Component {
                 this._keyboardDidHide,
             )
             if (this.props.toUser !== undefined) {
-                this.updateRecipient(this.props.toUser, 'toUser')
+                await this.updateRecipient(this.props.toUser, 'toUser')
+            }
+            if (this.props.state.account.user.newMessage !== undefined) {
+                await this.updateRecipient(this.props.state.account.user.newMessage.toUser, 'toUser')
             }
         }
 
@@ -285,7 +288,7 @@ class SendMessage extends React.Component {
                     <TextInput
                         placeholder={'To: (phone number)'}
                         placeholderTextColor={'rgba(0,0,0, .6)'}
-                        autoFocus={this.props.toUser === undefined ? true : false}
+                        autoFocus={this.props.toUser === undefined && this.props.state.account.user.newMessage === undefined ? true : false}
                         style={[styles.inputs, {marginTop: 5}]}
                         multiline={false}
                         autoCapitalize={'none'}
@@ -294,7 +297,7 @@ class SendMessage extends React.Component {
                         onChangeText={text => this.updateRecipient(text, 'toUser')}
                         onSubmitEditing={() => this.mainInput.focus()}
                         returnKeyType={"next"}
-                        value={this.props.toUserName !== '' ? this.props.toUserName : this.state.newMessage.toUser}
+                        value={this.props.toUserName !== '' && this.props.toUserName !== undefined ? this.props.toUserName : (this.props.state.account.user.newMessage !== undefined ? this.props.state.account.user.newMessage.username : this.state.newMessage.toUser)}
                     />
                 </View>
 
@@ -365,7 +368,7 @@ class SendMessage extends React.Component {
                         placeholder={this.state.selectedLayer === 'message' ? '' : (this.state.selectedLayer === 'words' ? "Type something here..." : "Enter a search phrase...")}
                         placeholderTextColor={'rgba(0,0,0, .6)'}
                         ref={input => this.mainInput = input}
-                        autoFocus={this.props.toUser === undefined ? false : true}
+                        autoFocus={this.props.toUser === undefined && this.props.state.account.user.newMessage === undefined ? false : true}
                         style={[styles.inputs, {marginBottom: 5, opacity: .6}, {width: this.state.selectedLayer === 'message' ? config.screenWidth - 80 : config.screenWidth - 10, marginHorizontal: this.state.selectedLayer === 'message' ? 40 : 5, height: this.state.selectedLayer === 'message' ? 96 : 32}]}
                         multiline={this.state.selectedLayer === 'message' ? true : (this.state.selectedLayer === 'words' ? true : false)}
                         autoCapitalize={this.state.selectedLayer === 'message' ? 'sentences' : (this.state.selectedLayer === 'words' ? 'sentences' : 'none')}

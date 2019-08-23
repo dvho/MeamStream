@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, AsyncStorage, TouchableOpacity, Keyboard, Image, Animated, Easing, ImageEditor} from 'react-native'
+import { View, Text, StyleSheet, TextInput, AsyncStorage, TouchableOpacity, Keyboard, StatusBar, Image, Animated, Easing, ImageEditor} from 'react-native'
 import config from '../../config'
 import Turbo from 'turbo360'
 import { Entypo, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons'
@@ -177,12 +177,11 @@ class Authenticate extends React.Component {
     }
 
     async submit() {
-        // Uncomment out the below when you're ready:
 
-        // if (this.state.credentials.username.length < 7) {
-        //     alert('Must enter a valid phone number.')
-        //     return
-        // }
+        if (this.state.credentials.username.length < 7) {
+            alert('Must enter a valid phone number.')
+            return
+        }
 
             await fetch(`${config.baseUrl}api/user?username=${this.state.credentials.username}`, {
                 method: 'GET',

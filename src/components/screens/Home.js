@@ -59,8 +59,7 @@ class Home extends React.Component {
         this.fetchUserData = this.fetchUserData.bind(this)
         this.setOrVerifyPushToken = this.setOrVerifyPushToken.bind(this)
     }
-
-    //In both Message.js and Conversation.js (for the Conversation.js navbar) you want to run doesContactExist() from a common util function.
+    //In both Message.js and Conversation.js (for the Conversation.js navbar) it would've been nice to run doesContactExist() from a common util function but it didn't work passing params to it.
 
     async getContactsPermission() {
         const { status } = await Permissions.askAsync(Permissions.CONTACTS)
@@ -83,14 +82,17 @@ class Home extends React.Component {
     }
 
     toggleCreateMessage() {
+        //There's a bug around here where I have to hit cancel twice to get out of sending a message if I've navigated to SendMessage from AddressBook
         this.setState({
             showCreateMessage: !this.state.showCreateMessage
-        },
-        () => {
+        })
+        //this.props.userReceived(this.state)
+
             this.props.navigation.setParams({
                 showIcon: !this.state.showCreateMessage
             })
-        })
+
+        this.props.userReceived(this.state)
     }
 
     async fetchUserData(userId) {
@@ -187,13 +189,18 @@ class Home extends React.Component {
             Contacts.PHONE_NUMBERS
           ]
         })
+        const cleanedContacts = []
+        contacts.data.forEach(i => { //Siri automatially generates a contact for the phone itself which lacks a phoneNumbers array in the contacts.data object, however, displays the phone's own number when looking at the contact in the address book of the phone... very confusing so in case you're wondering why your app is crashing with a " "'0' is undefined" error even after buffering for it in a conditional statement check to see if Siri is the culprit. This forEach checks to make sure Siri won't crash the app
+            if (i.phoneNumbers !== undefined) {
+                cleanedContacts.push(i)
+            }
+            return cleanedContacts
+        })
 
         this.props.navigation.setParams({
             toggleCreateMessage: this.toggleCreateMessage,
             showIcon: !this.state.showCreateMessage
         })
-
-        //the fetch below needs to be updated to handle a more dynamic route in the API which can also be used for updating the image. (i.e. put a type: pushToken object in the body
 
         try {
             // Each user who permits push notifications gets their unique token posted to the server under their User id so that it can be retrieved when a push notification is sent. I created a new route in the API for this that uses Turbo360's turbo.updateEntity method.
@@ -217,10 +224,9 @@ class Home extends React.Component {
         catch(err) {
             console.log(err)
         }
-
         await this.fetchMessages()
         await this.fetchUserData(userId)
-        await this.setState({userId: userId, pushToken: token, contacts: contacts.data, reduxStateUpdated: true})
+        await this.setState({userId: userId, pushToken: token, contacts: cleanedContacts, reduxStateUpdated: true})
         await this.props.userReceived(this.state)
     }
 
@@ -229,13 +235,14 @@ class Home extends React.Component {
     }
 
     render() {
+
         const messages = this.state.messages
         const lastIndex = messages.length - 1
 
         return(
             <View style={styles.container}>
 
-            <Modal visible={this.state.showCreateMessage} transparent={true} animationType="fade" onRequestClose={this.cancel}>
+            <Modal visible={this.props.state.account.user === undefined ? false : this.props.state.account.user.showCreateMessage} transparent={true} animationType="fade" onRequestClose={this.cancel}>
                 <SendMessage navProps={this.props.navigation} toggleCreateMessage={this.toggleCreateMessage}/>
             </Modal>
 
@@ -297,7 +304,7 @@ const styles = StyleSheet.create({
 
 const stateToProps = state => {
     return {
-
+        state: state
     }
 }
 

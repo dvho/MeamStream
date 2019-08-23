@@ -8,7 +8,6 @@ import config from '../../config'
 import actions from '../../redux/actions'
 
 //Important to note that, in rendering the message object here, StyleSheet.hairlineWidth actually renders differently according to device. I've estimated it at .5 px, thereby displacing the screen width by an extra 1px, but if it ends up causing a rendering problem on different devices I'll have to substitute it for a 1px width of a very light gray.
-//Headsup, Siri automatially generates a contact for the phone itself which lacks a phoneNumbers array in the contacts.data object, however, displays the phone's own number when looking at the contact in the address book of the phone... very confusing so in case you're wondering why your app is crashing with a " "'0' is undefined" error even after buffering for it in a conditional statement check to see if Siri is the culprit.
 
 class Message extends React.Component {
     constructor() {
@@ -77,7 +76,7 @@ class Message extends React.Component {
 
         return(
             <Animated.View style={{opacity: this.state.fadeInAnim}}>
-                <TouchableOpacity onPress={() => this.props.nav('tim')} activeOpacity={.7} style={styles.message} key={this.props.message.id}>
+                <TouchableOpacity onPress={() => this.props.nav()} activeOpacity={.7} style={styles.message} key={this.props.message.id}>
                     <View style={styles.topRow}>
                         <View style={styles.userCol}>
 

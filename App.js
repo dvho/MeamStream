@@ -8,7 +8,7 @@ import { createAppContainer, createSwitchNavigator, createStackNavigator, create
 import store from './src/redux/stores'
 import { Provider } from 'react-redux'
 
-import { Zocial, Ionicons } from '@expo/vector-icons'
+import { Zocial, Ionicons, FontAwesome } from '@expo/vector-icons'
 
 YellowBox.ignoreWarnings([
   'Require cycle:',
@@ -20,9 +20,9 @@ const MessageStack = createStackNavigator({
 })
 
 const MainAppTabs = createBottomTabNavigator({
-    messages: MessageStack,
-    addressBook: AddressBook,
-    profile: Profile
+    Messages: MessageStack,
+    'Address Book': AddressBook,
+    Profile: Profile
 },
 {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -30,15 +30,15 @@ const MainAppTabs = createBottomTabNavigator({
             const routeName = navigation.state.routeName
             let IconComponent
             let iconName
-            if (routeName === 'profile') {
+            if (routeName === 'Profile') {
                 iconName = 'md-person'
                 IconComponent = Ionicons
-            } else if (routeName === 'messages') {
+            } else if (routeName === 'Messages') {
                 iconName = 'email'
                 IconComponent = Zocial
-            } else if (routeName === 'addressBook') {
-                iconName = 'email'
-                IconComponent = Zocial
+            } else if (routeName === 'Address Book') {
+                iconName = 'address-card-o'
+                IconComponent = FontAwesome
             }
         return <IconComponent name={iconName} size={25} color={tintColor} />
         },

@@ -6,6 +6,7 @@ import GiphyOption from './GifOption'
 import Png from './Png'
 import Words from './Words'
 import LogoName from './LogoName'
+import SingleContact from './SingleContact'
 
 
 export {
@@ -16,5 +17,6 @@ export {
     GiphyOption,
     Png,
     Words,
-    LogoName
+    LogoName,
+    SingleContact
 }

@@ -1,10 +1,14 @@
-import contants from '../constants'
-
 export default {
     userReceived: (user) => {
         return {
-            type: contants.USER_RECEIVED,
+            type: 'USER_RECEIVED',
             data: user
+        }
+    },
+    recipientFromAddressBook: (recipient) => {
+        return {
+            type: 'RECIPIENT_FROM_ADDRESS_BOOK',
+            data: recipient
         }
     }
 }

@@ -128,14 +128,13 @@ class Conversation extends React.Component {
 
         const lastSevenDigitsUser = currentConversation.split('').reverse().splice(0,7).reverse().join('')
         this.props.state.account.user.contacts.forEach(i => {
-            if (i.phoneNumbers !== undefined) {
-                if (i.phoneNumbers[0].digits.split('').length >= 7) {
-                    let lastSevenDigitsContact = i.phoneNumbers[0].digits.split('').reverse().splice(0,7).reverse().join('')
-                    if (lastSevenDigitsUser === lastSevenDigitsContact) {
-                        currentConversation = i.name
-                    }
+            if (i.phoneNumbers[0].digits.split('').length >= 7) {
+                let lastSevenDigitsContact = i.phoneNumbers[0].digits.split('').reverse().splice(0,7).reverse().join('')
+                if (lastSevenDigitsUser === lastSevenDigitsContact) {
+                    currentConversation = i.name
                 }
             }
+
         })
 
         this.props.navigation.setParams({
