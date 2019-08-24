@@ -5,9 +5,10 @@ import { SingleContact } from '../views'
 import actions from '../../redux/actions'
 import config from '../../config'
 
-//For AddressBook.js, need to render a Flatlist of this.props.state.user.contacts using SingleContact.js dumb components in TouchableOpacities, sending the contact property to each and an Object.assign({}, this.state.newMessage) setState function that will update this.state.newMessage with toUser and username from selected contact. Then set the initial state below to empty strings.
+//For AddressBook.js, need to render a Flatlist of this.props.state.user.contacts using SingleContact.js dumb components in TouchableOpacities, sending the contact property to each and an Object.assign({}, this.state.newMessage) setState function that will update this.state.newMessage with toUser and username from selected contact. Then set the initial state below to empty strings. Need to include a navbar and perhaps cool background animation too of movie projector at .1 opacity with turning wheels.
 
 class AddressBook extends React.Component {
+
     constructor() {
         super()
         this.state = {
@@ -24,6 +25,10 @@ class AddressBook extends React.Component {
         }
         //this.navigateToSendMessageFromAddressBook = this.navigateToSendMessageFromAddressBook.bind(this)
     }
+    checkForMemeStream() {
+        //Here's where to check and see if the each of the contacts' phone numbers exist as usernames in the MemeStream database, if so, return the associated profile pic and prepare to display that in an <Image> in SingleContact.js along with a black or colored checkbox, else display no image and a greyed checkbox and black or colored X
+        return 'photourl'
+    }
 
     async navigateToSendMessageFromAddressBook(contact) {
         await this.setState({
@@ -37,8 +42,8 @@ class AddressBook extends React.Component {
         await this.props.navigation.navigate('home')
     }
 
-    componentDidMount() {
-        this.setState({
+    async componentDidMount() {
+            await this.setState({
             contacts: this.props.state.account.user.contacts,
             profileImage:  this.props.state.account.user.profileImage,
             pushToken:  this.props.state.account.user.pushToken,
@@ -49,16 +54,16 @@ class AddressBook extends React.Component {
     }
 
     render() {
+
         return(
             <View style={styles.container}>
                 <Image source={config.images.backgroundTilePng} resizeMode='repeat' resizeMethod='scale' style={{position: 'absolute', width: config.screenWidth, height: config.screenWidth * 2}}/>
 
                 <FlatList
-                    data={this.props.state.account.user.contacts}
+                    data={this.state.contacts}
                     keyExtractor={item => item.id}
-                    renderItem={({item}) => <SingleContact contact={item} nav={this.navigateToSendMessageFromAddressBook.bind(this, item=item)}/>}
+                    renderItem={({item}) => <SingleContact contact={item} hasMemeStreamAndPhoto={this.checkForMemeStream(item)} isFirstContact={this.state.contacts.indexOf(item) === 0} nav={this.navigateToSendMessageFromAddressBook.bind(this, item=item)}/>}
                     />
-
 
             </View>
         )
