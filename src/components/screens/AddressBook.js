@@ -22,7 +22,7 @@ class AddressBook extends React.Component {
             userId: '',
             userName: ''
         }
-        this.navigateToSendMessageFromAddressBook = this.navigateToSendMessageFromAddressBook.bind(this)
+        //this.navigateToSendMessageFromAddressBook = this.navigateToSendMessageFromAddressBook.bind(this)
     }
 
     async navigateToSendMessageFromAddressBook(contact) {
