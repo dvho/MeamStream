@@ -48,6 +48,28 @@ router.get("/user", (req, res) => {
 // })
 
 
+
+
+router.get("/user", function(req, res) {
+    const resource = 'user'
+    const username = req.query
+
+    turbo.fetch(resource, username)
+    .then(data => {
+        res.json({
+            confirmation: 'success',
+            data: data
+        })
+    })
+    .catch(err => {
+        res.json({
+            confirmation: 'fail',
+            message: err.message
+        })
+    })
+});
+
+
 router.post('/updateuser', function(req, res){
     let obj
 

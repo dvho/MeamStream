@@ -1,9 +1,14 @@
 import React from 'react'
-import { View, Image, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native'
+import { View, Image, Text, TouchableOpacity, StyleSheet, FlatList, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
-import { SingleContact } from '../views'
+import { SingleContact, LogoName } from '../views'
 import actions from '../../redux/actions'
 import config from '../../config'
+import { AntDesign } from '@expo/vector-icons'
+import * as Font from 'expo-font'
+import { Video } from 'expo-av'
+
+//https://github.com/react-navigation/react-navigation/issues/5454
 
 //For AddressBook.js, need to render a Flatlist of this.props.state.user.contacts using SingleContact.js dumb components in TouchableOpacities, sending the contact property to each and an Object.assign({}, this.state.newMessage) setState function that will update this.state.newMessage with toUser and username from selected contact. Then set the initial state below to empty strings. Need to include a navbar and perhaps cool background animation too of movie projector at .1 opacity with turning wheels.
 
@@ -25,10 +30,6 @@ class AddressBook extends React.Component {
         }
         //this.navigateToSendMessageFromAddressBook = this.navigateToSendMessageFromAddressBook.bind(this)
     }
-    checkForMemeStream() {
-        //Here's where to check and see if the each of the contacts' phone numbers exist as usernames in the MemeStream database, if so, return the associated profile pic and prepare to display that in an <Image> in SingleContact.js along with a black or colored checkbox, else display no image and a greyed checkbox and black or colored X
-        return 'photourl'
-    }
 
     async navigateToSendMessageFromAddressBook(contact) {
         await this.setState({
@@ -43,7 +44,15 @@ class AddressBook extends React.Component {
     }
 
     async componentDidMount() {
-            await this.setState({
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content')
+        })
+        await Font.loadAsync({
+            'helvetica-bold': require('../../fonts/Helvetica-Bold.ttf'),
+            'cinzel-regular': require('../../fonts/Cinzel-Regular.ttf')
+        })
+        await this.setState({
+            fontLoaded: true,
             contacts: this.props.state.account.user.contacts,
             profileImage:  this.props.state.account.user.profileImage,
             pushToken:  this.props.state.account.user.pushToken,
@@ -53,16 +62,29 @@ class AddressBook extends React.Component {
         })
     }
 
+    componentWillUnmount() {
+        this._navListener.remove()
+    }
+
     render() {
 
         return(
             <View style={styles.container}>
+
                 <Image source={config.images.backgroundTilePng} resizeMode='repeat' resizeMethod='scale' style={{position: 'absolute', width: config.screenWidth, height: config.screenWidth * 2}}/>
+                <Video source={config.videos.countdownMp4} shouldPlay isLooping style={{position: 'absolute', opacity: .3, width: 250 + '%', height: 100 + '%'}} />
+
+                <View style={{width: config.screenWidth, height: config.minimumHeaderHeight - 44}}/>
+
+                <View style={{width: config.screenWidth, height: 120/900 * config.screenWidth + 29, flexDirection: 'row', alignItems: 'center'}}>
+                    <LogoName style={{position: 'absolute'}}/>
+                    <View style={{width: config.screenWidth * 2/5, position: 'absolute', right: 0}}><Text style={{fontSize: 20, textAlign: 'center', fontFamily: this.state.fontLoaded ? 'helvetica-bold' : null}}>has the app?</Text></View>
+                </View>
 
                 <FlatList
                     data={this.state.contacts}
                     keyExtractor={item => item.id}
-                    renderItem={({item}) => <SingleContact contact={item} hasMemeStreamAndPhoto={this.checkForMemeStream(item)} isFirstContact={this.state.contacts.indexOf(item) === 0} nav={this.navigateToSendMessageFromAddressBook.bind(this, item=item)}/>}
+                    renderItem={({item}) => <SingleContact contact={item} isFirstContact={this.state.contacts.indexOf(item) === 0} nav={this.navigateToSendMessageFromAddressBook.bind(this, item=item)} singleContactFont={{fontFamily: this.state.fontLoaded ? 'cinzel-regular' : null, fontSize: 20, paddingVertical: 15, paddingLeft: 15}}/>}
                     />
 
             </View>

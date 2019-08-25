@@ -2,6 +2,7 @@ import React from 'react'
 import { View, StyleSheet, Image, Text, Animated, Easing } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import config from '../../config'
+import * as Font from 'expo-font'
 
 class MessageShort extends React.Component {
 
@@ -9,10 +10,17 @@ class MessageShort extends React.Component {
         super()
         this.state = {
             fadeInAnim: new Animated.Value(0),
+            fontLoaded: false
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        await Font.loadAsync({
+            'indieflower-regular': require('../../fonts/IndieFlower-Regular.ttf')
+        })
+        await this.setState({
+            fontLoaded: true
+        })
         Animated.timing(                // Animate over time
           this.state.fadeInAnim,       // The animated value to drive
           { toValue: 1,                 // Animate to opacity: 0
@@ -50,7 +58,7 @@ class MessageShort extends React.Component {
 
 
                     { this.props.message.message !== '' ? <View style={[styles.message, {backgroundColor: 'rgb(255,255,255)', padding: 15}]}>
-                        <Text style={styles.messageText}>{this.props.message.message}</Text>
+                        <Text style={{fontFamily: this.state.fontLoaded ? 'indieflower-regular' : null, fontSize: 22}}>{this.props.message.message}</Text>
                     </View>
 
                     :
@@ -71,9 +79,9 @@ class MessageShort extends React.Component {
 
 
 
-                        {this.props.message.words !== '' && this.props.message.wordsCoords.x !== -0.01 ? <Text style={{position: 'absolute', textAlign: 'center', color: 'rgb(215,215,215)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: (((config.screenWidth - 101)/10)- 4), top: Math.round((config.screenWidth - 101) * .7 * this.props.message.wordsCoords.y), left: Math.round((config.screenWidth - 101) * this.props.message.wordsCoords.x), fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.message.words}</Text> : null}
+                        {this.props.message.words !== '' && this.props.message.wordsCoords.x !== -0.01 ? <Text style={{position: 'absolute', textAlign: 'center', color: 'rgb(243,243,243)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: (((config.screenWidth - 101)/10)- 4), top: Math.round((config.screenWidth - 101) * .7 * this.props.message.wordsCoords.y), left: Math.round((config.screenWidth - 101) * this.props.message.wordsCoords.x), fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.message.words}</Text> : null}
 
-                        {this.props.message.words !== '' && this.props.message.wordsCoords.x === -0.01 ? <View style={{position: 'absolute', width: 100 + '%', height: 100 + '%', justifyContent: 'center'}}><Text style={{textAlign: 'center', color: 'rgb(215,215,215)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: (((config.screenWidth - 101)/10)- 4), fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.message.words}</Text></View> : null}
+                        {this.props.message.words !== '' && this.props.message.wordsCoords.x === -0.01 ? <View style={{position: 'absolute', width: 100 + '%', height: 100 + '%', justifyContent: 'center'}}><Text style={{textAlign: 'center', color: 'rgb(243,243,243)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: (((config.screenWidth - 101)/10)- 4), fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.message.words}</Text></View> : null}
 
                     </View> }
 
@@ -107,9 +115,6 @@ const styles = StyleSheet.create({
             width: 40,
             height: 40,
             borderRadius: 20
-        },
-        messageText:{
-            fontSize: 14
         }
 })
 

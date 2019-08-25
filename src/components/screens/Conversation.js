@@ -157,8 +157,6 @@ class Conversation extends React.Component {
 
     render() {
 
-        console.log(this.props.navigation.state.params)
-
         return (
             <View style={styles.container}>
 

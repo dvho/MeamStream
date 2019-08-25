@@ -14,7 +14,6 @@ export default {
         activeButton: 'rgb(187,17,23)',
         failButton: 'rgb(210,210,0)',
 
-
         dormantButton: 'rgb(128,128,128)',
         toggleSearching: 'rgb(207,23,23)',
         toggleArranging: 'rgb(0,0,179)',
@@ -29,6 +28,7 @@ export default {
     canvasWidth: Dimensions.get('window').width - 11,
     canvasHeight: (Dimensions.get('window').width - 11) * .7,
     headerHeight: Header.HEIGHT - (129/900 * Dimensions.get('window').width + 30) + 50, //this is the programmed header height minus the dynamic height of the logoName plus a hardcoded 50.
+    minimumHeaderHeight: Header.HEIGHT,
     images: {
         theaterPng: require('../assets/theater.png'),
         curtainPng: require('../assets/curtain.png'),

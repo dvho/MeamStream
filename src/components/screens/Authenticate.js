@@ -178,8 +178,8 @@ class Authenticate extends React.Component {
 
     async submit() {
 
-        if (this.state.credentials.username.length < 7) {
-            alert('Must enter a valid phone number.')
+        if (this.state.credentials.username.length < 10) {
+            alert('Must enter a valid 10-digit phone number.')
             return
         }
 

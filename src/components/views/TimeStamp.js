@@ -4,15 +4,15 @@ import dateFormat from 'dateformat'
 
 const TimeStamp = props => {
 
-    const dateTime = props.props
+    const dateTime = props.timestamp
     const date = dateFormat(dateTime, "fullDate").split(', ')
     const time = dateFormat(dateTime, "shortTime")
 
         return(
             <View style={styles.dateTimeBlock}>
-                <Text>{date[0].slice(0,3)}</Text>
-                <Text>{date[1]}</Text>
-                <Text>{time}</Text>
+                <Text style={props.dateTimeFont}>{date[0].slice(0,3)}</Text>
+                <Text style={props.dateTimeFont}>{date[1]}</Text>
+                <Text style={props.dateTimeFont}>{time}</Text>
             </View>
         )
 }

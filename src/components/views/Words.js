@@ -66,7 +66,7 @@ class Png extends React.Component {
        let handlers = this.state.panResponder.panHandlers
       return (
         <Animated.View onLayout={this.onLayout} style={this.state.position.getLayout()} {...handlers}>
-            <Text numberOfLines={6} style={{textDecorationLine: this.props.selected && this.props.words !== '' ? 'underline' : 'none', textAlign: 'center', color: this.state.outOfRange ? 'rgb(0,0,0)' : 'rgb(225,225,225)', textShadowColor: this.state.outOfRange ? 'rgb(225,225,225)' : 'rgb(0,0,0)', textShadowRadius: this.state.outOfRange ? 12: 3, padding: this.state.outOfRange ? 12 : 3, fontSize: (((config.screenWidth - 11)/10)- 4), fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.words}</Text>
+            <Text numberOfLines={6} style={{textDecorationLine: this.props.selected && this.props.words !== '' ? 'underline' : 'none', textAlign: 'center', color: this.state.outOfRange ? 'rgb(0,0,0)' : 'rgb(243,243,243)', textShadowColor: this.state.outOfRange ? 'rgb(243,243,243)' : 'rgb(0,0,0)', textShadowRadius: this.state.outOfRange ? 12: 3, padding: this.state.outOfRange ? 12 : 3, fontSize: (((config.screenWidth - 11)/10)- 4), fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.words}</Text>
         </Animated.View>
       )
    }
