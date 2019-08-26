@@ -6,6 +6,7 @@ import { MessageShort, SendMessage } from '../views'
 import config from '../../config'
 import utils from '../../utils'
 import actions from '../../redux/actions'
+import * as Font from 'expo-font'
 
 class Conversation extends React.Component {
 
@@ -13,10 +14,12 @@ class Conversation extends React.Component {
 
         const params = navigation.state.params || {}
         return {
-            //In both Message.js and Conversation.js (for the Conversation.js navbar) you want to run doesContactExist() from a common util function.
             title: params.currentConversation || null,
             headerStyle: {
                 backgroundColor: config.colors.pastelGray
+            },
+            headerTitleStyle: {
+                fontFamily: 'cinzel-regular'
             },
             // headerTintColor: config.colors.blue,
             // headerTitleStyle: {
@@ -75,7 +78,9 @@ class Conversation extends React.Component {
     }
 
     async componentDidMount() {
-
+        await Font.loadAsync({
+            'cinzel-regular': require('../../fonts/Cinzel-Regular.ttf'),
+        })
         this.props.navigation.setParams({
             toggleCreateMessage: this.toggleCreateMessage,
             showIcon: !this.state.showCreateMessage,
