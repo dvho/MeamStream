@@ -14,6 +14,7 @@ class Profile extends React.Component {
     constructor() {
         super()
         this.state = {
+            mountingAnimationComplete: false,
             drawLeftCurtain: new Animated.Value(0),
             drawRightCurtain: new Animated.Value(0),
             fadeOutVeil: new Animated.Value(1),
@@ -173,10 +174,11 @@ class Profile extends React.Component {
             duration: 2500,             // Make it take 2500ms
             easing: Easing.bezier(0.15, 0.45, 0.45, 0.85)
             }).start()
-        setTimeout(() => { //At least wait 4000ms (until curtains open) to start this huge changing otherwise you won't get a smooth curtain animation
+        setTimeout(() => { //At least wait 4000ms (until curtains open) to start this heavy changing color function (otherwise you won't get a smooth curtain animation) and also prevent logout with this.state.mountingAnimationComplete for those 4000ms so that React doesn't warn you about a no opp memory leak
             const intervalId = setInterval(this.startHueIncrement, 2)
             this.setState({
-                intervalId: intervalId
+                intervalId: intervalId,
+                mountingAnimationComplete: true
             })
         }, 4000)
     }
@@ -211,7 +213,7 @@ class Profile extends React.Component {
                             <MaterialCommunityIcons name="tag-faces" size={54} color={`'hsl(${this.state.selfieIconHue}, 20%, 70%)'`} style={[{padding: 12, marginLeft: 40}, styles.leftIconShadow]}/>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.logout()} activeOpacity={0.1} >
+                        <TouchableOpacity onPress={this.state.mountingAnimationComplete ? () => this.logout() : null} activeOpacity={0.1} >
                             <Entypo name="log-out" size={45} color={`'hsl(${this.state.logoutIconHue}, 20%, 70%)'`} style={[{paddingRight: 12, marginTop: -6, marginRight: 36}, styles.rightIconShadow]}/>
                         </TouchableOpacity>
                     </View>
