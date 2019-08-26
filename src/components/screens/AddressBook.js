@@ -10,8 +10,6 @@ import { Video } from 'expo-av'
 
 //https://github.com/react-navigation/react-navigation/issues/5454
 
-//For AddressBook.js, need to render a Flatlist of this.props.state.user.contacts using SingleContact.js dumb components in TouchableOpacities, sending the contact property to each and an Object.assign({}, this.state.newMessage) setState function that will update this.state.newMessage with toUser and username from selected contact. Then set the initial state below to empty strings. Need to include a navbar and perhaps cool background animation too of movie projector at .1 opacity with turning wheels.
-
 class AddressBook extends React.Component {
 
     constructor() {

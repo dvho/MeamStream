@@ -44,6 +44,7 @@ class Home extends React.Component {
             profileImage: '',
             pushToken: '',
             contacts: [],
+            currentTimeInMilliseconds: 0,
             showActivityIndictor: false,
             fetchingPage: false,
             showCreateMessage: false,
@@ -81,10 +82,11 @@ class Home extends React.Component {
         }
     }
 
-    toggleCreateMessage() {
-        //There's a bug around here where I have to hit cancel twice to get out of sending a message if I've navigated to SendMessage from AddressBook
+    toggleCreateMessage() { //There's a bug around here where I have to hit cancel twice to get out of sending a message if I've navigated to SendMessage from AddressBook
+        const currentTimeInMilliseconds = new Date().getTime() //When Home.js mounts or when toggleCreateMessage is called (from Home.js, Conversation.js, SendMessage.js, as it's passed through the navigation params) currentTimeInMilliseconds is updated in Redux
         this.setState({
-            showCreateMessage: !this.state.showCreateMessage
+            showCreateMessage: !this.state.showCreateMessage,
+            currentTimeInMilliseconds: currentTimeInMilliseconds
         })
         //this.props.userReceived(this.state)
 
@@ -226,7 +228,7 @@ class Home extends React.Component {
         }
         await this.fetchMessages()
         await this.fetchUserData(userId)
-        await this.setState({userId: userId, pushToken: token, contacts: cleanedContacts, reduxStateUpdated: true})
+        await this.setState({userId: userId, pushToken: token, contacts: cleanedContacts, reduxStateUpdated: true, currentTimeInMilliseconds: new Date().getTime()})
         await this.props.userReceived(this.state)
     }
 

@@ -1,7 +1,10 @@
 import React from 'react'
 import { View, StyleSheet, Image, Text, Animated, Easing } from 'react-native'
+import { connect } from 'react-redux'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { TimeStamp } from './'
 import config from '../../config'
+import actions from '../../redux/actions'
 import * as Font from 'expo-font'
 
 class MessageShort extends React.Component {
@@ -16,6 +19,7 @@ class MessageShort extends React.Component {
 
     async componentDidMount() {
         await Font.loadAsync({
+            'cinzel-regular': require('../../fonts/Cinzel-Regular.ttf'),
             'indieflower-regular': require('../../fonts/IndieFlower-Regular.ttf')
         })
         await this.setState({
@@ -42,10 +46,11 @@ class MessageShort extends React.Component {
         }
 
         const containerStyle = [styles.container, dir]
-        //console.log(props.message.timestamp)
 
         return (
             <Animated.View style={{opacity: this.state.fadeInAnim}}>
+                <View style={{width: config.screenWidth, marginTop: 15, marginBottom: 5, justifyContent: 'center', alignItems: 'center'}}><TimeStamp oneLineStamp={true} timestamp={this.props.message.timestamp} currentTimeInMilliseconds={this.props.state.account.user.currentTimeInMilliseconds} dateTimeFont={{fontSize: 14, fontFamily: this.state.fontLoaded ? 'cinzel-regular' : null}}/></View>
+
                 <View style={containerStyle}>
                     <View style={styles.userCol}>
 
@@ -97,8 +102,7 @@ const styles = StyleSheet.create({
         container: {
             width: 100 + '%',
             paddingRight: 40,
-            paddingLeft: 10,
-            marginTop: 15
+            paddingLeft: 10
         },
         message: {
             borderWidth: StyleSheet.hairlineWidth,
@@ -118,4 +122,16 @@ const styles = StyleSheet.create({
         }
 })
 
-export default MessageShort
+const stateToProps = state => {
+    return {
+        state: state
+    }
+}
+
+const dispatchToProps = dispatch => {
+    return {
+
+    }
+}
+
+export default connect(stateToProps, dispatchToProps)(MessageShort)

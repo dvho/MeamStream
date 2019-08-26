@@ -60,7 +60,6 @@ class SingleContact extends React.Component {
                 </TouchableOpacity>
 
             </View>
-
         )
     }
 }
