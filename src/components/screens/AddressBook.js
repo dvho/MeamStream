@@ -38,7 +38,7 @@ class AddressBook extends React.Component {
             showCreateMessage: true,
         })
         await this.props.userReceived(this.state)
-        await this.props.navigation.navigate('home')
+        await this.props.navigation.navigate('home', {navFromHome: false})
     }
 
     async componentDidMount() {

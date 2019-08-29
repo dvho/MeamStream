@@ -93,7 +93,7 @@ class SendMessage extends React.Component {
         }
 
         navigateToConversationFromSentMessage(data) {
-            this.props.navProps.navigate('conversation', {me: data.fromUser, user: data.toUser, newMessage: data})
+            this.props.navProps.navigate('conversation', {me: data.fromUser, user: data.toUser, newMessage: data, navFromHome: false })
         }
 
         updateDirections() {

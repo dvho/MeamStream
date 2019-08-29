@@ -53,6 +53,7 @@ class Home extends React.Component {
             //     toUser: '',
             //     message: ''
             // },
+            endReached: false,
             lastSuccessfullyFetchedPage: 0,
         }
         this.toggleCreateMessage = this.toggleCreateMessage.bind(this)
@@ -135,6 +136,7 @@ class Home extends React.Component {
         utils.fetchMessages('message', {page: page})
             .then(responseJSON => {
                 const sorted = utils.sortMessagesByDate(responseJSON.data)
+
                 let newMessages = Object.assign([], this.state.messages)
                 sorted.forEach((message, i) => {
                     newMessages.push(message)
@@ -253,7 +255,7 @@ class Home extends React.Component {
 
                 <FlatList
                     onEndReached={this.fetchMessages}
-                    onEndReachedThreshold={.5}
+                    onEndReachedThreshold={.9}
                     data={utils.mostRecentMessagePerSender(this.state.messages)}
                     ListFooterComponent={() => (this.state.fetchingPage) ? <ActivityIndicator/> : null}
                     keyExtractor={item => item.id}

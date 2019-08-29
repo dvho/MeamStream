@@ -38,6 +38,8 @@ class Conversation extends React.Component {
         super()
         this.state = {
             messages: [], //I was temporarily hardcoding these messages here until I had messages loaded onto the backend, at which point I set this to an empty array. Unfortunately, there's no longer a way to load dummy data into Turbo so the following is the dummy array I used here in addition to commenting out setState ({messages: responseJSON.data}) [{toUser:"5d051e8569395e0014a8cbe2",fromUser:"Bob",message:"Hey call me!",dateTime:"2019-06-15T16:38:08.316Z", id:"1"},{toUser:"5d051e8569395e0014a8cbe2",fromUser:"Bob",message:"Hellooo I said call me bro",dateTime:"2019-06-15T16:38:08.316Z", id:"2"},{toUser:"Tina",fromUser:"Jess",message:"NYC is fun!",dateTime:"2019-06-15T16:38:08.316Z", id:"3"},{toUser:"5d051e8569395e0014a8cbe2",fromUser:"Margerie",message:"We are so old!",dateTime:"2019-06-15T16:38:08.316Z", id:"4"}]
+            allSortedMessages: [],
+            page: 0,
             fromData: {},
             toData: {},
             showCreateMessage: false
@@ -58,24 +60,79 @@ class Conversation extends React.Component {
     }
 
     renderMessages(sorted) {
-
-        if (this.state.messages.length === 0) {
-                this.setState({
-                    messages: sorted, //I was temporarily commenting this out (hardcoding messages into state) so that state wasn't set with an empty array until I could get messages on the backend.
-                    showActivityIndictor: false
+        if ((this.state.messages.length === 0) || ((this.state.messages.length === 0) && (this.props.navigation.state.params.navFromHome === false))) {
+            //console.log(this.state.messages.length)
+            //console.log(this.props.navigation.state.params.navFromHome)
+            //console.log(this.state.allSortedMessages)
+            //console.log(this.state.messages)
+            //console.log(sorted)
+            let messages = this.state.messages
+            messages.push(sorted[0])
+            this.setState({
+                allSortedMessages: sorted,
+                messages: messages,
+                showActivityIndictor: false
                 })
-        } else if (this.props.navigation.state.params.newMessage !== undefined && this.props.navigation.state.params.newMessage.id !== this.state.messages[0].id) {
-            const newMessage = this.props.navigation.state.params.newMessage
-            const messages = this.state.messages
-            messages.unshift(newMessage)
+                this.props.navigation.setParams({
+                    navFromHome: true,
+                    newMessage: undefined
+                })
+                console.log(this.props.navigation.state.params.newMessage)
+                console.log(this.state.messages.length)
+                console.log(this.state.allSortedMessages.length)
+        } else if ((this.props.navigation.state.params.newMessage === undefined) && (this.state.messages.length !== 0) && (this.state.messages.length !== this.state.allSortedMessages.length)) {
+                //console.log(this.state.messages)
+                let page = this.state.page + 1
+                let messages = this.state.messages
+                messages.push(this.state.allSortedMessages[page])
                 this.setState({
                     messages: messages,
+                    page: page
+                })
+
+        } else if (this.props.navigation.state.params.newMessage !== undefined && this.props.navigation.state.params.newMessage.id !== this.state.messages[0].id) {
+            //console.log('unshift to the array from navigation')
+            const newMessage = this.props.navigation.state.params.newMessage
+            const messages = this.state.messages
+            const allSortedMessages = this.state.allSortedMessages
+            messages.unshift(newMessage)
+            allSortedMessages.unshift(newMessage)
+
+                this.setState({
+                    messages: messages,
+                    allSortedMessages: allSortedMessages,
                     showActivityIndictor: false,
+                    })
+
+                    this.props.navigation.setParams({
+                        newMessage: undefined
                     })
         } else {
             return
         }
     }
+
+
+    // Old renderMessages before pagination of Converation.js no matter from where it was navigated
+    // renderMessages(sorted) {
+    //     if (this.state.messages.length === 0) {
+    //             this.setState({
+    //                 messages: sorted, //I was temporarily commenting this out (hardcoding messages into state) so that state wasn't set with an empty array until I could get messages on the backend.
+    //                 showActivityIndictor: false
+    //             })
+    //     } else if (this.props.navigation.state.params.newMessage !== undefined && this.props.navigation.state.params.newMessage.id !== this.state.messages[0].id) {
+    //         const newMessage = this.props.navigation.state.params.newMessage
+    //         const messages = this.state.messages
+    //         messages.unshift(newMessage)
+    //             this.setState({
+    //                 messages: messages,
+    //                 showActivityIndictor: false,
+    //                 })
+    //     } else {
+    //         return
+    //     }
+    // }
+
 
     async componentDidMount() {
         await Font.loadAsync({
@@ -163,6 +220,7 @@ class Conversation extends React.Component {
     render() {
 
         return (
+
             <View style={styles.container}>
 
             <Modal visible={this.state.showCreateMessage} transparent={true} animationType="fade" onRequestClose={this.cancel} onDismiss={this.renderMessages}>
@@ -172,6 +230,8 @@ class Conversation extends React.Component {
             <Image source={config.images.backgroundTilePng} resizeMode='repeat' style={{position: 'absolute', width: config.screenWidth, height: config.screenWidth * 2}}/>
 
             <FlatList
+                onEndReached={this.renderMessages}
+                onEndReachedThreshold={.9}
                 data={this.state.messages}
                 extraData={this.state}
                 keyExtractor={item => item.id}

@@ -6,7 +6,7 @@ const router = vertex.router();
 /*  This is a sample API route. */
 
 const validResources = ["message"];
-const PAGE_LENGTH = 10;
+const PAGE_LENGTH = 1;
 
 
 router.get("/user", (req, res) => {

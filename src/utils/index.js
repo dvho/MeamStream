@@ -5,6 +5,7 @@ const queryString = require('query-string')
 export default {
 
     fetchMessages: (endpoint, additionalQueryParams) => {
+
         let params = {}
         Object.keys(additionalQueryParams).forEach((key, i) => {
             params[key] = additionalQueryParams[key]
@@ -13,6 +14,8 @@ export default {
         .then(key => {
             params.toUser = key
             let query = queryString.stringify(params)
+
+            //console.log(query)
 
             //alert(JSON.stringify(query))
 
