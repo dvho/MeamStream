@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "PrivateMessenger",
-    "slug": "PrivateMessenger",
+    "name": "MemeStream",
+    "slug": "MemeStream",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [
