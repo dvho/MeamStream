@@ -255,14 +255,13 @@ class SendMessage extends React.Component {
 
         async searchGiphy(text) {
             if (text !== undefined) {
-                console.log('yeah')
                 await this.setState({
                     giphySearchPhrase: text,
                     limit: 10
                 })
             }
             this.setState({limit: this.state.limit + 1})
-            console.log(this.state.limit)
+
             if (this.state.selectedLayer === 'giphyMainId') {
                 await giphy.search({
                     q: this.state.giphySearchPhrase,
@@ -322,7 +321,7 @@ class SendMessage extends React.Component {
 
                         <Image source={{uri: `https://media2.giphy.com/media/${this.state.newMessage.giphyMainId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyMainId === '' ? 'none' : 'flex'}]}/>
 
-                        <Image source={config.videos.giphyAttribution} style={{opacity: .5, bottom: 6, right: 6, borderRadius: config.borderRadii, position: 'absolute', display: this.state.subscreen !== false ? 'none' : 'flex'}}/>
+                        <Image source={config.videos.giphyAttribution} style={{opacity: .6, bottom: 6, right: 6, borderRadius: config.borderRadii, position: 'absolute', display: this.state.subscreen !== false ? 'none' : 'flex'}}/>
 
                         <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng1Id' ? 10 : 1, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng1Id'} giphyPngId={this.state.newMessage.giphyPng1Id} onRef={ref => (this.updateCoords = ref)} updateCoords={this.updateCoords.bind(this)}/></View>
 
