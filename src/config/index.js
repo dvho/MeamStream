@@ -38,6 +38,7 @@ export default {
     },
     videos: {
         countdownMp4: require('../assets/countdown.mp4'),
-        waitingMp4: require('../assets/waiting.mp4')
+        waitingMp4: require('../assets/waiting.mp4'),
+        giphyAttribution: require('../assets/giphyAttribution.gif')
     }
 }

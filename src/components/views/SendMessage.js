@@ -5,7 +5,9 @@ import { GiphyOption, Png, Words } from './'
 import { Video } from 'expo-av'
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'
 import * as SMS from 'expo-sms'
-const giphy = require('giphy-api')() //eventually apply for development API key and then production API key https://developers.giphy.com/faq/
+const giphy = require('giphy-api')('fyJJNam0Sxaemz2qBmAW7mFe0i6lJPjr') //An empty set of parenthesis allows you to test GIPHY integration with a public beta key, 'fyJJNam0Sxaemz2qBmAW7mFe0i6lJPjr' is my developer API key I got when I made a GIPHY account, and I'll need to eventually apply for a production API key
+//https://developers.giphy.com/faq/
+//https://www.npmjs.com/package/giphy-api
 import utils from '../../utils'
 import config from '../../config'
 import actions from '../../redux/actions'
@@ -24,6 +26,7 @@ class SendMessage extends React.Component {
             subscreen: false,
             directions: 'Welcome', //This is never really revealed because it's behind the keyboard which calls the updateDirecions function onBlur, which immediately changes it to some other statement. It's shown for a split second only in the case when 'Next' key on Keyboard is used to automatically focus on the mainInput from the top input where recipient is entered.
             giphySearchPhrase: '',
+            limit: 10,
             giphyArray: [],
             newMessage: {
                 toUser: '',
@@ -252,13 +255,19 @@ class SendMessage extends React.Component {
         }
 
         async searchGiphy(text) {
-            await this.setState({
-                giphySearchPhrase: text
-            })
+            if (text !== undefined) {
+                console.log('yeah')
+                await this.setState({
+                    giphySearchPhrase: text,
+                    limit: 10
+                })
+            }
+            this.setState({limit: this.state.limit + 1})
+            console.log(this.state.limit)
             if (this.state.selectedLayer === 'giphyMainId') {
                 await giphy.search({
                     q: this.state.giphySearchPhrase,
-                    limit: 100
+                    limit: this.state.limit
                 }, function (err, res) {
                     if (res.data) {
                         this.setState({
@@ -271,7 +280,7 @@ class SendMessage extends React.Component {
                 await giphy.search({
                     api: 'stickers',
                     q: this.state.giphySearchPhrase,
-                    limit: 100
+                    limit: this.state.limit
                 }, function (err, res) {
                     if (res.data) {
                         this.setState({
@@ -314,6 +323,8 @@ class SendMessage extends React.Component {
 
                         <Image source={{uri: `https://media2.giphy.com/media/${this.state.newMessage.giphyMainId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyMainId === '' ? 'none' : 'flex'}]}/>
 
+                        <Image source={config.videos.giphyAttribution} style={{bottom: 6, right: 6, borderRadius: config.borderRadii, position: 'absolute', display: this.state.subscreen !== false ? 'none' : 'flex'}}/>
+
                         <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng1Id' ? 10 : 1, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng1Id'} giphyPngId={this.state.newMessage.giphyPng1Id} onRef={ref => (this.updateCoords = ref)} updateCoords={this.updateCoords.bind(this)}/></View>
 
                         <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng2Id' ? 10 : 2, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng2Id'} giphyPngId={this.state.newMessage.giphyPng2Id} onRef={ref => (this.updateCoords = ref)} updateCoords={this.updateCoords.bind(this)}/></View>
@@ -327,6 +338,8 @@ class SendMessage extends React.Component {
                         <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'words' ? 10 : 6, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Words selected={this.state.selectedLayer === 'words'} words={this.state.newMessage.words} onRef={ref => (this.updateCoords = ref)} updateCoords={this.updateCoords.bind(this)}/></View>
 
                         <FlatList
+                            onEndReached={() => this.searchGiphy()}
+                            onEndReachedThreshold={.9}
                             style={[styles.canvas, {display: !this.state.subscreen || this.state.giphySearchPhrase === '' || this.state.giphyArray === [] ? 'none' : 'flex'}]}
                             data={this.state.giphyArray}
                             initialNumToRender={1}
