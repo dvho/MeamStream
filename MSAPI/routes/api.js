@@ -3,58 +3,16 @@ const turbo = require("turbo360")({ site_id: process.env.TURBO_APP_ID });
 const vertex = require("vertex360")({ site_id: process.env.TURBO_APP_ID });
 const router = vertex.router();
 
-/*  This is a sample API route. */
 
-const validResources = ["message"];
+const validResources = ['message'];
 const PAGE_LENGTH = 1;
 
 
-router.get("/user", (req, res) => {
-    const resource = "user"
+router.get('/user', (req, res) => {
+    const resource = 'user'
     const filter = req.query
 
     turbo.fetch(resource, filter)
-    .then(data => {
-        res.json({
-            confirmation: "success",
-            data: data
-        })
-    })
-    .catch(err => {
-        res.json({
-            confirmation: "fail",
-            message: err.message
-        })
-    })
-})
-
-// router.get('/user', function(req, res){
-//     const resource = 'user'
-//     const username = req.query.username
-//
-// 	turbo.fetch(resource, username)
-// 	.then(data => {
-// 		res.json({
-// 			confirmation: 'success',
-// 			data: data
-// 		})
-// 	})
-// 	.catch(err => {
-// 		res.json({
-// 			confirmation: 'fail',
-// 			message: err.message
-// 		})
-// 	})
-// })
-
-
-
-
-router.get("/user", function(req, res) {
-    const resource = 'user'
-    const username = req.query
-
-    turbo.fetch(resource, username)
     .then(data => {
         res.json({
             confirmation: 'success',
@@ -67,10 +25,10 @@ router.get("/user", function(req, res) {
             message: err.message
         })
     })
-});
+})
 
 
-router.post('/updateuser', function(req, res){
+router.post('/updateuser', (req, res) => {
     let obj
 
     if (req.body.type === 'image') {
@@ -99,8 +57,7 @@ router.post('/updateuser', function(req, res){
 })
 
 
-//Need to implement some pagination for this route
-router.get("/user/:id", function(req, res) {
+router.get('/user/:id', (req, res) => {
     const resource = 'user'
     const userId = req.params.id
 
@@ -120,22 +77,22 @@ router.get("/user/:id", function(req, res) {
 });
 
 
-router.post("/message", function(req, res) {
+router.post('/message',  (req, res) => {
   const toUser = req.body.toUser.toLowerCase();
   let params = req.body;
 
   turbo
-    .fetch("user", { username: toUser })
+    .fetch('user', { username: toUser })
     .then(data => {
       if (data.length === 0) {
-        throw new Error("User not found");
+        throw new Error('User not found');
       }
       params.toUser = data[0].id;
-      return turbo.create("message", params);
+      return turbo.create('message', params);
     })
     .then(data => {
       res.json({
-        confirmation: "success",
+        confirmation: 'success',
         data: data
       });
       return;
@@ -143,7 +100,7 @@ router.post("/message", function(req, res) {
     .catch(err => {
       console.log(err);
       res.json({
-        confirmation: "fail",
+        confirmation: 'fail',
         message: err.message
       });
       return;
@@ -151,14 +108,14 @@ router.post("/message", function(req, res) {
 });
 
 
-router.get("/:resource", function(req, res) {
+router.get('/:resource', (req, res) => {
   const { resource } = req.params;
   let { query } = req;
 
   if (validResources.indexOf(resource) < 0) {
     res.json({
-      confirmation: "fail",
-      message: "No such resource"
+      confirmation: 'fail',
+      message: 'No such resource'
     });
     return;
   }
@@ -170,12 +127,12 @@ router.get("/:resource", function(req, res) {
     .fetch(resource, query)
     .then(data => {
       const pageResults = data.slice(
-        PAGE_LENGTH * page - PAGE_LENGTH, // 20
-        PAGE_LENGTH * page //30
+        PAGE_LENGTH * page - PAGE_LENGTH, 
+        PAGE_LENGTH * page
       );
       //Must let front end know there are no more pages on last page
       res.json({
-        confirmation: "success",
+        confirmation: 'success',
         data: pageResults
       });
       return;
@@ -183,7 +140,7 @@ router.get("/:resource", function(req, res) {
     .catch(err => {
       console.log(err);
       res.json({
-        confirmation: "fail",
+        confirmation: 'fail',
         message: err.message
       });
       return;
@@ -191,8 +148,8 @@ router.get("/:resource", function(req, res) {
 });
 
 
-router.get("/message/me", function(req, res) {
-  const resource = "message";
+router.get('/message/me', (req, res) => {
+  const resource = 'message';
   const { query } = req;
 
   const messages = [];
@@ -218,28 +175,18 @@ router.get("/message/me", function(req, res) {
         messages.push(mes);
       });
       res.json({
-        confirmation: "success",
+        confirmation: 'success',
         data: messages
       });
     })
     .catch(err => {
       console.log(err);
       res.json({
-        confirmation: "fail",
+        confirmation: 'fail',
         message: err.message
       });
       return;
     });
 });
-
-
-// router.get("/:resource/:id", function(req, res) {
-//   res.json({
-//     confirmation: "success",
-//     resource: req.params.resource,
-//     id: req.params.id,
-//     query: req.query // from the url query string
-//   });
-// });
 
 module.exports = router;

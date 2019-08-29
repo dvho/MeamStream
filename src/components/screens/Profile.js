@@ -99,7 +99,7 @@ class Profile extends React.Component {
                 name: 'new_image',
                 type: 'image/jpeg'
             }
-            const apiKey = '7374b9b8-bf47-4b6c-bc1f-7a76b939aecb'
+            const apiKey = '3f3116b3-3084-49b1-a685-5681616bddfc'
             const cdnResp = await this.turbo.uploadFile(file, apiKey)
 
             this.setState({

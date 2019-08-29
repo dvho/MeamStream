@@ -2,9 +2,9 @@ import { Dimensions } from 'react-native'
 import { Header } from 'react-navigation'
 
 export default {
-    turboAppId: '5d050e1a272e860015c2fe89',
-    baseUrl: 'https://private-messenger-02-tvartj.turbo360-vertex.com/',
-    //baseUrl: 'http://localhost:3000',
+    turboAppId: '5d680e7b5fe3c6001516340d',
+    baseUrl: 'https://ms-vsmvfr.turbo360-vertex.com/',
+    //baseUrl: 'http://localhost:3000', //need to get an SSL certificate on localhost otherwise you won't be able to run Expo projects on Apple devices
     userIdKey: 'logged_in_user',
     colors: {
         main: 'rgb(64,64,64)', //Old ones: rgb(28,132,250) 'rgb(64,64,64)'
