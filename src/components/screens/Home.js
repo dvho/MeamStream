@@ -85,11 +85,12 @@ class Home extends React.Component {
     }
 
     toggleCreateMessage() { //There's a bug around here where I have to hit cancel twice to get out of sending a message if I've navigated to SendMessage from AddressBook
-        const currentTimeInMilliseconds = new Date().getTime() //When Home.js mounts or when toggleCreateMessage is called (from Home.js, Conversation.js, SendMessage.js, as it's passed through the navigation params) currentTimeInMilliseconds and todayInMilliseconds are updated in Redux
-        const currentHours = new Date().getHours() * 60 * 60 * 1000
-        const currentMinutes = new Date().getMinutes() * 60 * 1000
-        const currentSeconds = new Date().getSeconds() * 1000
-        const currentMilliseconds = new Date().getMilliseconds()
+        const date = new Date() //When Home.js mounts or when toggleCreateMessage is called (from Home.js, Conversation.js, SendMessage.js, as it's passed through the navigation params) currentTimeInMilliseconds and todayInMilliseconds are updated in Redux
+        const currentTimeInMilliseconds = date.getTime()
+        const currentHours = date.getHours() * 60 * 60 * 1000
+        const currentMinutes = date.getMinutes() * 60 * 1000
+        const currentSeconds = date.getSeconds() * 1000
+        const currentMilliseconds = date.getMilliseconds()
         const millisecondsSinceMidnight = currentHours + currentMinutes + currentSeconds + currentMilliseconds
 
         this.setState({
@@ -186,11 +187,12 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
-        const currentTimeInMilliseconds = new Date().getTime() //When Home.js mounts or when toggleCreateMessage is called (from Home.js, Conversation.js, SendMessage.js, as it's passed through the navigation params) currentTimeInMilliseconds and todayInMilliseconds are updated in Redux
-        const currentHours = new Date().getHours() * 60 * 60 * 1000
-        const currentMinutes = new Date().getMinutes() * 60 * 1000
-        const currentSeconds = new Date().getSeconds() * 1000
-        const currentMilliseconds = new Date().getMilliseconds()
+        const date = new Date() //When Home.js mounts or when toggleCreateMessage is called (from Home.js, Conversation.js, SendMessage.js, as it's passed through the navigation params) currentTimeInMilliseconds and todayInMilliseconds are updated in Redux
+        const currentTimeInMilliseconds = date.getTime()
+        const currentHours = date.getHours() * 60 * 60 * 1000
+        const currentMinutes = date.getMinutes() * 60 * 1000
+        const currentSeconds = date.getSeconds() * 1000
+        const currentMilliseconds = date.getMilliseconds()
         const millisecondsSinceMidnight = currentHours + currentMinutes + currentSeconds + currentMilliseconds
 
         //Need to get the profile image here as well, set it in state, and let that update in Redux below so that Profile.js has access to it
