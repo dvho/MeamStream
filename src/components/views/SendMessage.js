@@ -14,8 +14,7 @@ import actions from '../../redux/actions'
 
 //To hide toolbar TouchableOpacities upon clicking the T icon to toggle to regular text message (when all of the Png layers and canvas are empty strings) it would've been ideal to make visiblity 'hidden' when this.state.selectedLayer === 'message' but there's a known bug in React Native so I made opacities 0 AND rendered the onPress functions null https://github.com/facebook/react-native/issues/1322
 
-//TODO: 7) Make tab navs inactive until screens finish loading, 11) need to add Powered By Giphy and appy for a development API key and then production API key https://developers.giphy.com/faq/, 12) Need to move API from staging site to production (new acct)
-
+//TODO: 7) Make tab navs inactive until screens finish loading, 11) Apply for GIPHY production API key, 12) Need to move API from staging site to production (new acct)
 
 class SendMessage extends React.Component {
     constructor() {
@@ -323,7 +322,7 @@ class SendMessage extends React.Component {
 
                         <Image source={{uri: `https://media2.giphy.com/media/${this.state.newMessage.giphyMainId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyMainId === '' ? 'none' : 'flex'}]}/>
 
-                        <Image source={config.videos.giphyAttribution} style={{bottom: 6, right: 6, borderRadius: config.borderRadii, position: 'absolute', display: this.state.subscreen !== false ? 'none' : 'flex'}}/>
+                        <Image source={config.videos.giphyAttribution} style={{opacity: .5, bottom: 6, right: 6, borderRadius: config.borderRadii, position: 'absolute', display: this.state.subscreen !== false ? 'none' : 'flex'}}/>
 
                         <View style={{position: 'absolute', zIndex: this.state.selectedLayer === 'giphyPng1Id' ? 10 : 1, display: this.state.subscreen !== false ? 'none' : 'flex'}}><Png selected={this.state.selectedLayer === 'giphyPng1Id'} giphyPngId={this.state.newMessage.giphyPng1Id} onRef={ref => (this.updateCoords = ref)} updateCoords={this.updateCoords.bind(this)}/></View>
 
