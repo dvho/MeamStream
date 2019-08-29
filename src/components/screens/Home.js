@@ -45,6 +45,7 @@ class Home extends React.Component {
             pushToken: '',
             contacts: [],
             currentTimeInMilliseconds: 0,
+            todayInMilliseconds: 0,
             showActivityIndictor: false,
             fetchingPage: false,
             showCreateMessage: false,
@@ -84,10 +85,17 @@ class Home extends React.Component {
     }
 
     toggleCreateMessage() { //There's a bug around here where I have to hit cancel twice to get out of sending a message if I've navigated to SendMessage from AddressBook
-        const currentTimeInMilliseconds = new Date().getTime() //When Home.js mounts or when toggleCreateMessage is called (from Home.js, Conversation.js, SendMessage.js, as it's passed through the navigation params) currentTimeInMilliseconds is updated in Redux
+        const currentTimeInMilliseconds = new Date().getTime() //When Home.js mounts or when toggleCreateMessage is called (from Home.js, Conversation.js, SendMessage.js, as it's passed through the navigation params) currentTimeInMilliseconds and todayInMilliseconds are updated in Redux
+        const currentHours = new Date().getHours() * 60 * 60 * 1000
+        const currentMinutes = new Date().getMinutes() * 60 * 1000
+        const currentSeconds = new Date().getSeconds() * 1000
+        const currentMilliseconds = new Date().getMilliseconds()
+        const millisecondsSinceMidnight = currentHours + currentMinutes + currentSeconds + currentMilliseconds
+
         this.setState({
             showCreateMessage: !this.state.showCreateMessage,
-            currentTimeInMilliseconds: currentTimeInMilliseconds
+            currentTimeInMilliseconds: currentTimeInMilliseconds,
+            millisecondsSinceMidnight: millisecondsSinceMidnight
         })
         //this.props.userReceived(this.state)
 
@@ -178,6 +186,13 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
+        const currentTimeInMilliseconds = new Date().getTime() //When Home.js mounts or when toggleCreateMessage is called (from Home.js, Conversation.js, SendMessage.js, as it's passed through the navigation params) currentTimeInMilliseconds and todayInMilliseconds are updated in Redux
+        const currentHours = new Date().getHours() * 60 * 60 * 1000
+        const currentMinutes = new Date().getMinutes() * 60 * 1000
+        const currentSeconds = new Date().getSeconds() * 1000
+        const currentMilliseconds = new Date().getMilliseconds()
+        const millisecondsSinceMidnight = currentHours + currentMinutes + currentSeconds + currentMilliseconds
+
         //Need to get the profile image here as well, set it in state, and let that update in Redux below so that Profile.js has access to it
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('dark-content')
@@ -230,7 +245,7 @@ class Home extends React.Component {
         }
         await this.fetchMessages()
         await this.fetchUserData(userId)
-        await this.setState({userId: userId, pushToken: token, contacts: cleanedContacts, reduxStateUpdated: true, currentTimeInMilliseconds: new Date().getTime()})
+        await this.setState({userId: userId, pushToken: token, contacts: cleanedContacts, reduxStateUpdated: true, currentTimeInMilliseconds: currentTimeInMilliseconds, millisecondsSinceMidnight: millisecondsSinceMidnight})
         await this.props.userReceived(this.state)
     }
 

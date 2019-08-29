@@ -96,7 +96,7 @@ class Message extends React.Component {
                             <Text style={[styles.username, {fontFamily: this.state.fontLoaded ? 'cinzel-regular' : null }]}>{this.state.contact !== '' ? this.state.contact : this.state.fromData.username}</Text>
                         </View>
                         <View style={styles.timeCol}>
-                                <TimeStamp oneLineStamp={false} timestamp={this.props.message.timestamp} currentTimeInMilliseconds={this.props.state.account.user.currentTimeInMilliseconds} dateTimeFont={{fontSize: 10, fontFamily: this.state.fontLoaded ? 'cinzel-regular' : null}}/>
+                                <TimeStamp oneLineStamp={false} timestamp={this.props.message.timestamp} currentTimeInMilliseconds={this.props.state.account.user.currentTimeInMilliseconds} millisecondsSinceMidnight={this.props.state.account.user.millisecondsSinceMidnight} dateTimeFont={{fontSize: 10, fontFamily: this.state.fontLoaded ? 'cinzel-regular' : null}}/>
                         </View>
                     </View>
 

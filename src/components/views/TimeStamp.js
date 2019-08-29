@@ -4,15 +4,16 @@ import dateFormat from 'dateformat'
 
 const TimeStamp = props => {
 
-    const currentTimeInMilliseconds = props.currentTimeInMilliseconds
     const timeStampInMilliseconds = Date.parse(props.timestamp)
+    const currentTimeInMilliseconds = props.currentTimeInMilliseconds
+    const millisecondsSinceMidnight = props.millisecondsSinceMidnight
 
     const dateTime = props.timestamp
     const date = dateFormat(dateTime, "fullDate").split(', ')
     const time = dateFormat(dateTime, "shortTime")
-    const wasItOverADayAgo = (86400000 - (currentTimeInMilliseconds - timeStampInMilliseconds)) < 0
-    const wasItOverTwoDaysAgo = (172800000 - (currentTimeInMilliseconds - timeStampInMilliseconds)) < 0
-    const wasItOverAWeekAgo = (604800000 - (currentTimeInMilliseconds - timeStampInMilliseconds)) < 0
+    const wasItOverADayAgo = (millisecondsSinceMidnight - (currentTimeInMilliseconds - timeStampInMilliseconds)) < 0
+    const wasItOverTwoDaysAgo = ((86400000 + millisecondsSinceMidnight) - (currentTimeInMilliseconds - timeStampInMilliseconds)) < 0
+    const wasItOverAWeekAgo = ((518400000 + millisecondsSinceMidnight) - (currentTimeInMilliseconds - timeStampInMilliseconds)) < 0
 
         return(
             <View style={styles.dateTimeBlock}>

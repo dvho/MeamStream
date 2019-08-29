@@ -12,7 +12,7 @@ import actions from '../../redux/actions'
 
 //To hide toolbar TouchableOpacities upon clicking the T icon to toggle to regular text message (when all of the Png layers and canvas are empty strings) it would've been ideal to make visiblity 'hidden' when this.state.selectedLayer === 'message' but there's a known bug in React Native so I made opacities 0 AND rendered the onPress functions null https://github.com/facebook/react-native/issues/1322
 
-//TODO: 7) Make logout unavailable until screen finishes loading, make tab navs inactive until screens finish loading, 11) need to add Powered By Giphy and appy for a development API key and then production API key https://developers.giphy.com/faq/, 12) Need to move API from staging site to production (new acct)
+//TODO: 7) Make tab navs inactive until screens finish loading, 11) need to add Powered By Giphy and appy for a development API key and then production API key https://developers.giphy.com/faq/, 12) Need to move API from staging site to production (new acct)
 
 
 class SendMessage extends React.Component {
@@ -80,7 +80,7 @@ class SendMessage extends React.Component {
             })
         }
 
-        //Don't need to use this right now because keyboardHeight shoudn't be set back to zero when keyboard closes, otherwise the canvas will snap down
+        //Don't need to use this right now because keyboardHeight shouldn't be set back to zero when keyboard closes, otherwise the canvas will snap down
         // _keyboardDidHide(e) {
         //     this.setState({
         //         keyboardHeight: 0

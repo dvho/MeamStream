@@ -49,7 +49,7 @@ class MessageShort extends React.Component {
 
         return (
             <Animated.View style={{opacity: this.state.fadeInAnim}}>
-                <View style={{width: config.screenWidth, marginTop: 15, marginBottom: 5, justifyContent: 'center', alignItems: 'center'}}><TimeStamp oneLineStamp={true} timestamp={this.props.message.timestamp} currentTimeInMilliseconds={this.props.state.account.user.currentTimeInMilliseconds} dateTimeFont={{fontSize: 14, fontFamily: this.state.fontLoaded ? 'cinzel-regular' : null}}/></View>
+                <View style={{width: config.screenWidth, marginTop: 15, marginBottom: 5, justifyContent: 'center', alignItems: 'center'}}><TimeStamp oneLineStamp={true} timestamp={this.props.message.timestamp} currentTimeInMilliseconds={this.props.state.account.user.currentTimeInMilliseconds} millisecondsSinceMidnight={this.props.state.account.user.millisecondsSinceMidnight} dateTimeFont={{fontSize: 14, fontFamily: this.state.fontLoaded ? 'cinzel-regular' : null}}/></View>
 
                 <View style={containerStyle}>
                     <View style={styles.userCol}>

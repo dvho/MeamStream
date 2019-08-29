@@ -77,9 +77,9 @@ class Conversation extends React.Component {
                     navFromHome: true,
                     newMessage: undefined
                 })
-                console.log(this.props.navigation.state.params.newMessage)
-                console.log(this.state.messages.length)
-                console.log(this.state.allSortedMessages.length)
+                //console.log(this.props.navigation.state.params.newMessage)
+                //console.log(this.state.messages.length)
+                //console.log(this.state.allSortedMessages.length)
         } else if ((this.props.navigation.state.params.newMessage === undefined) && (this.state.messages.length !== 0) && (this.state.messages.length !== this.state.allSortedMessages.length)) {
                 //console.log(this.state.messages)
                 let page = this.state.page + 1
