@@ -122,7 +122,7 @@ class App extends React.Component {
     }
 
     async _cacheResourcesAsync() {
-        const images = [require('./src/assets/logo.png'), require('./src/assets/curtain.png'), require('./src/assets/theater.png'), require('./src/assets/countdown.mp4'), require('./src/assets/logoName.png'), require('./src/assets/backgroundTile.png'), require('./src/assets/waiting.mp4'), require('./src/assets/giphyAttribution.gif')]
+        const images = [require('./src/assets/logo.png'), require('./src/assets/curtain.png'), require('./src/assets/theater.png'), require('./src/assets/countdown.mp4'), require('./src/assets/logoName.png'), require('./src/assets/backgroundTile.png'), require('./src/assets/waiting.mp4'), require('./src/assets/giphyAttribution(looped-in-ezgif.com[slash]loop-count).gif')]
         const cacheImages = images.map(image => {
             return Asset.fromModule(image).downloadAsync()
         })
