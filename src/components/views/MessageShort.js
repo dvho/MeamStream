@@ -2,10 +2,10 @@ import React from 'react'
 import { View, StyleSheet, Image, Text, Animated, Easing } from 'react-native'
 import { connect } from 'react-redux'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import * as Font from 'expo-font'
 import { TimeStamp } from './'
 import config from '../../config'
 import actions from '../../redux/actions'
-import * as Font from 'expo-font'
 
 class MessageShort extends React.Component {
 
@@ -20,7 +20,8 @@ class MessageShort extends React.Component {
     async componentDidMount() {
         await Font.loadAsync({
             'cinzel-regular': require('../../fonts/Cinzel-Regular.ttf'),
-            'indieflower-regular': require('../../fonts/IndieFlower-Regular.ttf')
+            'indieflower-regular': require('../../fonts/IndieFlower-Regular.ttf'),
+            'abril-fatface-regular': require('../../fonts/AbrilFatface-Regular.ttf')
         })
         await this.setState({
             fontLoaded: true
@@ -84,9 +85,9 @@ class MessageShort extends React.Component {
 
 
 
-                        {this.props.message.words !== '' && this.props.message.wordsCoords.x !== -0.01 ? <Text style={{position: 'absolute', textAlign: 'center', color: 'rgb(243,243,243)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: (((config.screenWidth - 101)/10)- 4), top: Math.round((config.screenWidth - 101) * .7 * this.props.message.wordsCoords.y), left: Math.round((config.screenWidth - 101) * this.props.message.wordsCoords.x), fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.message.words}</Text> : null}
+                        {this.props.message.words !== '' && this.props.message.wordsCoords.x !== -0.01 ? <Text style={{position: 'absolute', textAlign: 'center', color: 'rgb(243,243,243)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: (((config.screenWidth - 101)/10)- 4), top: Math.round((config.screenWidth - 101) * .7 * this.props.message.wordsCoords.y), left: Math.round((config.screenWidth - 101) * this.props.message.wordsCoords.x), fontFamily: this.state.fontLoaded ? 'abril-fatface-regular' : null}}>{this.props.message.words}</Text> : null}
 
-                        {this.props.message.words !== '' && this.props.message.wordsCoords.x === -0.01 ? <View style={{position: 'absolute', width: 100 + '%', height: 100 + '%', justifyContent: 'center'}}><Text style={{textAlign: 'center', color: 'rgb(243,243,243)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: (((config.screenWidth - 101)/10)- 4), fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.message.words}</Text></View> : null}
+                        {this.props.message.words !== '' && this.props.message.wordsCoords.x === -0.01 ? <View style={{position: 'absolute', width: 100 + '%', height: 100 + '%', justifyContent: 'center'}}><Text style={{textAlign: 'center', color: 'rgb(243,243,243)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: (((config.screenWidth - 101)/10)- 4), fontFamily: this.state.fontLoaded ? 'abril-fatface-regular' : null}}>{this.props.message.words}</Text></View> : null}
 
                     </View> }
 

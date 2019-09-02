@@ -1,11 +1,11 @@
 import React from 'react'
 import { View, Image, Text, TouchableOpacity, StyleSheet, FlatList, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
+import * as Font from 'expo-font'
 import { SingleContact, LogoName } from '../views'
 import actions from '../../redux/actions'
 import config from '../../config'
 import { AntDesign } from '@expo/vector-icons'
-import * as Font from 'expo-font'
 import { Video } from 'expo-av'
 
 //https://github.com/react-navigation/react-navigation/issues/5454

@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, PanResponder, Animated, Text } from 'react-native'
 import config from '../../config'
+import * as Font from 'expo-font'
 
 //https://medium.com/@leonardobrunolima/react-native-tips-using-animated-and-panresponder-components-to-interact-with-user-gestures-4620bf27b9e4
 //https://codedaily.io/tutorials/1/Maintain-Touchable-Items-with-a-Parent-PanResponder-in-React-Native
@@ -49,7 +50,8 @@ class Png extends React.Component {
             panResponder: panResponder,
             position: position,
             coords: {},
-            outOfRange: false
+            outOfRange: false,
+            fontLoaded: false
         }
         this.onLayout = this.onLayout.bind(this)
     }
@@ -62,11 +64,20 @@ class Png extends React.Component {
         })
     }
 
+    async componentDidMount () {
+        await Font.loadAsync({
+            'abril-fatface-regular': require('../../fonts/AbrilFatface-Regular.ttf')
+        })
+        await this.setState({
+            fontLoaded: true
+        })
+    }
+
    render() {
        let handlers = this.state.panResponder.panHandlers
       return (
         <Animated.View onLayout={this.onLayout} style={this.state.position.getLayout()} {...handlers}>
-            <Text numberOfLines={6} style={{textDecorationLine: this.props.selected && this.props.words !== '' ? 'underline' : 'none', textAlign: 'center', color: this.state.outOfRange ? 'rgb(0,0,0)' : 'rgb(243,243,243)', textShadowColor: this.state.outOfRange ? 'rgb(243,243,243)' : 'rgb(0,0,0)', textShadowRadius: this.state.outOfRange ? 12: 3, padding: this.state.outOfRange ? 12 : 3, fontSize: (((config.screenWidth - 11)/10)- 4), fontWeight: 'bold', fontStyle: 'italic'}}>{this.props.words}</Text>
+            <Text numberOfLines={6} style={{textDecorationLine: this.props.selected && this.props.words !== '' ? 'underline' : 'none', textAlign: 'center', color: this.state.outOfRange ? 'rgb(0,0,0)' : 'rgb(243,243,243)', textShadowColor: this.state.outOfRange ? 'rgb(243,243,243)' : 'rgb(0,0,0)', textShadowRadius: this.state.outOfRange ? 12: 3, padding: this.state.outOfRange ? 12 : 3, fontSize: (((config.screenWidth - 11)/10)- 4), fontFamily: this.state.fontLoaded ? 'abril-fatface-regular' : null}}>{this.props.words}</Text>
         </Animated.View>
       )
    }

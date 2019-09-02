@@ -5,12 +5,14 @@ import { GiphyOption, Png, Words } from './'
 import { Video } from 'expo-av'
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'
 import * as SMS from 'expo-sms'
+import * as Font from 'expo-font'
 const giphy = require('giphy-api')('fyJJNam0Sxaemz2qBmAW7mFe0i6lJPjr') //An empty set of parenthesis allows you to test GIPHY integration with a public beta key, 'fyJJNam0Sxaemz2qBmAW7mFe0i6lJPjr' is my developer API key I got when I made a GIPHY account, and I'll need to eventually apply for a production API key
 //https://developers.giphy.com/faq/
 //https://www.npmjs.com/package/giphy-api
 import utils from '../../utils'
 import config from '../../config'
 import actions from '../../redux/actions'
+
 
 //To hide toolbar TouchableOpacities upon clicking the T icon to toggle to regular text message (when all of the Png layers and canvas are empty strings) it would've been ideal to make visiblity 'hidden' when this.state.selectedLayer === 'message' but there's a known bug in React Native so I made opacities 0 AND rendered the onPress functions null https://github.com/facebook/react-native/issues/1322
 
@@ -23,6 +25,7 @@ class SendMessage extends React.Component {
             keyboardHeight: 0,
             fadeInWorkArea: new Animated.Value(0),
             subscreen: false,
+            fontLoaded: false,
             directions: 'Welcome', //This is never really revealed because it's behind the keyboard which calls the updateDirecions function onBlur, which immediately changes it to some other statement. It's shown for a split second only in the case when 'Next' key on Keyboard is used to automatically focus on the mainInput from the top input where recipient is entered.
             giphySearchPhrase: '',
             limit: 10,
@@ -52,6 +55,12 @@ class SendMessage extends React.Component {
     }
 
         async componentDidMount() {
+            await Font.loadAsync({
+                'cinzel-regular': require('../../fonts/Cinzel-Regular.ttf')
+            })
+            await this.setState({
+                fontLoaded: true
+            })
             Animated.timing(                // Animate over time
               this.state.fadeInWorkArea,     // The animated value to drive
               { toValue: 1,                 // Animate to opacity: 1
@@ -400,7 +409,7 @@ class SendMessage extends React.Component {
                 </Animated.View>
 
                 <View style={{position: 'absolute', bottom: 0, height: this.state.keyboardHeight, width: 100 + '%', display: 'flex', alignItems: 'center'}}>
-                        <Text style={{textAlign: 'center', paddingHorizontal: 10, color: 'rgb(215,215,215)', fontSize: 20, fontWeight: 'bold', letterSpacing: .5}}>{this.state.directions}</Text>
+                        <Text style={{textAlign: 'center', paddingHorizontal: 10, color: 'rgb(215,215,215)', fontSize: 20, fontFamily: this.state.fontLoaded ? 'cinzel-regular' : null}}>{this.state.directions}</Text>
                 </View>
 
             </View>

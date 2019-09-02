@@ -2,11 +2,11 @@ import React from 'react'
 import { View, StyleSheet, Text, FlatList, TouchableOpacity, Modal, Image } from 'react-native'
 import { connect } from 'react-redux'
 import { Entypo } from '@expo/vector-icons'
+import * as Font from 'expo-font'
 import { MessageShort, SendMessage } from '../views'
 import config from '../../config'
 import utils from '../../utils'
 import actions from '../../redux/actions'
-import * as Font from 'expo-font'
 
 class Conversation extends React.Component {
 
