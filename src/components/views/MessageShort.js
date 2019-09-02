@@ -54,9 +54,9 @@ class MessageShort extends React.Component {
                 <View style={containerStyle}>
                     <View style={styles.userCol}>
 
-                        { profileImg !== '' ? <Image
+                        { profileImg !== '' ? <View style={styles.profilePicShadow}><Image
                             source={{uri: profileImg}}
-                            style={styles.profile}/> : <MaterialCommunityIcons name='tag-faces' size={40} color={this.props.sentMessage ? 'rgb(250,84,33)' : 'rgb(0,85,255)'} style={this.props.sentMessage ? {transform: [{rotateY: '180deg'}]} : null}/> }
+                            style={styles.profile}/></View> : <MaterialCommunityIcons name='tag-faces' size={40} color={this.props.sentMessage ? 'rgb(250,84,33)' : 'rgb(0,85,255)'} style={this.props.sentMessage ? {transform: [{rotateY: '180deg'}]} : null}/> }
 
                     </View>
 
@@ -110,7 +110,11 @@ const styles = StyleSheet.create({
             marginBottom: 15,
             borderRadius: config.borderRadii,
             borderColor: 'rgb(225, 225, 225)',
-            backgroundColor: 'rgb(255, 255, 255)'
+            backgroundColor: 'rgb(255, 255, 255)',
+            shadowColor: 'rgb(0,0,0)',
+            shadowOpacity: .7,
+            shadowRadius: 5,
+            shadowOffset: {width: 2, height: 2}
         },
         userCol: {
             flexDirection: 'row'
@@ -119,6 +123,16 @@ const styles = StyleSheet.create({
             width: 40,
             height: 40,
             borderRadius: 20
+        },
+        profilePicShadow: {
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            backgroundColor: 'rgb(255, 255, 255)',
+            shadowColor: 'rgb(0,0,0)',
+            shadowOpacity: .7,
+            shadowRadius: 5,
+            shadowOffset: {width: 2, height: 2}
         }
 })
 

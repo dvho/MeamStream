@@ -145,7 +145,11 @@ const styles = StyleSheet.create({
             padding: 15,
             borderRadius: config.borderRadii,
             borderColor: 'rgb(225, 225, 225)',
-            backgroundColor: 'rgb(255, 255, 255)'
+            backgroundColor: 'rgb(255, 255, 255)',
+            shadowColor: 'rgb(0,0,0)',
+            shadowOpacity: .35,
+            shadowRadius: 5,
+            shadowOffset: {width: 2, height: 2}
         },
         bottomRow: {
             flexDirection: 'row',
