@@ -1,5 +1,5 @@
 import React from 'react'
-import { AsyncStorage, ActivityIndicator, YellowBox } from 'react-native'
+import { Image, AsyncStorage, ActivityIndicator, YellowBox } from 'react-native'
 import { Asset } from 'expo-asset'
 import { AppLoading } from 'expo'
 import { Home, Authenticate, Conversation, Profile, AddressBook } from './src/components/screens'
@@ -123,11 +123,19 @@ class App extends React.Component {
     }
 
     async _cacheResourcesAsync() {
-        const images = [require('./src/assets/logo.png'), require('./src/assets/curtain.png'), require('./src/assets/theater.png'), require('./src/assets/logoName.png'), require('./src/assets/backgroundTile.png'), require('./src/assets/giphyAttribution(looped-in-ezgif.com[slash]loop-count).gif')]
-        const cacheImages = images.map(image => {
-            return Asset.fromModule(image).downloadAsync()
-        })
-        return Promise.all(cacheImages)
+        const images = [require('./src/assets/logo.png'), require('./src/assets/curtain.png'), require('./src/assets/theater.png'), require('./src/assets/logoName.png'), require('./src/assets/backgroundTile.png'), require('./src/assets/giphyAttribution(looped-in-ezgif.com[slash]loop-count).gif'), 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif', 'https://media.giphy.com/media/xTkcEQACH24SMPxIQg/giphy.gif']
+
+        const cacheImages = (images) => {
+          return images.map(image => {
+            if (typeof image === 'string') {
+              return Image.prefetch(image);
+            } else {
+              return Asset.fromModule(image).downloadAsync();
+            }
+          });
+        }
+
+        return await Promise.all(cacheImages)
     }
 }
 
