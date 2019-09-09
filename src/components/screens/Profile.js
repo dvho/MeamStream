@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import config from '../../config'
 import Turbo from 'turbo360'
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons'
-import { Video } from 'expo-av'
+//import { Video } from 'expo-av'
 import Constants from 'expo-constants'
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
@@ -194,7 +194,12 @@ class Profile extends React.Component {
 
                 <View style={{position: 'absolute', backgroundColor: 'rgb(255,255,255)', width: config.screenWidth, height: config.screenWidth}}></View>
 
-                {this.state.profileImage === '' ? <Video source={config.videos.countdownMp4} shouldPlay isLooping style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6)}} /> : <View style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6), backgroundColor: `hsl(${this.state.profilePicBackgroundHue}, 100%, 50%)`}}></View>}
+
+                {/* //Video component doesn't seem to be loading properties properly on Android so using Image component and gif for the looping animation {this.state.profileImage === '' ? <Video source={config.videos.countdownMp4} shouldPlay isLooping style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6)}}/> : <View style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6), backgroundColor: `hsl(${this.state.profilePicBackgroundHue}, 100%, 50%)`}}></View>}  */}
+
+
+                {this.state.profileImage === '' ? <Image source={{uri: 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif'}} style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6)}}/> : <View style={{position: 'absolute', top: Math.round(config.screenWidth * .15), opacity: .4, width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .6), backgroundColor: `hsl(${this.state.profilePicBackgroundHue}, 100%, 50%)`}}></View>}
+
 
                 <Animated.View style={{opacity: this.state.fadeInProfilePic, position: 'absolute', top: Math.round(config.screenWidth * .16667)}}><Image source={{uri: this.state.profileImage !== '' ? this.state.profileImage : null}} style={{width: Math.round(config.screenWidth * .75), height: Math.round(config.screenWidth * .58333)}}/></Animated.View>
 

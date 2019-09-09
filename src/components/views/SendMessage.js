@@ -2,7 +2,7 @@ import React from 'react'
 import { View, TextInput, Text, TouchableOpacity, StyleSheet, Keyboard, Image, FlatList, KeyboardAvoidingView, Animated, Easing, Alert, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import { GiphyOption, Png, Words } from './'
-import { Video } from 'expo-av'
+//import { Video } from 'expo-av'
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'
 import * as SMS from 'expo-sms'
 import * as Font from 'expo-font'
@@ -326,7 +326,15 @@ class SendMessage extends React.Component {
 
                     <KeyboardAvoidingView behavior='padding' style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
 
-                        <Video source={config.videos.waitingMp4} shouldPlay isLooping style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyMainId !== '') || (this.state.newMessage.giphyMainId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyMainId === '') ? 'flex' : 'none'}]} />
+                        {/* <Video source={config.videos.waitingMp4} shouldPlay isLooping style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyMainId !== '') || (this.state.newMessage.giphyMainId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyMainId === '') ? 'flex' : 'none'}]}/> */}
+
+
+                        <Image source={{uri: 'https://media.giphy.com/media/xTkcEQACH24SMPxIQg/giphy.gif'}} style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyMainId !== '') || (this.state.newMessage.giphyMainId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyMainId === '') ? 'flex' : 'none'}]}/>
+
+
+
+
+
 
                         <Image source={{uri: `https://media2.giphy.com/media/${this.state.newMessage.giphyMainId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyMainId === '' ? 'none' : 'flex'}]}/>
 

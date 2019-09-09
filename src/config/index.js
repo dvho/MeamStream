@@ -38,8 +38,8 @@ export default {
         logoNamePng: require('../assets/logoName.png')
     },
     videos: {
-        countdownMp4: require('../assets/countdown.mp4'), //countdownGif: 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif' //Pulling this video from giphy on load is about 6MB! the (higher res countdown.mp4 is only 0.4MB)
-        waitingMp4: require('../assets/waiting.mp4'), //waitingGif: 'https://media.giphy.com/media/xTkcEQACH24SMPxIQg/giphy.gif'
+        //countdownMp4: require('../assets/countdown.mp4'), //countdownGif: 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif' //Pulling this video from giphy on load is about 6MB! the (higher res countdown.mp4 is only 0.4MB)
+        //waitingMp4: require('../assets/waiting.mp4'), //waitingGif: 'https://media.giphy.com/media/xTkcEQACH24SMPxIQg/giphy.gif'
         giphyAttribution: require('../assets/giphyAttribution(looped-in-ezgif.com[slash]loop-count).gif')
     }
 }
