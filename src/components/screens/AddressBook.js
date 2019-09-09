@@ -6,7 +6,7 @@ import { SingleContact, LogoName } from '../views'
 import actions from '../../redux/actions'
 import config from '../../config'
 import { AntDesign } from '@expo/vector-icons'
-import { Video } from 'expo-av'
+//import { Video } from 'expo-av'
 
 //https://github.com/react-navigation/react-navigation/issues/5454
 
@@ -70,7 +70,10 @@ class AddressBook extends React.Component {
             <View style={styles.container}>
 
                 <Image source={config.images.backgroundTilePng} resizeMode='repeat' resizeMethod='scale' style={{position: 'absolute', width: config.screenWidth, height: config.screenWidth * 2}}/>
-                <Video source={config.videos.countdownMp4} shouldPlay isLooping style={{position: 'absolute', opacity: .3, width: 250 + '%', height: 100 + '%'}} />
+
+                {/* Video component doesn't seem to be loading properties properly on Android so using Image component and gif for the looping animation <Video source={config.videos.countdownMp4} shouldPlay isLooping style={{position: 'absolute', opacity: .3, width: 250 + '%', height: 100 + '%'}} /> */}
+
+                <Image source={{uri: 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif'}} style={{position: 'absolute', opacity: .3, width: 250 + '%', height: 100 + '%'}} />
 
                 <View style={{width: config.screenWidth, height: config.minimumHeaderHeight - 44}}/>
 

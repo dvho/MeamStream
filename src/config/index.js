@@ -1,8 +1,6 @@
 import { Dimensions } from 'react-native'
 import { Header } from 'react-navigation'
 
-//Android has a problem with properties of the Video component, so I plan on refactoring the config.videos.countdownMp4 and config.videos.waitingMp4 assets to be their respective gifs to be used in Image components, which should load the same way for both iOS and Android. Sadly, Android also has a problem with gif and webp formats: https://docs.expo.io/versions/latest/react-native/image/ so this is going to be trick to get around. It's worth a shot without going through the aforementioned pains in these docs since gifs seem to load properly via Image source={{uri: 'your_giphy_url_here'}} in SendMessage.js. Webp is difficult to test on OSX Sierra... I believe because it's a newer format (it can't be read by Apple Preview... or the latest version of Chrome for that matter... wtf) so it might behoove me to use ezgif.com or something to change the format to a looping gif.
-
 export default {
     turboAppId: '5d680e7b5fe3c6001516340d',
     baseUrl: 'https://ms-vsmvfr.turbo360-vertex.com/',
