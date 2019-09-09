@@ -9,7 +9,8 @@ import store from './src/redux/stores'
 import { Provider } from 'react-redux'
 
 import { Zocial, Ionicons, FontAwesome } from '@expo/vector-icons'
-
+//expo can't be used on unsecured network. Make sure the WiFi you’re on requires a password, not just an email (i.e. not Starbucks, etc.)
+//expo cli needs to be updated using sudo (to expo-cli@3.0.10, as of the current moment) in order not to get the message that there are no assets to upload upon running expo publish https://github.com/expo/expo-cli/issues/179
 YellowBox.ignoreWarnings([
   'Require cycle:',
 ])

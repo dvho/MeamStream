@@ -206,18 +206,14 @@ class Profile extends React.Component {
 
                 <Animated.View style={{opacity: this.state.fadeOutVeil, position: 'absolute', width: config.screenWidth, height: config.screenWidth * 2, backgroundColor: 'rgb(0,0,0)'}}/>
 
-                <Animated.View style={{opacity: this.state.fadeInInterface}}>
+                <Animated.View style={{opacity: this.state.fadeInInterface, width: config.screenWidth, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', top: config.screenWidth * .34}}>
+                    <TouchableOpacity onPress={() => this.toggleSelectImage()} activeOpacity={0.1}>
+                        <MaterialCommunityIcons name="tag-faces" size={54} color={`'hsl(${this.state.selfieIconHue}, 20%, 70%)'`} style={[{padding: 12, marginLeft: 40}, styles.leftIconShadow]}/>
+                    </TouchableOpacity>
 
-                    <View style={{width: config.screenWidth, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', top: config.screenWidth * .34}}>
-                        <TouchableOpacity onPress={() => this.toggleSelectImage()} activeOpacity={0.1} >
-                            <MaterialCommunityIcons name="tag-faces" size={54} color={`'hsl(${this.state.selfieIconHue}, 20%, 70%)'`} style={[{padding: 12, marginLeft: 40}, styles.leftIconShadow]}/>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={this.state.mountingAnimationComplete ? () => this.logout() : null} activeOpacity={0.1} >
-                            <Entypo name="log-out" size={45} color={`'hsl(${this.state.logoutIconHue}, 20%, 70%)'`} style={[{paddingRight: 12, marginTop: -6, marginRight: 36}, styles.rightIconShadow]}/>
-                        </TouchableOpacity>
-                    </View>
-
+                    <TouchableOpacity onPress={this.state.mountingAnimationComplete ? () => this.logout() : null} activeOpacity={0.1}>
+                        <Entypo name="log-out" size={45} color={`'hsl(${this.state.logoutIconHue}, 20%, 70%)'`} style={[{paddingRight: 12, marginTop: -6, marginRight: 36}, styles.rightIconShadow]}/>
+                    </TouchableOpacity>
                 </Animated.View>
 
                 <Animated.View style={{position: 'absolute', left: this.state.drawLeftCurtain}}>
@@ -260,7 +256,7 @@ const styles = StyleSheet.create({
         shadowOpacity: .6,
         shadowRadius: 2,
         shadowOffset: {width: -2, height: 12}
-    },
+    }
 })
 
 const stateToProps = state => {

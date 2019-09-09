@@ -1,6 +1,8 @@
 import { Dimensions } from 'react-native'
 import { Header } from 'react-navigation'
 
+//Android has a problem with properties of the Video component, so I plan on refactoring the config.videos.countdownMp4 and config.videos.waitingMp4 assets to be their respective gifs to be used in Image components, which should load the same way for both iOS and Android. Sadly, Android also has a problem with gif and webp formats: https://docs.expo.io/versions/latest/react-native/image/ so this is going to be trick to get around. It's worth a shot without going through the aforementioned pains in these docs since gifs seem to load properly via Image source={{uri: 'your_giphy_url_here'}} in SendMessage.js. Webp is difficult to test on OSX Sierra... I believe because it's a newer format (it can't be read by Apple Preview... or the latest version of Chrome for that matter... wtf) so it might behoove me to use ezgif.com or something to change the format to a looping gif.
+
 export default {
     turboAppId: '5d680e7b5fe3c6001516340d',
     baseUrl: 'https://ms-vsmvfr.turbo360-vertex.com/',
@@ -33,12 +35,11 @@ export default {
         theaterPng: require('../assets/theater.png'),
         curtainPng: require('../assets/curtain.png'),
         backgroundTilePng: require('../assets/backgroundTile.png'),
-        logoNamePng: require('../assets/logoName.png'),
-        //countdownVid: 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif' //Pulling this video from giphy on load is about 6MB! the (higher res countdown.mp4 is only 0.4MB)
+        logoNamePng: require('../assets/logoName.png')
     },
     videos: {
-        countdownMp4: require('../assets/countdown.mp4'),
-        waitingMp4: require('../assets/waiting.mp4'),
+        countdownMp4: require('../assets/countdown.mp4'), //countdownGif: 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif' //Pulling this video from giphy on load is about 6MB! the (higher res countdown.mp4 is only 0.4MB)
+        waitingMp4: require('../assets/waiting.mp4'), //waitingGif: 'https://media.giphy.com/media/xTkcEQACH24SMPxIQg/giphy.gif'
         giphyAttribution: require('../assets/giphyAttribution(looped-in-ezgif.com[slash]loop-count).gif')
     }
 }

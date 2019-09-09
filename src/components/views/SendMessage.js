@@ -6,7 +6,7 @@ import { Video } from 'expo-av'
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'
 import * as SMS from 'expo-sms'
 import * as Font from 'expo-font'
-const giphy = require('giphy-api')('fyJJNam0Sxaemz2qBmAW7mFe0i6lJPjr') //An empty set of parenthesis allows you to test GIPHY integration with a public beta key, 'fyJJNam0Sxaemz2qBmAW7mFe0i6lJPjr' is my developer API key I got when I made a GIPHY account, and I'll need to eventually apply for a production API key
+const giphy = require('giphy-api')('fyJJNam0Sxaemz2qBmAW7mFe0i6lJPjr') //An empty set of parenthesis allows you to test GIPHY integration with a public beta key, 'fyJJNam0Sxaemz2qBmAW7mFe0i6lJPjr' is my developer API key I got when I made a GIPHY account, and on 2019, 09-03rd my application for production API key was denied because I wasn't doing anything out of the ordinary with the API other than searching GIPHY.
 //https://developers.giphy.com/faq/
 //https://www.npmjs.com/package/giphy-api
 import utils from '../../utils'
