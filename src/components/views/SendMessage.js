@@ -6,7 +6,7 @@ import { GiphyOption, Png, Words } from './'
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'
 import * as SMS from 'expo-sms'
 import * as Font from 'expo-font'
-const giphy = require('giphy-api')('fyJJNam0Sxaemz2qBmAW7mFe0i6lJPjr') //An empty set of parenthesis allows you to test GIPHY integration with a public beta key, 'fyJJNam0Sxaemz2qBmAW7mFe0i6lJPjr' is my developer API key I got when I made a GIPHY account, and on 2019, 09-03rd my application for production API key was denied because GIPHY incorrectly claimed that I wasn't doing anything out of the ordinary with the API other than searching GIPHY. I applealed the case to Xinmei Wang (xinmei@giphy.com), a moderator at GIPHY, and insisted that she look at the video I'd attached to the application (because by the declination I could tell no one had). When she realied it was a full stack chat app with a drag and drop canvas (yep, no one had really looked at my application) she approved the project for use of a production API key and simply augmented the scope of my developer key. 
+const giphy = require('giphy-api')('fyJJNam0Sxaemz2qBmAW7mFe0i6lJPjr') //An empty set of parenthesis allows you to test GIPHY integration with a public beta key, 'fyJJNam0Sxaemz2qBmAW7mFe0i6lJPjr' is my developer API key I got when I made a GIPHY account, and on 2019, 09-03rd my application for production API key was denied because GIPHY incorrectly claimed that I wasn't doing anything out of the ordinary with the API other than searching GIPHY. I applealed the case to Xinmei Wang (xinmei@giphy.com), a moderator at GIPHY, and insisted that she look at the video I'd attached to the application (because by the declination I could tell no one had). When she realied it was a full stack chat app with a drag and drop canvas (yep, no one had really looked at my application) she approved the project for use of a production API key and simply augmented the scope of my developer key.
 //https://developers.giphy.com/faq/
 //https://www.npmjs.com/package/giphy-api
 import utils from '../../utils'
@@ -322,9 +322,9 @@ class SendMessage extends React.Component {
                     />
                 </View>
 
-                <Animated.View style={{display: this.state.selectedLayer === 'message' ? 'none' : 'flex', flexDirection: 'column', top: 0, opacity: this.state.fadeInWorkArea}}>
+                <Animated.View style={{display: 'flex', flexDirection: 'column', top: 0, opacity: this.state.fadeInWorkArea}}>
 
-                    <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={{display: this.state.selectedLayer === 'message' ? 'none' : 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
 
                         {/* <Video source={config.videos.waitingMp4} shouldPlay isLooping style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyMainId !== '') || (this.state.newMessage.giphyMainId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyMainId === '') ? 'flex' : 'none'}]}/> */}
 
@@ -414,7 +414,6 @@ class SendMessage extends React.Component {
 
                 </Animated.View>
 
-
             </View>
         )
     }
@@ -433,10 +432,10 @@ const styles = StyleSheet.create({
     inputs: {
         width: config.screenWidth - 10,
         height: 32,
-        paddingVertical: 8,
+        paddingVertical: Platform.OS === 'ios' ? 8 : 6,
         paddingHorizontal: 12,
         backgroundColor: 'rgb(255,255,255)',
-        fontSize: 16,
+        fontSize: Platform.OS === 'ios' ? 16 : 12,
         color: 'rgb(0,0,0)',
         opacity: .6,
         marginHorizontal: 5,
