@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native'
+import { Text, View, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native'
 import config from '../../config'
 import { AntDesign } from '@expo/vector-icons'
 
@@ -13,7 +13,19 @@ class SingleContact extends React.Component {
     }
 
     async componentDidMount() {
-        let username = this.props.contact.phoneNumbers[0].digits.split('').reverse().splice(0,10).reverse().join('')
+
+        let username
+
+        if (Platform.OS === 'ios') {
+            username = this.props.contact.phoneNumbers[0].digits.split('').reverse().splice(0,10).reverse().join('')
+        } else {
+            this.props.contact.phoneNumbers.map(i => {
+                if (i.isPrimary === 1) { // .number.split('').reverse().splice(0,10).reverse().join('')
+                    username = i.number.split('').reverse().splice(0,10).reverse().join('')
+                }
+            })
+        }
+
         fetch(`${config.baseUrl}api/user/?username=${username}`, {
             method: 'GET',
             headers: {

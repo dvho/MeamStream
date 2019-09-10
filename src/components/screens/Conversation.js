@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, Text, FlatList, TouchableOpacity, Modal, Image } from 'react-native'
+import { View, StyleSheet, Text, FlatList, TouchableOpacity, Modal, Image, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import { Entypo } from '@expo/vector-icons'
 import * as Font from 'expo-font'
@@ -187,17 +187,42 @@ class Conversation extends React.Component {
         //Unable to put the below shared method (refered to as "doesContactExist" in Message.js) in utils because it doesn't properly return a single value when arguments are passed to it.
 
         let currentConversation = this.state.fromData.username
+        let lastTenDigitsUser = this.state.fromData.username.split('').reverse().splice(0,10).reverse().join('')
 
-        const lastSevenDigitsUser = currentConversation.split('').reverse().splice(0,7).reverse().join('')
-        this.props.state.account.user.contacts.forEach(i => {
-            if (i.phoneNumbers[0].digits.split('').length >= 7) {
-                let lastSevenDigitsContact = i.phoneNumbers[0].digits.split('').reverse().splice(0,7).reverse().join('')
-                if (lastSevenDigitsUser === lastSevenDigitsContact) {
-                    currentConversation = i.name
+        if (Platform.OS === 'ios') {
+
+            this.props.state.account.user.contacts.forEach(i => {
+                if (i.phoneNumbers !== undefined) {
+                    if (i.phoneNumbers[0].digits.split('').length >= 10) {
+                        let lastTenDigitsContact = i.phoneNumbers[0].digits.split('').reverse().splice(0,10).reverse().join('')
+                        if (lastTenDigitsUser === lastTenDigitsContact) {
+                            currentConversation = i.name
+                        }
+                    }
                 }
-            }
+            })
+        } else {
+            this.props.state.account.user.contacts.forEach(i => {
+                if (i.phoneNumbers !== undefined) {
+                    let phoneNumber
+                    i.phoneNumbers.map(j => {
+                        if (j.isPrimary === 1) {
+                            phoneNumber = j.number
+                        }
+                    })
+                    if (phoneNumber !== undefined) {
+                        if (phoneNumber.split('').length >= 10) {
 
-        })
+                            let lastTenDigitsContact = phoneNumber.split('').reverse().splice(0,10).reverse().join('')
+
+                            if (lastTenDigitsUser === lastTenDigitsContact) {
+                                currentConversation = i.name
+                            }
+                        }
+                    }
+                }
+            })
+        }
 
         this.props.navigation.setParams({
             currentConversation: currentConversation

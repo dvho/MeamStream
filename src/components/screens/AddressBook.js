@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image, Text, TouchableOpacity, StyleSheet, FlatList, StatusBar } from 'react-native'
+import { View, Image, Text, TouchableOpacity, StyleSheet, FlatList, StatusBar, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import * as Font from 'expo-font'
 import { SingleContact, LogoName } from '../views'
@@ -30,13 +30,29 @@ class AddressBook extends React.Component {
     }
 
     async navigateToSendMessageFromAddressBook(contact) {
-        await this.setState({
-            newMessage: {
-                toUser: contact.phoneNumbers[0].digits,
-                username: contact.name
-            },
-            showCreateMessage: true,
-        })
+        if (Platform.OS === 'ios') {
+            await this.setState({
+                newMessage: {
+                    toUser: contact.phoneNumbers[0].digits,
+                    username: contact.name
+                },
+                showCreateMessage: true,
+            })
+        } else {
+            let toUser
+            contact.phoneNumbers.map(i => {
+                if (i.isPrimary === 1) { // .number.split('').reverse().splice(0,10).reverse().join('')
+                    toUser = i.number
+                }
+            })
+            await this.setState({
+                newMessage: {
+                    toUser: toUser,
+                    username: contact.name
+                },
+                showCreateMessage: true,
+            })
+        }
         await this.props.userReceived(this.state)
         await this.props.navigation.navigate('home', {navFromHome: false})
     }

@@ -128,11 +128,11 @@ class App extends React.Component {
         const cacheImages = (images) => {
           return images.map(image => {
             if (typeof image === 'string') {
-              return Image.prefetch(image);
+              return Image.prefetch(image)
             } else {
-              return Asset.fromModule(image).downloadAsync();
+              return Asset.fromModule(image).downloadAsync()
             }
-          });
+          })
         }
 
         return await Promise.all(cacheImages)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, TouchableOpacity, StyleSheet, Image, Text, Animated, Easing } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Image, Text, Animated, Easing, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import * as Permissions from 'expo-permissions'
@@ -22,19 +22,45 @@ class Message extends React.Component {
     }
 
     async doesContactExist() {
-        const lastSevenDigitsUser = this.state.fromData.username.split('').reverse().splice(0,7).reverse().join('')
-        this.props.state.account.user.contacts.forEach(i => {
-            if (i.phoneNumbers !== undefined) {
-                if (i.phoneNumbers[0].digits.split('').length >= 7) {
-                    let lastSevenDigitsContact = i.phoneNumbers[0].digits.split('').reverse().splice(0,7).reverse().join('')
-                    if (lastSevenDigitsUser === lastSevenDigitsContact) {
-                        this.setState({
-                            contact: i.name
-                        })
+
+        const lastTenDigitsUser = this.state.fromData.username.split('').reverse().splice(0,10).reverse().join('')
+
+        if (Platform.OS === 'ios') {
+
+            this.props.state.account.user.contacts.forEach(i => {
+                if (i.phoneNumbers !== undefined) {
+                    if (i.phoneNumbers[0].digits.split('').length >= 10) {
+                        let lastTenDigitsContact = i.phoneNumbers[0].digits.split('').reverse().splice(0,10).reverse().join('')
+                        if (lastTenDigitsUser === lastTenDigitsContact) {
+                            this.setState({
+                                contact: i.name
+                            })
+                        }
                     }
                 }
-            }
-        })
+            })
+        } else {
+            this.props.state.account.user.contacts.forEach(i => {
+                if (i.phoneNumbers !== undefined) {
+                    let phoneNumber
+                    i.phoneNumbers.map(j => {
+                        if (j.isPrimary === 1) {
+                            phoneNumber = j.number
+                        }
+                    })
+                    if (phoneNumber !== undefined) {
+                        if (phoneNumber.split('').length >= 10) {
+                            let lastTenDigitsContact = phoneNumber.split('').reverse().splice(0,10).reverse().join('')
+                            if (lastTenDigitsUser === lastTenDigitsContact) {
+                                this.setState({
+                                    contact: i.name
+                                })
+                            }
+                        }
+                    }
+                }
+            })
+        }
     }
 
     async componentDidMount() {
@@ -65,7 +91,6 @@ class Message extends React.Component {
             })
 
             this.doesContactExist()
-            //console.log(this.props.state.account.user.contacts)
 
             Animated.timing(                // Animate over time
               this.state.fadeInAnim,       // The animated value to drive
