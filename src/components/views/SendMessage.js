@@ -329,7 +329,7 @@ class SendMessage extends React.Component {
                         {/* <Video source={config.videos.waitingMp4} shouldPlay isLooping style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyMainId !== '') || (this.state.newMessage.giphyMainId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyMainId === '') ? 'flex' : 'none'}]}/> */}
 
 
-                        <Image source={{uri: 'https://media.giphy.com/media/xTkcEQACH24SMPxIQg/giphy.gif'}} style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyMainId !== '') || (this.state.newMessage.giphyMainId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyMainId === '') ? 'flex' : 'none'}]}/>
+                        <Image source={config.videos.waitingGif} style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyMainId !== '') || (this.state.newMessage.giphyMainId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyMainId === '') ? 'flex' : 'none'}]}/>
 
 
 

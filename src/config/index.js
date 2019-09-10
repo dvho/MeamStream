@@ -36,8 +36,8 @@ export default {
         logoNamePng: require('../assets/logoName.png')
     },
     videos: {
-        //countdownMp4: require('../assets/countdown.mp4'), //countdownGif: 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif' //Pulling this video from giphy on load is about 6MB! the (higher res countdown.mp4 is only 0.4MB)
-        //waitingMp4: require('../assets/waiting.mp4'), //waitingGif: 'https://media.giphy.com/media/xTkcEQACH24SMPxIQg/giphy.gif'
+        countdownGif: require('../assets/countdown.gif'),//countdownMp4: require('../assets/countdown.mp4'), //countdownGif: 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif' //Pulling this video from giphy on load is 6.5MB and the (higher res) countdown.mp4 is only 0.4MB, but Android has problems reading Video component properties so using Image component with the gif version and caching the Asset in App.js was the best way to go about this.
+        waitingGif: require('../assets/waiting.gif'),//waitingMp4: require('../assets/waiting.mp4'), //waitingGif: 'https://media.giphy.com/media/xTkcEQACH24SMPxIQg/giphy.gif'
         giphyAttribution: require('../assets/giphyAttribution(looped-in-ezgif.com[slash]loop-count).gif')
     }
 }

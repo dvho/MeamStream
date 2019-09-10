@@ -19,7 +19,7 @@
     ],
     "ios": {
       "supportsTablet": true
-  },
+    },
     "splash": {
         "image": "./src/assets/logo.png",
         "resizeMode": "cover"

@@ -123,19 +123,12 @@ class App extends React.Component {
     }
 
     async _cacheResourcesAsync() {
-        const images = [require('./src/assets/logo.png'), require('./src/assets/curtain.png'), require('./src/assets/theater.png'), require('./src/assets/logoName.png'), require('./src/assets/backgroundTile.png'), require('./src/assets/giphyAttribution(looped-in-ezgif.com[slash]loop-count).gif'), 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif', 'https://media.giphy.com/media/xTkcEQACH24SMPxIQg/giphy.gif']
+        const images = [require('./src/assets/logo.png'), require('./src/assets/curtain.png'), require('./src/assets/theater.png'), require('./src/assets/logoName.png'), require('./src/assets/backgroundTile.png'), require('./src/assets/giphyAttribution(looped-in-ezgif.com[slash]loop-count).gif'), require('./src/assets/countdown.gif'), require('./src/assets/waiting.gif')]
 
-        const cacheImages = (images) => {
-          return images.map(image => {
-            if (typeof image === 'string') {
-              return Image.prefetch(image)
-            } else {
-              return Asset.fromModule(image).downloadAsync()
-            }
-          })
-        }
-
-        return await Promise.all(cacheImages)
+        const cacheImages = images.map(image => {
+            return Asset.fromModule(image).downloadAsync()
+            })
+        return Promise.all(cacheImages)
     }
 }
 

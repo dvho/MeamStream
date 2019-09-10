@@ -89,7 +89,7 @@ class AddressBook extends React.Component {
 
                 {/* Video component doesn't seem to be loading properties properly on Android so using Image component and gif for the looping animation <Video source={config.videos.countdownMp4} shouldPlay isLooping style={{position: 'absolute', opacity: .3, width: 250 + '%', height: 100 + '%'}} /> */}
 
-                <Image source={{uri: 'https://media.giphy.com/media/thNsW0HZ534DC/giphy.gif'}} style={{position: 'absolute', opacity: .3, width: 250 + '%', height: 100 + '%'}} />
+                <Image source={config.videos.countdownGif} style={{position: 'absolute', opacity: .3, width: 250 + '%', height: 100 + '%'}} />
 
                 <View style={{width: config.screenWidth, height: config.minimumHeaderHeight - 44}}/>
 
