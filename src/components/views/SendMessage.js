@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Keyboard, Image, FlatList, KeyboardAvoidingView, Animated, Easing, Alert, Platform } from 'react-native'
+import { View, TextInput, Text, TouchableOpacity, StyleSheet, Keyboard, Image, FlatList, Animated, Easing, Alert, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import { GiphyOption, Png, Words } from './'
 //import { Video } from 'expo-av'
@@ -324,17 +324,11 @@ class SendMessage extends React.Component {
 
                 <Animated.View style={{display: this.state.selectedLayer === 'message' ? 'none' : 'flex', flexDirection: 'column', top: 0, opacity: this.state.fadeInWorkArea}}>
 
-                    <KeyboardAvoidingView behavior='padding' style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
 
                         {/* <Video source={config.videos.waitingMp4} shouldPlay isLooping style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyMainId !== '') || (this.state.newMessage.giphyMainId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyMainId === '') ? 'flex' : 'none'}]}/> */}
 
-
                         <Image source={config.videos.waitingGif} style={[styles.canvas, {display: (this.state.giphySearchPhrase === '' && this.state.subscreen && this.state.newMessage.giphyMainId !== '') || (this.state.newMessage.giphyMainId === '' && !this.state.subscreen) || (this.state.subscreen && this.state.giphySearchPhrase === '' && this.state.newMessage.giphyMainId === '') ? 'flex' : 'none'}]}/>
-
-
-
-
-
 
                         <Image source={{uri: `https://media2.giphy.com/media/${this.state.newMessage.giphyMainId}/200.gif`}} resizeMode='contain' resizeMethod='scale' style={[styles.canvas, {display: this.state.subscreen !== false || this.state.newMessage.giphyMainId === '' ? 'none' : 'flex'}]}/>
 
@@ -363,11 +357,9 @@ class SendMessage extends React.Component {
                             renderItem={({item}) => <GiphyOption gifId={item.id} getGiphyId={()=>this.updateNewMessage(item.id, 'giphyId')}/>}
                             />
 
-                    </KeyboardAvoidingView>
+                    </View>
 
-                </Animated.View>
-
-                <Animated.View style={{bottom: this.state.keyboardHeight + 66, position: 'absolute', opacity: this.state.fadeInWorkArea}}>
+                <View>
 
                     <View style={{zIndex: 0, flexDirection: 'row', justifyContent: 'center', height: 30, width: 100 + '%'}}>
 
@@ -414,11 +406,14 @@ class SendMessage extends React.Component {
                         returnKeyType={this.state.selectedLayer === 'message' ? null : (this.state.selectedLayer === 'words' ? null : 'next')}
                     />
 
-                </Animated.View>
+                </View>
 
-                <View style={{position: 'absolute', bottom: 0, height: this.state.keyboardHeight, width: 100 + '%', display: 'flex', alignItems: 'center'}}>
+                <View style={{bottom: 0, height: this.state.keyboardHeight, width: 100 + '%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                         <Text style={{textAlign: 'center', paddingHorizontal: 10, color: 'rgb(215,215,215)', fontSize: 20, fontFamily: this.state.fontLoaded ? 'cinzel-regular' : null}}>{this.state.directions}</Text>
                 </View>
+
+                </Animated.View>
+
 
             </View>
         )

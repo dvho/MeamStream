@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, PanResponder, Animated, Image, StyleSheet } from 'react-native'
+import { View, PanResponder, Animated, Image, StyleSheet, Platform } from 'react-native'
 import config from '../../config'
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -17,7 +17,7 @@ class Png extends React.Component {
         const panResponder = PanResponder.create({
            onStartShouldSetPanResponder: () => true,
            onPanResponderMove: (event, gesture) => {
-               if (((gesture.moveX - event.nativeEvent.locationX - 10) > 0) && ((gesture.moveX - event.nativeEvent.locationX + config.pngWidth - 10) < config.canvasWidth ) && ((gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 42) > 0) && ((gesture.moveY - event.nativeEvent.locationY + config.pngWidth - 42) < (config.canvasHeight + config.headerHeight))) {
+               if ( Platform.OS === 'ios' ? (((gesture.moveX - event.nativeEvent.locationX - 10) > 0) && ((gesture.moveX - event.nativeEvent.locationX + config.pngWidth - 10) < config.canvasWidth ) && ((gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 42) > 0) && ((gesture.moveY - event.nativeEvent.locationY + config.pngWidth - 42) < (config.canvasHeight + config.headerHeight))) : (((gesture.moveX - 50 - 10) > 0) && (gesture.moveX < config.canvasWidth) && ((gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 42) > 0) && ((gesture.moveY - event.nativeEvent.locationY + config.pngWidth - 42) < (config.canvasHeight + config.headerHeight))) ) {
                    let locationX = event.nativeEvent.locationX
                    let locationY = event.nativeEvent.locationY
                    // setTimeout(() => {
