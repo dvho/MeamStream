@@ -18,8 +18,9 @@ class Png extends React.Component {
            onStartShouldSetPanResponder: () => true,
            onPanResponderMove: (event, gesture) => {
                if ( Platform.OS === 'ios' ? (((gesture.moveX - event.nativeEvent.locationX - 10) > 0) && ((gesture.moveX - event.nativeEvent.locationX + config.pngWidth - 10) < config.canvasWidth ) && ((gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 42) > 0) && ((gesture.moveY - event.nativeEvent.locationY + config.pngWidth - 42) < (config.canvasHeight + config.headerHeight))) : (((gesture.moveX - 50 - 10) > 0) && (gesture.moveX < config.canvasWidth) && ((gesture.moveY - event.nativeEvent.locationY - config.headerHeight - 42) > 0) && ((gesture.moveY - event.nativeEvent.locationY + config.pngWidth - 42) < (config.canvasHeight + config.headerHeight))) ) {
-                   let locationX = event.nativeEvent.locationX
-                   let locationY = event.nativeEvent.locationY
+
+                   let locationX = Platform.OS === 'ios' ? event.nativeEvent.locationX : 50
+                   let locationY = Platform.OS === 'ios' ? event.nativeEvent.locationY : 50
                    // setTimeout(() => {
                        position.setValue({ x: gesture.dx, y: gesture.dy })
                            this.setState({
