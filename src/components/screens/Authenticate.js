@@ -178,6 +178,8 @@ class Authenticate extends React.Component {
 
     async submit() {
 
+        //Deleted accounts: 5d71e29f8c0d480014a7b26c, 5d76794c2f079f0014a3af17
+
         if (this.state.credentials.username.length < 10) {
             alert('Must enter a valid 10-digit phone number.')
             return
