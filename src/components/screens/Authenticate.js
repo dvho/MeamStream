@@ -104,7 +104,7 @@ class Authenticate extends React.Component {
             })
 
         //Now send the local image to turbo CDN, get a callback function, pick off the new URL from the CDN and add it to credentials when turbo runs this.turbo.createUser. Whatever that new url is should be substituded for result.uri below.
-        this.updateCredentials(cdnResp.result.url, 'image')
+        await this.updateCredentials(cdnResp.result.url, 'image')
 
         this.setState({
             selectedImage: result.uri,
@@ -207,7 +207,9 @@ class Authenticate extends React.Component {
             })
 
         //(Here if this.state.loginScreen is false (if you're about to run the register function) you need to first check if the user already exists. Why does turbo360 SDK not already do that with their createUser function? You'll need to create a route in the API that handles this.) Also, if it's a new user using register, this.turbo.createUser(cred), once they're in, before the return function, call turbo.updateEntity to update the record with the image. Make sure that the profile image updloaded is outside the credentials object...update: somehow this last part automatially worked... why?
+
         const authFunction = this.state.loginScreen ? this.login : this.register
+
         authFunction(this.state.credentials)
             .then(resp => {
                 AsyncStorage.setItem(config.userIdKey, resp.id)
@@ -216,7 +218,7 @@ class Authenticate extends React.Component {
                 })
                 return
             })
-            .then(() => { // Used to be .then(key => {... but I didn't understand the key part and console.loggin key was giving undefined
+            .then(key => { // Used to be .then(key => {... but I didn't understand the key part and console.loggin key was giving undefined... actually this whole then block ended up giving me problems because returns were happening in the respective authFuncitons so timerSuccess was never running and so accounts were being created and there was no thumbs up feedback nor navigation to the next page.
                 this.timerSuccess()
                 this.setState({
                     loginHand: 'thumbs-up',
@@ -240,6 +242,15 @@ class Authenticate extends React.Component {
 
     register(cred) {
         if (this.state.userExists === undefined) {
+            this.setState({
+                profileImage: this.state.selectedImage,
+                loginHand: 'thumbs-up',
+                loginStatus: "Let's go!",
+                loginColor: config.colors.activeButton,
+                textColor: 'rgb(128,10,14)'
+            })
+            Keyboard.dismiss()
+            this.timerSuccess()
             return this.turbo.createUser(cred)
         } else {
             this.setState({
@@ -336,7 +347,7 @@ class Authenticate extends React.Component {
                         <TouchableOpacity onPress={() => this.togglePage()} activeOpacity={0.1} style={{paddingVertical: 15, paddingHorizontal: 5}}>
                             <MaterialCommunityIcons name="new-box" size={48} color={this.state.loginScreen ? config.colors.inactiveButton : `'hsl(${this.state.newBoxIconHue}, 75%, 25%)'`}  style={styles.newIconShadow}/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.state.imageProcessingStatus === '' ? () => this.submit() : null} activeOpacity={0.1} style={[{paddingHorizontal: 10, paddingVertical: 5, flexDirection: 'row', alignItems: 'center', borderWidth: StyleSheet.hairlineWidth, borderColor: this.state.textColor, borderRadius: 10}, styles.loginStatusShadow]}>
+                        <TouchableOpacity onPress={() => this.submit()} activeOpacity={0.1} style={[{paddingHorizontal: 10, paddingVertical: 5, flexDirection: 'row', alignItems: 'center', borderWidth: StyleSheet.hairlineWidth, borderColor: this.state.textColor, borderRadius: 10}, styles.loginStatusShadow]}>
                             <Text style={{fontSize: 16, fontWeight: 'bold', color: this.state.textColor}}>{this.state.loginStatus}</Text>
                             <Entypo style={this.state.loginHand === 'thumbs-up' ? {transform: [{rotateY: '180deg'}]} : null} name={this.state.loginHand} size={this.state.handSize} color={this.state.loginColor}/>
                         </TouchableOpacity>

@@ -127,7 +127,7 @@ router.get('/:resource', (req, res) => {
     .fetch(resource, query)
     .then(data => {
       const pageResults = data.slice(
-        PAGE_LENGTH * page - PAGE_LENGTH, 
+        PAGE_LENGTH * page - PAGE_LENGTH,
         PAGE_LENGTH * page
       );
       //Must let front end know there are no more pages on last page

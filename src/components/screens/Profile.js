@@ -14,7 +14,7 @@ class Profile extends React.Component {
     constructor() {
         super()
         this.state = {
-            mountingAnimationComplete: false,
+            mountingAnimationComplete: true, //This used to be set as false to prevent a no-op memory leak but the leak has no substance and in order to prevent the leak I have to block functionality / hinder user experience while animation is active, so leaving this true so that it's effectively a dummy variable is best policy
             drawLeftCurtain: new Animated.Value(0),
             drawRightCurtain: new Animated.Value(0),
             fadeOutVeil: new Animated.Value(1),
