@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "MemeStream",
-    "slug": "MemeStream",
+    "description": "A fun chat app where you can drag and drop cool animated layers and text onto a message canvas.",
+    "slug": "memestream",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [
@@ -11,6 +12,8 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
+    "primaryColor": "#d9fff5",
+    "icon": "./src/assets/icon.png",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -18,11 +21,18 @@
       "assets/*"
     ],
     "ios": {
+      "bundleIdentifier": "io.expo.dvho.memestream",
       "supportsTablet": true
     },
     "splash": {
         "image": "./src/assets/logo.png",
         "resizeMode": "cover"
+    },
+    "notification": {
+        "icon": "./src/assets/notification-icon.png",
+        "color": "#d9fff5",
+        "androidMode": "default",
+        "androidCollapsedTitle": "New MemeStream Message!"
     }
   }
 }

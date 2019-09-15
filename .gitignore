@@ -10,5 +10,8 @@ web-build/
 web-report/
 summary.txt
 assets-in-progress/
+screenshots/
+binaries/
+privacy-policy/
 *.log
 .DS_Store
