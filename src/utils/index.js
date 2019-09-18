@@ -59,14 +59,27 @@ export default {
         })
     },
 
-    sortMessagesByDate: arrayOfMessages => {
-        arrayOfMessages.sort((a,b) => {
+    filterAndSortMessagesByDate: (arrayOfMessages, filter) => {
+
+        let filteredArray = []
+
+        if ((filter !== undefined) && (filter !== [])) {
+            arrayOfMessages.forEach(i => {
+                if (!filter.includes(i.id)) {
+                    filteredArray.push(i)
+                }
+            })
+        } else {
+            filteredArray = arrayOfMessages
+        }
+
+        filteredArray.sort((a,b) => {
             return new Date(b.timestamp) - new Date(a.timestamp)
         })
-        return arrayOfMessages
+        return filteredArray
     },
 
-    mostRecentMessagePerSender: arrayOfMessages => {
+    mostRecentMessagePerSender: (arrayOfMessages) => {
         const senderArray = []
         const mostRecentMessagePerSenderArray = []
         arrayOfMessages.forEach(i => {

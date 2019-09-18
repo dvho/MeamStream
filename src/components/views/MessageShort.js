@@ -1,8 +1,9 @@
 import React from 'react'
-import { View, StyleSheet, Image, Text, Animated, Easing } from 'react-native'
+import { View, StyleSheet, Image, Text, Animated, Easing, TouchableOpacity, Alert } from 'react-native'
 import { connect } from 'react-redux'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons'
 import * as Font from 'expo-font'
+import Turbo from 'turbo360'
 import { TimeStamp } from './'
 import config from '../../config'
 import actions from '../../redux/actions'
@@ -13,8 +14,40 @@ class MessageShort extends React.Component {
         super()
         this.state = {
             fadeInAnim: new Animated.Value(0),
-            fontLoaded: false
+            fontLoaded: false,
+            flaggedAndDeleted: false
         }
+        this.turbo = Turbo({site_id: config.turboAppId})
+    }
+
+
+    flagAndFilterMessage() {
+        this.props.filterMessage(this.props.message.id)
+        this.setState({flaggedAndDeleted: true})
+        Alert.alert(
+             'Thanks for your feedback!',
+            'Content will be removed next time you open the app.',
+          [
+            //{ text: 'Ask me later', onPress: () => console.log('Ask me later pressed') },
+            { text: 'Close', onPress: () => console.log('Closed dialog box'), style: 'cancel'}
+          ],
+          { cancelable: false }
+        )
+        //this.turbo.removeEntity(`${config.baseUrl}api/message?id=${this.props.message.id}`)
+    }
+
+    alerting() {
+        //console.log(this.props.filterArray)
+        Alert.alert(
+            'Heads up!',
+            'Do you want to flag and remove this message?',
+          [
+            //{ text: 'Ask me later', onPress: () => console.log('Ask me later pressed') },
+            { text: 'Cancel', onPress: () => console.log('Cancel remove content'), style: 'cancel'},
+            { text: 'Yes', onPress: () => this.flagAndFilterMessage()},
+          ],
+          { cancelable: false }
+        )
     }
 
     async componentDidMount() {
@@ -61,7 +94,7 @@ class MessageShort extends React.Component {
 
                     </View>
 
-
+                    <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', position: 'absolute', top: 44, width: 40, height: 40, marginHorizontal: 10}} onPress={this.state.flaggedAndDeleted ? null : () => this.alerting()} activeOpacity={this.state.flaggedAndDeleted ? 1 : .3}><FontAwesome name={'flag'} size={26} color={this.state.flaggedAndDeleted ? 'rgb(255,0,0)' : 'rgb(200,200,200)'} /></TouchableOpacity>
 
                     { this.props.message.message !== '' ? <View style={[styles.message, {backgroundColor: 'rgb(255,255,255)', padding: 15}]}>
                         <Text style={{fontFamily: this.state.fontLoaded ? 'indieflower-regular' : null, fontSize: 22}}>{this.props.message.message}</Text>
@@ -90,7 +123,6 @@ class MessageShort extends React.Component {
                         {this.props.message.words !== '' && this.props.message.wordsCoords.x === -0.01 ? <View style={{position: 'absolute', width: 100 + '%', height: 100 + '%', justifyContent: 'center'}}><Text style={{textAlign: 'center', color: 'rgb(243,243,243)', textShadowColor: 'rgb(0,0,0)', textShadowRadius: 3, padding: 3, fontSize: (((config.screenWidth - 101)/10)- 4), fontFamily: this.state.fontLoaded ? 'abril-fatface-regular' : null}}>{this.props.message.words}</Text></View> : null}
 
                     </View> }
-
 
                 </View>
             </Animated.View>

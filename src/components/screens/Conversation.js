@@ -42,10 +42,12 @@ class Conversation extends React.Component {
             page: 0,
             fromData: {},
             toData: {},
+            filter: ['hi'],
             showCreateMessage: false
         }
         this.toggleCreateMessage = this.toggleCreateMessage.bind(this)
         this.renderMessages = this.renderMessages.bind(this)
+        this.filterMessage = this.filterMessage.bind(this)
     }
 
     toggleCreateMessage() {
@@ -109,6 +111,57 @@ class Conversation extends React.Component {
                     })
         } else {
             return
+        }
+    }
+
+    async filterMessage(messageId) {
+
+        let filter = []
+
+        await fetch(`${config.baseUrl}api/user/${this.props.state.account.user.userId}`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+        .then(response => {
+            return(response.json())
+        })
+        .then(responseJSON => {
+            this.setState({
+                filter: responseJSON.data.filter !== undefined ? responseJSON.data.filter : []
+            })
+        })
+        .catch(err => {
+            console.log(err.messsage)
+        })
+
+        filter = this.state.filter
+
+        filter.push(messageId)
+
+        try {
+            // Filtering messages uses Turbo360's turbo.updateEntity method.
+            fetch(`${config.baseUrl}api/updateuser`, {
+            method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    },
+                body: JSON.stringify({
+                    type: 'filter',
+                    filter: {
+                        messageId: filter,
+                    },
+                    user: {
+                        id: this.state.toData.id
+                    }
+                })
+            })
+        }
+        catch(err) {
+            console.log(err)
         }
     }
 
@@ -231,7 +284,7 @@ class Conversation extends React.Component {
         utils
         .fetchMessages('message/me', { fromUser: fromId })
         .then(responseJSON => {
-            const sorted = utils.sortMessagesByDate(responseJSON.data)
+            const sorted = utils.filterAndSortMessagesByDate(responseJSON.data, this.props.state.account.user.filter)
             this.renderMessages(sorted)
         })
         .catch(err => {
@@ -260,7 +313,7 @@ class Conversation extends React.Component {
                 data={this.state.messages}
                 extraData={this.state}
                 keyExtractor={item => item.id}
-                renderItem={({item}) => <MessageShort toImage={this.state.toData.image} fromImage={this.state.fromData.image} sentMessage={item.fromUser === this.props.navigation.state.params.user} message={item}/>}
+                renderItem={({item}) => <MessageShort filterMessage={this.filterMessage} toImage={this.state.toData.image} fromImage={this.state.fromData.image} sentMessage={item.fromUser === this.props.navigation.state.params.user} message={item}/>}
                 />
             </View>
         )

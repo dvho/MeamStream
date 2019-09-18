@@ -29,6 +29,7 @@
     "react-navigation": "^3.11.0",
     "react-redux": "^7.1.0",
     "redux": "^4.0.4",
+    "turbo-cli": "^0.34.88",
     "turbo360": "=1.6.35"
   },
   "devDependencies": {

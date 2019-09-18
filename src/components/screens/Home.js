@@ -42,6 +42,7 @@ class Home extends React.Component {
             userId: '',
             username: '',
             profileImage: '',
+            filter: [],
             pushToken: '',
             contacts: [],
             currentTimeInMilliseconds: 0,
@@ -121,7 +122,8 @@ class Home extends React.Component {
         .then(responseJSON => {
             this.setState({
                 username: responseJSON.data.username,
-                profileImage: responseJSON.data.image
+                profileImage: responseJSON.data.image,
+                filter: responseJSON.data.filter
             })
         })
         .then(() => {
@@ -144,7 +146,8 @@ class Home extends React.Component {
         })
         utils.fetchMessages('message', {page: page})
             .then(responseJSON => {
-                const sorted = utils.sortMessagesByDate(responseJSON.data)
+
+                const sorted = utils.filterAndSortMessagesByDate(responseJSON.data, this.state.filter)
 
                 let newMessages = Object.assign([], this.state.messages)
                 sorted.forEach((message, i) => {

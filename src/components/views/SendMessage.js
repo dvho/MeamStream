@@ -66,7 +66,7 @@ class SendMessage extends React.Component {
               { toValue: 1,                 // Animate to opacity: 1
                 delay: 500,                // Wait 500ms so keyboard can swing up
                 duration: 1000,             // Make it take 1000ms
-                easing: Easing.bezier(0, 0, 0, 1, 1)
+                easing: Easing.bezier(0, 0, 1, 1)
               }).start()
 
             this.keyboardDidShowListener = Keyboard.addListener(

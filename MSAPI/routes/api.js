@@ -37,6 +37,9 @@ router.post('/updateuser', (req, res) => {
     if (req.body.type === 'pushToken') {
         obj = {pushToken: req.body.token.value}
     }
+    if (req.body.type === 'filter') {
+        obj = {filter: req.body.filter.messageId}
+    }
 
     const resource = 'user'
     const userId = req.body.user.id
