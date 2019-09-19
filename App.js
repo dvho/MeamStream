@@ -11,6 +11,10 @@ import { Provider } from 'react-redux'
 import { Zocial, Ionicons, FontAwesome } from '@expo/vector-icons'
 //expo can't be used on unsecured network. Make sure the WiFi you’re on requires a password, not just an email (i.e. not Starbucks, etc.)
 //expo cli needs to be updated using sudo (to expo-cli@3.0.10, as of the current moment) in order not to get the message that there are no assets to upload upon running expo publish https://github.com/expo/expo-cli/issues/179
+//Deploying to App and Play stores https://www.youtube.com/watch?v=6XJhgeuUszQ&t=183s (4 videos)
+//Updates for App Store, including updating info.plist  https://docs.expo.io/versions/v32.0.0/distribution/app-stores/#system-permissions-dialogs-on-ios
+//Workaround to update info.plist from App.js https://stackoverflow.com/questions/48157185/info-plist-file-for-react-native-ios-app-using-expo-sdk
+
 YellowBox.ignoreWarnings([
   'Require cycle:',
 ])

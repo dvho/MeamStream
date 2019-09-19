@@ -284,7 +284,7 @@ class Conversation extends React.Component {
         utils
         .fetchMessages('message/me', { fromUser: fromId })
         .then(responseJSON => {
-            const sorted = utils.filterAndSortMessagesByDate(responseJSON.data, this.props.state.account.user.filter)
+            const sorted = utils.filterBanAndSortMessagesByDate(responseJSON.data, this.props.state.account.user.filter)
             this.renderMessages(sorted)
         })
         .catch(err => {

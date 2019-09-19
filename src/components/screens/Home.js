@@ -43,6 +43,7 @@ class Home extends React.Component {
             username: '',
             profileImage: '',
             filter: [],
+            ban: [],
             pushToken: '',
             contacts: [],
             currentTimeInMilliseconds: 0,
@@ -62,6 +63,7 @@ class Home extends React.Component {
         this.fetchMessages = this.fetchMessages.bind(this)
         this.fetchUserData = this.fetchUserData.bind(this)
         this.setOrVerifyPushToken = this.setOrVerifyPushToken.bind(this)
+        this.filterUsersMessages = this.filterUsersMessages.bind(this)
     }
     //In both Message.js and Conversation.js (for the Conversation.js navbar) it would've been nice to run doesContactExist() from a common util function but it didn't work passing params to it.
 
@@ -123,7 +125,8 @@ class Home extends React.Component {
             this.setState({
                 username: responseJSON.data.username,
                 profileImage: responseJSON.data.image,
-                filter: responseJSON.data.filter
+                filter: responseJSON.data.filter,
+                ban: responseJSON.data.ban
             })
         })
         .then(() => {
@@ -147,7 +150,7 @@ class Home extends React.Component {
         utils.fetchMessages('message', {page: page})
             .then(responseJSON => {
 
-                const sorted = utils.filterAndSortMessagesByDate(responseJSON.data, this.state.filter)
+                const sorted = utils.filterBanAndSortMessagesByDate(responseJSON.data, this.state.filter, this.state.ban)
 
                 let newMessages = Object.assign([], this.state.messages)
                 sorted.forEach((message, i) => {
@@ -187,6 +190,57 @@ class Home extends React.Component {
         this.setState({
             newMessage: newMessage
         })
+    }
+
+    async filterUsersMessages(fromUser) {
+
+        let ban = []
+
+        await fetch(`${config.baseUrl}api/user/${this.props.state.account.user.userId}`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+        .then(response => {
+            return(response.json())
+        })
+        .then(responseJSON => {
+            this.setState({
+                ban: responseJSON.data.ban !== undefined ? responseJSON.data.ban : []
+            })
+        })
+        .catch(err => {
+            console.log(err.messsage)
+        })
+
+        ban = this.state.ban
+
+        ban.push(fromUser)
+
+        try {
+            // Filtering/banning messages/users uses Turbo360's turbo.updateEntity method.
+            fetch(`${config.baseUrl}api/updateuser`, {
+            method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    },
+                body: JSON.stringify({
+                    type: 'ban',
+                    ban: {
+                        fromUser: ban,
+                    },
+                    user: {
+                        id: this.state.userId
+                    }
+                })
+            })
+        }
+        catch(err) {
+            console.log(err)
+        }
     }
 
     async componentDidMount() {
@@ -279,7 +333,7 @@ class Home extends React.Component {
                     data={utils.mostRecentMessagePerSender(this.state.messages)}
                     ListFooterComponent={() => (this.state.fetchingPage) ? <ActivityIndicator/> : null}
                     keyExtractor={item => item.id}
-                    renderItem={({item}) => <Message message={item} nav={this.navigateToConversationFromReadingMessages.bind(this, item=item)}/>}
+                    renderItem={({item}) => <Message filterUsersMessages={this.filterUsersMessages} message={item} nav={this.navigateToConversationFromReadingMessages.bind(this, item=item)}/>}
                     />
             </View>
         )

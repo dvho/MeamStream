@@ -59,22 +59,33 @@ export default {
         })
     },
 
-    filterAndSortMessagesByDate: (arrayOfMessages, filter) => {
+    filterBanAndSortMessagesByDate: (arrayOfMessages, filter, banned) => {
 
         let filteredArray = []
+        let notBannedArray = []
+
+        if ((banned !== undefined) && (banned !== [])) {
+            arrayOfMessages.forEach(i => {
+                if (!banned.includes(i.fromUser)) {
+                    notBannedArray.push(i)
+                }
+            })
+        } else {
+            notBannedArray = arrayOfMessages
+        }
 
         //console.log(filter)
         //console.log(arrayOfMessages)
 
 
         if ((filter !== undefined) && (filter !== [])) {
-            arrayOfMessages.forEach(i => {
+            notBannedArray.forEach(i => {
                 if (!filter.includes(i.id)) {
                     filteredArray.push(i)
                 }
             })
         } else {
-            filteredArray = arrayOfMessages
+            filteredArray = notBannedArray
         }
 
         filteredArray.sort((a,b) => {

@@ -40,6 +40,9 @@ router.post('/updateuser', (req, res) => {
     if (req.body.type === 'filter') {
         obj = {filter: req.body.filter.messageId}
     }
+    if (req.body.type === 'ban') {
+        obj = {ban: req.body.ban.fromUser}
+    }
 
     const resource = 'user'
     const userId = req.body.user.id

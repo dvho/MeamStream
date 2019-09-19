@@ -1,7 +1,7 @@
 import React from 'react'
-import { View, TouchableOpacity, StyleSheet, Image, Text, Animated, Easing, Platform } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Image, Text, Animated, Easing, Platform, Alert } from 'react-native'
 import { connect } from 'react-redux'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons'
 import * as Permissions from 'expo-permissions'
 import * as Font from 'expo-font'
 import { TimeStamp } from './'
@@ -17,7 +17,8 @@ class Message extends React.Component {
             fadeInAnim: new Animated.Value(0),
             fromData: {},
             contact: '',
-            fontLoaded: false
+            fontLoaded: false,
+            flaggedAndDeleted: false
         }
     }
 
@@ -61,6 +62,35 @@ class Message extends React.Component {
                 }
             })
         }
+    }
+
+    flagAndBanUsersMessages() {
+        this.props.filterUsersMessages(this.props.message.fromUser)
+        this.setState({flaggedAndDeleted: true})
+        Alert.alert(
+             'Thanks for your feedback!',
+            'User will no longer be able to contact you.',
+          [
+            //{ text: 'Ask me later', onPress: () => console.log('Ask me later pressed') },
+            { text: 'Close', onPress: () => console.log('Closed dialog box'), style: 'cancel'}
+          ],
+          { cancelable: false }
+        )
+        //this.turbo.removeEntity(`${config.baseUrl}api/message?id=${this.props.message.id}`)
+    }
+
+    alerting() {
+        //console.log(this.props.filterArray)
+        Alert.alert(
+            'Heads up!',
+            'Do you want to flag and ban this user?',
+          [
+            //{ text: 'Ask me later', onPress: () => console.log('Ask me later pressed') },
+            { text: 'Cancel', onPress: () => console.log('Cancel ban user content'), style: 'cancel'},
+            { text: 'Yes', onPress: () => this.flagAndBanUsersMessages()},
+          ],
+          { cancelable: false }
+        )
     }
 
     async componentDidMount() {
@@ -119,13 +149,14 @@ class Message extends React.Component {
                                 source={{uri: senderImage}}
                                 style={styles.profilePic}/> : <MaterialCommunityIcons name='tag-faces' size={40} color="rgb(250,84,33)" style={{transform: [{rotateY: '180deg'}]}}/> }
 
+                                <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', width: 32, height: 32}} onPress={this.state.flaggedAndDeleted ? null : () => this.alerting()} activeOpacity={this.state.flaggedAndDeleted ? 1 : .3}><FontAwesome name={'flag'} size={22} color={this.state.flaggedAndDeleted ? 'rgb(255,0,0)' : 'rgb(200,200,200)'} /></TouchableOpacity>
+
                             <Text style={[styles.username, {fontFamily: this.state.fontLoaded ? 'cinzel-regular' : null }]}>{this.state.contact !== '' ? this.state.contact : this.state.fromData.username}</Text>
                         </View>
                         <View style={styles.timeCol}>
                                 <TimeStamp oneLineStamp={false} timestamp={this.props.message.timestamp} currentTimeInMilliseconds={this.props.state.account.user.currentTimeInMilliseconds} millisecondsSinceMidnight={this.props.state.account.user.millisecondsSinceMidnight} dateTimeFont={{fontSize: 10, fontFamily: this.state.fontLoaded ? 'cinzel-regular' : null}}/>
                         </View>
                     </View>
-
 
                     { this.props.message.message !== '' ? <View style={[styles.bottomRow, {backgroundColor: 'rgb(255,255,255)'}]}>
                         <Text style={{fontFamily: this.state.fontLoaded ? 'indieflower-regular' : null, fontSize: 22}}>{this.props.message.message}</Text>
@@ -202,8 +233,7 @@ const styles = StyleSheet.create({
             borderRadius: 20
         },
         username: {
-            fontSize: 16,
-            marginLeft: 8
+            fontSize: 16
         },
         date: {
             color: 'rgb(102, 102, 102)'
