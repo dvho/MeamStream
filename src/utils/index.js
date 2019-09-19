@@ -63,8 +63,8 @@ export default {
 
         let filteredArray = []
 
-        console.log(filter)
-        console.log(arrayOfMessages)
+        //console.log(filter)
+        //console.log(arrayOfMessages)
 
 
         if ((filter !== undefined) && (filter !== [])) {
