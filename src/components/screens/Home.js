@@ -70,7 +70,7 @@ class Home extends React.Component {
     async getContactsPermission() {
         const { status } = await Permissions.askAsync(Permissions.CONTACTS)
         if (status !== 'granted') {
-          alert('Ok, MemeStream won\'t be able to display your friends\' names, hope ya don\'t mind.')
+          alert('Ok, MemeStream won\'t be able to show you which of your friends also has the app, hope ya don\'t mind.')
           return
         }
     }
