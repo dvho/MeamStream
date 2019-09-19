@@ -22,7 +22,10 @@
     ],
     "ios": {
       "bundleIdentifier": "io.expo.dvho.memestream",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+          "NSContactsUsageDescription": "MemeStream! uses your contacts to let you see who in your contacts has MemeStream!"
+      }
     },
     "splash": {
         "image": "./src/assets/logo.png",
