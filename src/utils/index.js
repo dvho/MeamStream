@@ -63,6 +63,10 @@ export default {
 
         let filteredArray = []
 
+        console.log(filter)
+        console.log(arrayOfMessages)
+
+
         if ((filter !== undefined) && (filter !== [])) {
             arrayOfMessages.forEach(i => {
                 if (!filter.includes(i.id)) {

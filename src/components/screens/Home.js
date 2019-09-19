@@ -248,8 +248,8 @@ class Home extends React.Component {
         catch(err) {
             console.log(err)
         }
-        await this.fetchMessages()
         await this.fetchUserData(userId)
+        await this.fetchMessages()
         await this.setState({userId: userId, pushToken: token, contacts: cleanedContacts, reduxStateUpdated: true, currentTimeInMilliseconds: currentTimeInMilliseconds, millisecondsSinceMidnight: millisecondsSinceMidnight})
         await this.props.userReceived(this.state)
     }

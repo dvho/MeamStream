@@ -5,7 +5,7 @@ const router = vertex.router();
 
 
 const validResources = ['message'];
-const PAGE_LENGTH = 1;
+const PAGE_LENGTH = 5;
 
 
 router.get('/user', (req, res) => {
