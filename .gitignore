@@ -11,7 +11,7 @@ web-report/
 summary.txt
 assets-in-progress/
 screenshots/
+legal/
 binaries/
-privacy-policy/
 *.log
 .DS_Store

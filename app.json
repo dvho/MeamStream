@@ -10,7 +10,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "primaryColor": "#d9fff5",
     "icon": "./src/assets/icon.png",
@@ -24,7 +24,7 @@
       "bundleIdentifier": "io.expo.dvho.memestream",
       "supportsTablet": true,
       "infoPlist": {
-          "NSContactsUsageDescription": "MemeStream! uses your contacts to let you see who in your contacts has MemeStream!"
+          "NSContactsUsageDescription": "MemeStream! accesses your contacts only while the app is open so that you can see who in your contacts has MemeStream!"
       }
     },
     "splash": {
