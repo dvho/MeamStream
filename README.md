@@ -21,7 +21,7 @@ I wanted to build a full stack messaging app in which users could create entire 
 _________________________
 
 #### Notes
-Animate your message with MemeStream!
+Animate your message with _MemeStream!_
 
 _________________________
 
