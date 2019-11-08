@@ -27,11 +27,19 @@ class Home extends React.Component {
             //     fontWeight: 'bold',
             //     color: 'rgb(0,0,0)',
             // },
-            headerRight: params.showIcon ? (
+
+            // There used to be a conditional statement here:
+            // headerRight: params.showIcon ? (
+            //     <TouchableOpacity onPress={params.toggleCreateMessage} activeOpacity={0.7} style={{paddingHorizontal: 22, paddingVertical: 10}}>
+            //         <Entypo name="new-message" size={config.screenWidth / 16} color={config.colors.blue}/>
+            //     </TouchableOpacity>
+            // ) : null
+            // But there's no need for it with the modal covering the headerRight icon and I believe it was causing an issue when Apple reviewed version 1.0.3
+
+            headerRight:
                 <TouchableOpacity onPress={params.toggleCreateMessage} activeOpacity={0.7} style={{paddingHorizontal: 22, paddingVertical: 10}}>
                     <Entypo name="new-message" size={config.screenWidth / 16} color={config.colors.blue}/>
                 </TouchableOpacity>
-            ) : null
         }
     }
 
