@@ -10,7 +10,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.4",
+    "version": "1.0.5",
     "orientation": "portrait",
     "primaryColor": "#d9fff5",
     "icon": "./src/assets/icon.png",
@@ -24,7 +24,9 @@
       "bundleIdentifier": "io.expo.dvho.memestream",
       "supportsTablet": true,
       "infoPlist": {
-          "NSContactsUsageDescription": "MemeStream! accesses your contacts only while the app is open so that you can see who in your contacts has MemeStream!"
+          "NSContactsUsageDescription": "MemeStream! accesses your contacts only while the app is open so that you can see who in your contacts has MemeStream!",
+          "NSPhotoLibraryUsageDescription": "MemeStream! accesses your photos so that you can select and upload a profile photo if you would like to.",
+          "NSPhotoLibraryAddUsageDescription": "MemeStream! saves any photo you choose so that you can use it as a profile photo."
       }
     },
     "splash": {

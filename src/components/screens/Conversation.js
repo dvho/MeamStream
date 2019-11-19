@@ -36,8 +36,8 @@ class Conversation extends React.Component {
             // But there's no need for it with the modal covering the headerRight icon and I believe it was causing an issue when Apple reviewed version 1.0.3
 
             headerRight:
-                <TouchableOpacity onPress={params.toggleCreateMessage} activeOpacity={0.7} style={{paddingHorizontal: 20, paddingVertical: 10}}>
-                    <Entypo name="new-message" size={config.screenWidth / 18} color={config.colors.blue}/>
+                <TouchableOpacity onPress={params.toggleCreateMessage} activeOpacity={0.7} style={{paddingHorizontal: 20, paddingVertical: 4}}>
+                    <Entypo name="new-message" size={17} color={config.colors.blue}/>
                 </TouchableOpacity>
         }
     }

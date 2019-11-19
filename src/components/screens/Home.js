@@ -38,7 +38,7 @@ class Home extends React.Component {
 
             headerRight:
                 <TouchableOpacity onPress={params.toggleCreateMessage} activeOpacity={0.7} style={{paddingHorizontal: 22, paddingVertical: 10}}>
-                    <Entypo name="new-message" size={config.screenWidth / 16} color={config.colors.blue}/>
+                    <Entypo name="new-message" size={23} color={config.colors.blue}/>
                 </TouchableOpacity>
         }
     }

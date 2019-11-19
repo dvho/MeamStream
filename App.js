@@ -14,6 +14,7 @@ import { Zocial, Ionicons, FontAwesome } from '@expo/vector-icons'
 //Deploying to App and Play stores https://www.youtube.com/watch?v=6XJhgeuUszQ&t=183s (4 videos)
 //Updates for App Store, including updating info.plist  https://docs.expo.io/versions/v32.0.0/distribution/app-stores/#system-permissions-dialogs-on-ios
 //Workaround to update info.plist from App.js https://stackoverflow.com/questions/48157185/info-plist-file-for-react-native-ios-app-using-expo-sdk
+//How to edit info.plist https://github.com/expo/expo/blob/master/exponent-view-template/ios/exponent-view-template/Supporting/Info.plist#L28-L41
 
 YellowBox.ignoreWarnings([
   'Require cycle:',
