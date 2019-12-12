@@ -37,15 +37,11 @@ class SingleContact extends React.Component {
             return(response.json())
         })
         .then(responseJSON => {
-            if (responseJSON.data !== [] && responseJSON.data !== undefined) {
+            if (responseJSON.data.length !== 0) {
                 this.setState({
                     hasApp: true,
+                    profileImage: responseJSON.data[0] === undefined ? '' : responseJSON.data[0].image
                 })
-                if (responseJSON.profileImg !== undefined) {
-                    this.setState({
-                        profileImage: responseJSON.data[0].image
-                    })
-                }
             }
         })
         .catch(err => {
