@@ -72,10 +72,10 @@ class MessageShort extends React.Component {
         let dir = {}
 
         if (this.props.sentMessage) {
-            profileImg = this.props.fromImage !== '' ? `${this.props.fromImage}=s40-c` : ''
+            profileImg = this.props.fromImage !== '' ? `${this.props.fromImage}=s80-c` : ''
             dir = { flexDirection: 'row' }
         } else {
-            profileImg = this.props.toImage !== '' ? `${this.props.toImage}=s40-c` : ''
+            profileImg = this.props.toImage !== '' ? `${this.props.toImage}=s80-c` : ''
             dir = { flexDirection: 'row-reverse' }
         }
 
@@ -96,7 +96,7 @@ class MessageShort extends React.Component {
 
                     <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', position: 'absolute', top: 44, width: 40, height: 40, marginHorizontal: 10}} onPress={this.state.flaggedAndDeleted ? null : () => this.alerting()} activeOpacity={this.state.flaggedAndDeleted ? 1 : .3}><FontAwesome name={'flag'} size={26} color={this.state.flaggedAndDeleted ? 'rgb(255,0,0)' : 'rgb(200,200,200)'} /></TouchableOpacity>
 
-                    { this.props.message.message !== '' ? <View style={[styles.message, {backgroundColor: 'rgb(255,255,255)', padding: 15}]}>
+                    { this.props.message.message !== '' ? <View style={[styles.message, {backgroundColor: 'rgb(255,255,255)', padding: 15, shadowOpacity: .35}]}>
                         <Text style={{fontFamily: this.state.fontLoaded ? 'indieflower-regular' : null, fontSize: 22}}>{this.props.message.message}</Text>
                     </View>
 

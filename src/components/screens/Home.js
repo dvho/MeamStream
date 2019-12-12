@@ -95,7 +95,7 @@ class Home extends React.Component {
         }
     }
 
-    toggleCreateMessage() { //There's a bug around here where I have to hit cancel twice to get out of sending a message if I've navigated to SendMessage from AddressBook
+    toggleCreateMessage(navFrom) { //There was a bug where I had to hit cancel twice to get out of sending a message if I'd navigated to SendMessage from AddressBook. I squashed this by adding the navFrom parameter.
         const date = new Date() //When Home.js mounts or when toggleCreateMessage is called (from Home.js, Conversation.js, SendMessage.js, as it's passed through the navigation params) currentTimeInMilliseconds and todayInMilliseconds are updated in Redux
         const currentTimeInMilliseconds = date.getTime()
         const currentHours = date.getHours() * 60 * 60 * 1000
@@ -105,17 +105,18 @@ class Home extends React.Component {
         const millisecondsSinceMidnight = currentHours + currentMinutes + currentSeconds + currentMilliseconds
 
         this.setState({
-            showCreateMessage: !this.state.showCreateMessage,
+            showCreateMessage: navFrom === 'cancel' ? false : !this.state.showCreateMessage,
             currentTimeInMilliseconds: currentTimeInMilliseconds,
             millisecondsSinceMidnight: millisecondsSinceMidnight
         })
         //this.props.userReceived(this.state)
 
             this.props.navigation.setParams({
-                showIcon: !this.state.showCreateMessage
+                showIcon: navFrom === 'cancel' ? true : !this.state.showCreateMessage
             })
 
-        this.props.userReceived(this.state)
+            setTimeout(() => this.props.userReceived(this.state), 5) //There was a bug where I'd have to tap the send message icon twice but only on the first time trying to send a message per session. I squashed this by breaking this.props.userReceived(this.state) out of the normal flow.
+
     }
 
     async fetchUserData(userId) {

@@ -40,8 +40,12 @@ class SingleContact extends React.Component {
             if (responseJSON.data !== [] && responseJSON.data !== undefined) {
                 this.setState({
                     hasApp: true,
-                    profileImage: responseJSON.data[0].image
                 })
+                if (responseJSON.profileImg !== undefined) {
+                    this.setState({
+                        profileImage: responseJSON.data[0].image
+                    })
+                }
             }
         })
         .catch(err => {
@@ -57,7 +61,7 @@ class SingleContact extends React.Component {
                 <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'space-evenly', width: config.screenWidth, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: config.colors.inactiveButton, borderTopWidth: this.props.isFirstContact ? StyleSheet.hairlineWidth : null}} onPress={()=>this.props.nav(this.props.contact)} activeOpacity={3} key={this.props.contact.id}>
 
                     <View style={{flex: 3, flexDirection: 'row', alignItems: 'center'}}>
-                        { this.state.profileImage === '' ? null : <Image source={{uri: `${this.state.profileImage}=s${Math.floor(config.screenWidth/12)}-c`}} style={{width: 40, height: 40, borderRadius: 20, marginLeft: 10}}/> }
+                        { this.state.profileImage === '' ? null : <Image source={{uri: `${this.state.profileImage}=s${Math.floor(config.screenWidth/6)}-c`}} style={{width: 40, height: 40, borderRadius: 20, marginLeft: 10}}/> }
                         <Text style={this.props.singleContactFont}>{this.props.contact.name}</Text>
                     </View>
 

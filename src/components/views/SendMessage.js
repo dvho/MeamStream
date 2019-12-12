@@ -207,7 +207,7 @@ class SendMessage extends React.Component {
         }
 
         cancel() {
-            this.props.toggleCreateMessage()
+            this.props.toggleCreateMessage('cancel')
             this.updateNewMessage('', 'toUser')
             this.updateNewMessage('', 'message')
             this.updateNewMessage('', 'giphyMainId')

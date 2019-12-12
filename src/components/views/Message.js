@@ -137,7 +137,7 @@ class Message extends React.Component {
     }
 
     render() {
-        const senderImage = this.state.fromData.image !== '' ? `${this.state.fromData.image}=s40-c` : ''
+        const senderImage = this.state.fromData.image !== '' ? `${this.state.fromData.image}=s80-c` : ''
 
         return(
             <Animated.View style={{opacity: this.state.fadeInAnim}}>

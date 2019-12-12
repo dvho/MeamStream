@@ -68,11 +68,11 @@ class AddressBook extends React.Component {
         await this.setState({
             fontLoaded: true,
             contacts: this.props.state.account.user.contacts,
-            profileImage:  this.props.state.account.user.profileImage,
-            pushToken:  this.props.state.account.user.pushToken,
-            showCreateMessage:  this.props.state.account.user.showCreateMessage,
-            userId:  this.props.state.account.user.userId,
-            username:  this.props.state.account.user.username
+            profileImage: this.props.state.account.user.profileImage,
+            pushToken: this.props.state.account.user.pushToken,
+            showCreateMessage: this.props.state.account.user.showCreateMessage,
+            userId: this.props.state.account.user.userId,
+            username: this.props.state.account.user.username
         })
     }
 
